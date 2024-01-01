@@ -1,0 +1,34 @@
+{% extends 'oscar/layout.html' %}
+
+
+{% block layout %}
+
+
+
+<div class="container-fluid">
+    {# Site logo/title, mini-basket, browse dropdown and searchbox #}
+    <header class="header container">
+        {% block navigation %}
+            {% include "oscar/partials/nav_primary.html" %}
+        {% endblock %}
+    </header>
+    <div class="columns is-justify-content-center mt-3">
+        <div class="column is-half ">
+            <div class="card">
+                <div class="card-header is-justify-content-center title has-text-info">Signup Form</div>
+                <div class="card-content">
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="button has-background-link">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+{% include 'oscar/partials/footer.html' %}
+{% endblock %}

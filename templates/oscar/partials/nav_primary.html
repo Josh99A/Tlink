@@ -1,0 +1,9 @@
+{% extends 'oscar/partials/nav_primary.html' %}
+{% load i18n %}
+
+{% block nav_extra %}
+{% include "oscar/partials/search.html" %}
+<a href="{% url 'core:subscribe' %}" class="btn btn btn-primary my-2 mr-3 my-sm-0" >{% trans "Sign up" %}</a>
+<a href="{% url 'core:index' %}" class="btn btn btn-primary my-2 my-sm-0 mr-3" >{% trans "Home" %}</a>
+<a href="{% url 'dashboard:index' %}" class="btn btn btn-primary my-2 my-sm-0 mr-3" >{% trans "Dashboard" %}</a>
+{% endblock %}

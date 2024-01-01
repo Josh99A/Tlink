@@ -1,0 +1,89 @@
+{% extends 'oscar/base.html' %}
+{% load static %}
+{% load image_tags %}
+{% load tlink_tags %}
+
+{% block layout %}
+<div class="container-fluid">
+    <!--Navbar-->
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand me-auto" href="{% url 'core:index' %}">TLink</a>
+          
+          <div class="offcanvas text-bg-dark offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2 active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link mx-lg-2" href="#">MyShop</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle mx-lg-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li><a class="dropdown-item" href="#">Fashion</a></li>
+                    <li><a class="dropdown-item" href="#">Gadgets</a></li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Fruniture</a></li>
+                  </ul>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+          <a href="" class="login_or_register_action_btn btn  btn-primary">Login</a>
+          <button class="navbar-toggler pe-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </nav>
+      <!--End of Navbar-->
+
+    <!--Hero section-->
+    <section class="hero-section">
+      <div class="container d-flex align-items-center justify-content-center fs-1 text-white flex-column">
+        <h1>TrustLink Online Market</h1>
+      </div>
+    </section>
+    <!--End of hero section-->
+    <main class="container-fluid mt-3">
+      <div class="container">
+        <h3 class="text-center">Shop by category</h3>
+        <div class="row">
+          <div class="col w-25">
+            <figure class="image">
+              <section id="portfolio" class="portfolio">
+                  <div class="portfolio-container">
+                    <div class="portfolio-item filter-app">
+                      <div class="portfolio-wrap">
+                        <img src="{% static 'core\Images\Fashion\women_green_african_wear.jpg' %}" alt='Image' class="image-fluid  itemImage  rounded"> 
+                        <div class="portfolio-info">
+                          <h4></h4>
+                          <p>App</p>
+                          <div class="portfolio-links">
+                            <a href="../assets/Images/post_images/photo-55.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                            <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+               </section><!-- End Portfolio Section -->
+            </figure>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+</div>
+{% endblock layout %}

@@ -1,0 +1,127 @@
+{% extends 'oscar/layout.html' %}
+
+
+
+{% block layout %}
+{# Site logo/title, mini-basket, browse dropdown and searchbox #}
+<div class="container-fluid has-background-link-light pt-4">
+<header class="header mb-3">  
+    <div class="title is-3 has-text-centered">Choose a subscription plan</div>
+</header>
+
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{% url 'core:index' %}">Home</a></li>
+        <li class="is-active"><a href="">Subscription</a></li>
+    </ul>
+</nav>    
+<div class="columns">
+    <div class="column mx-auto">
+        <div class="card primary-blue  has-text-white">
+            <div class="card-header">
+                <h4 class="card-header-title has-text-white">Basic</h4>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    <ul class="ul"> 
+                        <li class="mb-4">
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>Product slots</span>
+                            
+                        </li>
+                        <li class="mb-4"></li>
+                            <i class="has-text-danger bi bi-x-circle-fill mr-3" ></i>
+                            <span>Socail media links</span>
+                            
+                        </li>
+                        <li >
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>SMS messages</span>
+                            
+                        </li>
+                        <li>
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>Advanced dashboard analytics</span>
+                            
+                        </li>
+                    </ul>
+                </div>
+                <button  class="button is-fullwidth is-focused is-primary js-modal-trigger" data-target="basic_modal">Buy Now</button>
+            </div>
+        </div>
+        {% include 'oscar/partials/payment_modal.html' with subscription="basic" sub_modal_id="basic_modal" %}
+    </div>
+    <div class="column">
+        <div class="card has-background-dark has-text-white-bis">
+            <div class="card-header">
+                <h4 class="card-header-title has-text-white ">Premium</h4>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    <ul class="ul"> 
+                        <li class="mb-4">
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>Product slots</span>
+                            
+                        </li>
+                        <li class="mb-4"></li>
+                            <i class="has-text-danger bi bi-x-circle-fill mr-3" ></i>
+                            <span>Socail media links</span>
+                            
+                        </li>
+                        <li >
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>SMS messages</span>
+                            
+                        </li>
+                        <li>
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>Advanced dashboard analytics</span>
+                            
+                        </li>
+                    </ul>
+                    <button class="button is-fullwidth is-focused is-primary">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card has-background-warning-light">
+            <div class="card-header">
+                <h4 class="card-header-title">Enterprise</h4>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    <ul class="ul"> 
+                        <li class="mb-4">
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>Product slots</span>
+                            
+                        </li>
+                        <li class="mb-4"></li>
+                            <i class="has-text-danger bi bi-x-circle-fill mr-3" ></i>
+                            <span>Socail media links</span>
+                            
+                        </li>
+                        <li >
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>SMS messages</span>
+                            
+                        </li>
+                        <li>
+                            <i class="has-text-success bi bi-bag-check-fill mr-3" ></i>
+                            <span>Advanced dashboard analytics</span>
+                            
+                        </li>
+                    </ul>
+                    <button class="button is-fullwidth is-focused is-primary">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="mt-3">
+    {% include "oscar/partials/footer.html" %}
+</div>
+{% endblock layout %}

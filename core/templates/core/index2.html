@@ -1,0 +1,163 @@
+{% extends 'oscar/layout.html' %}
+{% load static %}
+{% load image_tags %}
+{% load i18n %}
+ 
+{% block layout %}
+
+{# Site logo/title, mini-basket, browse dropdown and searchbox #}
+<header class="header">  
+    {% block navigation %}
+        {% include "oscar/partials/nav_primary.html" %}
+    {% endblock %}
+</header>
+<section class="main-section mt-5">
+    <div class="container-fluid">
+        <div class="columns">
+            <div class="column is-one-third">
+              <aside class="panel is-info ">
+                <p class="panel-heading">
+                  Categories
+                </p>
+                <p class="panel-tabs">
+                  <a href="" class="is-active">All</a>
+                  <a href="">Public</a>
+                  <a href="">Private</a>
+                  <a href="">Source</a>
+                  <a href="">Forks</a>
+                </p>
+                <div class="panel-block">
+                  <p class="control has-icons-left">
+                    <input type="text" class="input is-info" placeholder="Search">
+                    <span class="icon is-left">
+                      <i class="bi bi-search"></i>
+                    </span>
+                  </p>
+                </div>
+                <a class="panel-block is-active">
+                  <span class="panel-icon">
+                    <i class="bi bi-gender-female"></i>
+                  </span>
+                  Fashion
+                </a>
+                <a class="panel-block is-active">
+                  <span class="panel-icon">
+                    <i class="bi bi-phone"></i>
+                  </span>
+                  Electronics
+                </a>
+                <div class="panel-block">
+                  <button class="button is-link is-outlined is-fullwidth">
+                    Reset all filters
+                  </button>
+              </div>
+              </aside>
+            </div>
+            <div class="column ">
+              <div class="hero is-medium is-link">
+      
+                <div class="hero-body">
+                  <h1 class="title">Tlink</h1>
+                  <h5 class="subtitle">The best online Market</h5>
+                </div>
+                <div class="hero-foot">
+                <nav class="tabs is-boxed is-fullwidth">
+                  <div class="container">
+                    <ul>
+                      <li class="is-active">
+                        <a>Overview</a>
+                      </li>
+                      <li>
+                        <a>Fashion</a>
+                      </li>
+                      <li>
+                        <a>Electronics</a>
+                      </li>
+                      <li>
+                        <a>Health & Beauty</a>
+                      </li>
+                      <li>
+                        <a>Supermarket</a>
+                      </li>
+                      <li>
+                        <a>Phones & Tablets</a>
+                      </li>
+                    </ul>
+                  </div>
+                </nav>
+              </div>
+      
+              </div>
+            </div>
+      
+        </div>
+        <div class="section">
+          <h3 class="title has-text-centered">
+            Top products
+          </h3>
+          <div class="section" >
+            <div class="columns">
+                <!--Swiper container-->
+            <div class="swiper column "> 
+              <div class="swiper-wrapper">
+                {% for product in products %}
+                <div class="swiper-slide column is-full-mobile is-half-tablet is-narrow is-3">
+                  <div class="container">
+                  <div class="card W-100">
+                    <div class="card-image">
+                      <figure class="image">
+                        <section id="portfolio" class="portfolio">
+                            <div class="portfolio-container">
+            
+                              <div class="portfolio-item filter-app">
+                                <div class="portfolio-wrap">
+                                  <img src="{% oscar_thumbnail product.primary_image.original '300x400' crop='center' upscale=False  %}" alt='Image' class="image  itemImage"> 
+                                  <div class="portfolio-info">
+                                    <h4>{% trans product.get_title %}</h4>
+                                    <p>App</p>
+                                    <div class="portfolio-links">
+                                      <a href="../assets/Images/post_images/photo-55.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                                      <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                         </section><!-- End Portfolio Section -->
+                      </figure>
+                    </div>
+                    <div class="card-content p-3 card-info ">  
+                    <div class="content has-text-centered">
+                        <p class="title is-size-6 has-text-weight-blod "  style="height: 40px;">{{ product.get_title|truncatewords:3 }}</p>
+                        <p class="subtitle is-size-6 p-1 has-text-primary has-text-weight-semibold">Ugx 100,000</p>
+                      </div>
+              </div>
+                </div>
+                </div>
+                </div><!--End of slide 1-->
+                {% endfor %}
+                
+              </div>
+              <div class="swiper-pagination"></div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-scrollbar"></div>
+            </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column has-text-centered title">
+            <h1 class="title">Side bar</h1>
+          </div>
+          <div class="column">
+            <h1>The body</h1>
+          </div>
+        </div>
+    </div>
+</section>
+
+{% include "oscar/partials/footer.html" %}
+{% endblock layout %}
+ 

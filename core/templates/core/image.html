@@ -1,0 +1,52 @@
+{% extends 'oscar/layout.html' %}
+{% load static %}
+<!-- {% load image_tags %} -->
+ 
+{% block layout %}
+{# Top-horizontal bar with account, notifictions, dashboard links #}
+{% include "oscar/partials/nav_accounts.html" %}
+
+
+{# Site logo/title, mini-basket, browse dropdown and searchbox #}
+<header class="header">  
+    {% block navigation %}
+        {% include "oscar/partials/nav_primary.html" %}
+    {% endblock %}
+</header>
+
+<section class="mt-5">
+   <div class="has-text-centered columns">
+    <div class="column is-half">
+        <div class="card">
+            <div class="card-image">
+              <figure class="image">
+                <section id="portfolio" class="portfolio">
+                    <div class="portfolio-container">
+    
+                      <div class="portfolio-item filter-app">
+                        <div class="portfolio-wrap">
+                          <img src="{% oscar_thumbnail product.primary_image.original 'x155' %}" alt='Image' class="image itemImage"> 
+                          <div class="portfolio-info">
+                            <h4>App 1</h4>
+                            <p>App</p>
+                            <div class="portfolio-links">
+                              <a href="../assets/Images/post_images/photo-55.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                              <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 </section><!-- End Portfolio Section -->
+              </figure>
+            </div>
+            <div class="card-content p-3 card-info ">  
+            <div class="content"> 
+
+
+              
+
+
+              <div class="column ">
+               
+              </div>
