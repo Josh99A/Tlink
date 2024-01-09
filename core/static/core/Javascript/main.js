@@ -1,4 +1,25 @@
-const swiper = new Swiper('.swiper', {
+ /**
+   * Easy selector helper function
+   */
+ const select = (el, all = false) => {
+    el = el.trim()
+    if (all) {
+      return [...document.querySelectorAll(el)]
+    } else {
+      return document.querySelector(el)
+    }
+  }
+
+  /**
+   * Easy on scroll event listener 
+   */
+  const onscroll = (el, listener) => {
+    el.addEventListener('scroll', listener)
+  }
+
+
+//   Category slides
+const swiper1 = new Swiper('.category-intro', {
     loop: true,
     pagination: {
         el: '.swiper-pagination',
@@ -16,6 +37,51 @@ const swiper = new Swiper('.swiper', {
 
     slidesPerView: 'auto'
 })
+
+// Generic swiper function
+const swiper_func = (selector) => {
+
+    var swipers = select(selector, true)
+
+    swipers.forEach(function(swiper){
+        const Myswiper = new Swiper(swiper, {
+            loop: true,
+        navigation : {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+    
+        },
+        slidesPerView: 'auto',
+        autoplay:{
+            delay: 5000,
+        },
+        autoplayDisableOnInteraction :true,
+        pauseOnMouseEnter: true,
+    },
+    )
+
+})}
+
+swiper_func('.top-deals')
+swiper_func('.ps-swiper')
+
+/**
+   * Back to top button
+   */
+let backtotop = select('.back-to-top')
+if (backtotop) {
+  const toggleBacktotop = () => {
+    if (window.scrollY > 100) {
+      backtotop.classList.add('active')
+
+    } else {
+        backtotop.classList.remove('active')
+       
+    }
+  }
+  window.addEventListener('load', toggleBacktotop)
+  onscroll(document, toggleBacktotop)
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -40,7 +40,7 @@ a:hover {
     position: relative;
 }
 
-@media(min-width:911px) {
+@media(min-width:991px) {
 
     .nav-link::before {
         content: "";
@@ -62,30 +62,71 @@ a:hover {
     }
 }
 
-.hero-section {
-    background: url("../Images/hero-bg2.jpg") no-repeat center;
-    background-size: cover;
-    width: 100%;
-}
 
-.hero-section::before {
-    background-color: rgba(0, 0, 0, 0.6);
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    top: 0;
-    right: 0;
-}
 
-.hero-section .container {
+.carousel-item {
+    position: relative;
     height: 100vh;
-    z-index: 1;
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media(max-width:575.98px) {
+    .carousel-item {
+        height: 80vh;
+    }
+
+    .carousel-caption {
+        position: absolute;
+        top: 56% !important;
+    }
+
+    .carousel-caption h3 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+
+    .carousel-item .fs-6 {
+        font-size: 0.73rem !important;
+    }
+}
+
+.carousel-item .img-fluid {
+    height: 100% !important;
+}
+
+
+.carousel-caption {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+}
+
+.carousel-inner {
     position: relative;
 }
 
-.hero-section .container h1 {
-    font-size: 1.5em;
+.main-header {
+    position: absolute;
+    z-index: 2;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
 }
 
 .mtn-momo-panel {
@@ -98,115 +139,110 @@ a:hover {
     background-color: red;
 }
 
-.primary-blue {
-    background-color: #5444f4;
-}
-
-.primary-orange {
-    background-color: #f56c16;
-}
-
-
 
 li {
     list-style: none !important;
 }
 
-.portfolio .portfolio-item {
-    margin-bottom: 30px;
-}
-
-.card-info {
-    margin-top: -30px;
-}
-
-.itemImage {
-    width: 100%;
-}
-
-
-
-.portfolio .portfolio-wrap {
-    transition: 0.3s;
+.image-container {
     position: relative;
+    border-radius: 0.375rem;
     overflow: hidden;
-    z-index: 1;
-    background: rgba(85, 98, 112, 0.6);
 }
 
-.portfolio .portfolio-wrap::before {
+.image-container::before {
     content: "";
-    background: rgba(85, 98, 112, 0.6);
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
     bottom: 0;
-    transition: all ease-in-out 0.3s;
-    z-index: 2;
-    opacity: 0;
-}
-
-.portfolio .portfolio-wrap img {
-    transition: all ease-in-out 0.3s;
-}
-
-.portfolio .portfolio-wrap .portfolio-info {
-    opacity: 0;
-    position: absolute;
-    top: 0;
     left: 0;
+    top: 0;
     right: 0;
-    bottom: 0;
-    z-index: 3;
-    transition: all ease-in-out 0.3s;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    padding: 20px;
+    transition: 0.3s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.6);
+
 }
 
-.portfolio .portfolio-wrap .portfolio-info h4 {
-    font-size: 20px;
-    color: #fff;
-    font-weight: 600;
-}
-
-.portfolio .portfolio-wrap .portfolio-info p {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
-    text-transform: uppercase;
-    padding: 0;
-    margin: 0;
-    font-style: italic;
-}
-
-.portfolio .portfolio-wrap .portfolio-links {
-    text-align: center;
+.image-container .image-info {
+    text-transform: capitalize;
     z-index: 4;
+    position: absolute;
+    top: 40%;
+    left: 12%;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a {
-    color: rgba(255, 255, 255, 0.6);
-    margin: 0 5px 0 0;
+
+.image-container img {
+    transition: 0.3s ease-in-out;
+}
+
+.image-container:hover img {
+    transform: scale(1.1);
+}
+
+.image-container:hover .image-info {
+    display: none;
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    right: 15px;
+    bottom: 15px;
+    z-index: 996;
+    background: #0d6efd;
+    width: 40px;
+    height: 40px;
+    transition: all 0.4s;
+}
+
+.back-to-top i {
     font-size: 28px;
-    display: inline-block;
-    transition: 0.3s;
+    color: #fff;
+    line-height: 0;
 }
 
-.portfolio .portfolio-wrap .portfolio-links a:hover {
-    color: white;
+.back-to-top:hover {
+    background: #60ccdc;
+    color: #fff;
 }
 
-.portfolio .portfolio-wrap:hover::before {
+.back-to-top.active {
+    visibility: visible;
     opacity: 1;
 }
 
-.portfolio .portfolio-wrap:hover img {
-    transform: scale(1.2);
+/* Fashion banner */
+.fashion-banner {
+    background-image: url(../Images/black-woman-and-man-jumping.jpg);
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top center;
+    background-attachment: fixed;
+    width: 100%;
+    height: auto;
+    position: relative;
 }
 
-.portfolio .portfolio-wrap:hover .portfolio-info {
-    opacity: 1;
+.td-cards:hover img {
+    transition: 0.3s ease-in-out;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Popular Stores card section */
+.ps-image {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    border: 6px solid rgba(255, 255, 255, 0.15);
+    margin: 5px auto;
+    
+}
+
+.ps-card-header{
+  height: 65px;
+  overflow-y:auto;
 }

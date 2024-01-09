@@ -7,12 +7,28 @@ from .forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from core.models import User
 
+from oscar.apps.catalogue.models import Category
+
 
 
 class indexList(ListView):
     model = Product
     template_name = 'core/index.html'
     context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(*kwargs)
+
+        categories = Category.objects.all()
+        root_categories = []
+
+        for category in categories:
+            if category.is_root():
+                root_categories.append(category)
+
+
+        context['categories'] = root_categories
+        return context
 
 class Subscribe(TemplateView):
     template_name = 'core/subscription_plans.html'
