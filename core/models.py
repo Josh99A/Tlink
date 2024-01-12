@@ -10,6 +10,3 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=13)
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE,  null=True, blank=True)
 
-class StaticImage(models.Model):
-    area = models.CharField(max_length=50)
-    image = models.ImageField(upload_to='media/')
