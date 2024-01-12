@@ -6,6 +6,7 @@ from apps.dashboard.catalogue.views import TlinkProductCreateUpdateView
 app_name='core'
 urlpatterns = [
     path('', views.indexList.as_view() , name='index'),
+    path('fashion/', views.FashionCategory.as_view(), name='fashion'),
     path('subscribe/', views.Subscribe.as_view(), name='subscribe'),
     path('<str:subscription>/<str:payment_method>/signup', views.SignUp.as_view(), name='signup'),
     path('<int:pk>/store', views.UserStoreView.as_view(), name='store'),

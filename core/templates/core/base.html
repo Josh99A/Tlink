@@ -1,0 +1,56 @@
+{% extends 'oscar/base.html' %}
+
+{% block layout %}
+ <!--Navbar-->
+ <nav class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand me-auto" href="{% url 'core:index' %}">TLink</a>
+      
+      <div class="offcanvas text-bg-dark offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'core:index' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-lg-2" href="#">MyShop</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link mx-lg-2" href="{% url 'dashboard:index' %}">Dashboard</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle mx-lg-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Categories
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="{% url 'core:fashion' %}">Fashion</a></li>
+                <li><a class="dropdown-item" href="#">Gadgets</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Fruniture</a></li>
+              </ul>
+            </li>
+          </ul>
+          <form class="d-flex me-3" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search product or store" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+
+        </div>
+      </div>
+      <a href="" class="login_or_register_action_btn btn  btn-primary">Login</a>
+      <button class="navbar-toggler pe-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <!--End of Navbar-->
+  {% block main-content %}{% endblock %}
+  {% include 'oscar/partials/backtotop.html' %}
+  {% include 'oscar/partials/Footer.html' %}
+  {% endblock layout %}

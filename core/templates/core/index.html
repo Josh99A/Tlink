@@ -1,63 +1,15 @@
-{% extends 'oscar/base.html' %}
+{% extends 'core/base.html' %}
 {% load static %}
 {% load image_tags %}
 
 
-{% block layout %}
-<!--Navbar-->
+
+{% block main-content %}
 <style>
   .seller-rating{
     margin-right: 20px;
   }
 </style>
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand me-auto" href="{% url 'core:index' %}">TLink</a>
-      
-      <div class="offcanvas text-bg-dark offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
-            <li class="nav-item">
-              <a class="nav-link mx-lg-2 active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="#">MyShop</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="{% url 'dashboard:index' %}">Dashboard</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle mx-lg-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Categories
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="#">Fashion</a></li>
-                <li><a class="dropdown-item" href="#">Gadgets</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Fruniture</a></li>
-              </ul>
-            </li>
-          </ul>
-          <form class="d-flex me-3" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search product or store" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
-          </form>
-
-        </div>
-      </div>
-      <a href="" class="login_or_register_action_btn btn  btn-primary">Login</a>
-      <button class="navbar-toggler pe-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </nav>
-  <!--End of Navbar-->
   <!-- Carousel  -->
   <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" >
     <div class="carousel-inner">
@@ -174,25 +126,8 @@
             <div class="text-center fs-5 text-capitalize">
               <h3>Popular Categories</h3>
             </div>
-            <div class="swiper category-intro row my-3 ">
-              <div class="swiper-wrapper">
-                {% for category in categories %}
-                  <div class=" swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">
-                      <a href="#">
-                        <div class="image-container" class="w-25">
-                          <img src="{% oscar_thumbnail category.image  '300x400' crop='center' upscale='false' %}" alt="" class="rounded img-fluid">
-                          <div class="image-info">
-                            <h6 class="text-white  text-uppercase fs-4 ">{{ category.name }}</h6>
-                        </div>
-                      </div>
-                      </a>
-                  </div>
-                  {% endfor %} 
-
-                </div>
-                <div class="swiper-button-prev d-none d-mb-block"></div>
-                <div class="swiper-button-next d-none d-mb-block"></div>
-            </div>
+           {% include 'core/patials/categorySlider.html' with categories=categories width=300 height=400 %}
+          </div>
           </div>
         </div>
       </div> <!--End of find your interest-->
@@ -214,67 +149,9 @@
                 <h3>Top deals in Fashion</h3>
                 <hr>
               </div>
-              <div class="row ">
-                  <div class="swiper top-deals"> <!--Top deals fashion begins-->
-                    <div class="swiper-wrapper">
-                      <div class="swiper-slide col-lg-2 col-md-3 col-sm-4 col-5 mx-2">
-                        <a href="">
-                          <div class="card td-cards">
-                            <div class="card-image">
-                              <img src="{% static 'core\Images\Fashion\male-casual-sleevless-short-attire.jpg' %}" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="card-content mt-1  p-2 is-dark">
-                              <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
-                              <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div class="swiper-slide col-lg-2 col-md-3 col-sm-4 col-5 mx-2">
-                        <a href="">
-                          <div class="card td-cards">
-                            <div class="card-image">
-                              <img src="{% static 'core\Images\Fashion\male-casual-sleevless-short-attire.jpg' %}" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="card-content mt-1  p-2 is-dark">
-                              <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
-                              <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div class="swiper-slide col-lg-2 col-md-3 col-sm-4 col-5 mx-2">
-                        <a href="">
-                          <div class="card td-cards">
-                            <div class="card-image">
-                              <img src="{% static 'core\Images\Fashion\male-casual-sleevless-short-attire.jpg' %}" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="card-content mt-1  p-2 is-dark">
-                              <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
-                              <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div class="swiper-slide col-lg-2 col-md-3 col-sm-4 col-5 mx-2">
-                        <a href="">
-                          <div class="card td-cards">
-                            <div class="card-image">
-                              <img src="{% static 'core\Images\Fashion\male-casual-sleevless-short-attire.jpg' %}" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="card-content mt-1  p-2 is-dark">
-                              <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
-                              <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="swiper-button-prev "></div>
-                    <div class="swiper-button-next "></div>
-                  </div><!--Top deals fashion ends-->
+              
+              <!--Top deals fashion -->
+              {% include 'core/patials/topDealsSlider.html' %}
               </div>
             </div>
           </div>
@@ -283,121 +160,8 @@
               <div class="has-text-centered text-capitalize mb-4">
                 <h3>Popular Fashion Stores</h3>
               </div>
-              <div class="row">
-                <div class="swiper ps-swiper"><!--Popular fashion stores swiper begin-->
-                  <div class="swiper-wrapper">
-                      <div class="swiper-slide col-lg-3 col-md-4 col-6 mx-2">
-                        <div class="card text-white bg-dark ps-card">
-                          <img src="{% static 'core\Images\Fashion\women_black_red_teen_dress.jpg' %}" class="ps-image" alt="">
-                          <div class="card-header ps-card-header">
-                            <h5>Lorem ipsum dolor sit amet, consectetur </h5>
-                          </div>
-                          <div class="card-body">
-                            <h6 class="fw-bold">Seller's Score</h6>
-                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                              <div class="progress-bar" style="width: 75%">75%</div>
-                            </div>
-                            <h6 class="fw-bold">Seller rating</h6>
-                            <div class="seller-rating d-flex justify-content-between mr-mb-3 mr-lg-5">
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                            </div>
-                          
-                              <a href="" class="d-grid mt-3">
-                                <button class="btn btn-primary" type="button">Visit Store</button>
-                              </a>
-      
-                          </div>
-                      </div>
-                      </div>
-                      <div class="swiper-slide col-lg-3 col-md-4 col-6 mx-2">
-                        <div class="card text-white bg-dark ps-card">
-                          <img src="{% static 'core\Images\Fashion\women_black_red_teen_dress.jpg' %}" class="ps-image" alt="">
-                          <div class="card-header ps-card-header">
-                            <h5>Lorem ipsum dolor sit amet, consectetur </h5>
-                          </div>
-                          <div class="card-body">
-                            <h6 class="fw-bold">Seller's Score</h6>
-                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                              <div class="progress-bar" style="width: 75%">75%</div>
-                            </div>
-                            <h6 class="fw-bold">Seller rating</h6>
-                            <div class="seller-rating d-flex justify-content-between mr-mb-3 mr-lg-5">
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                            </div>
-                          
-                              <a href="" class="d-grid mt-3">
-                                <button class="btn btn-primary" type="button">Visit Store</button>
-                              </a>
-      
-                          </div>
-                      </div>
-                      </div>
-                      <div class="swiper-slide col-lg-3 col-md-4 col-6  mx-2">
-                        <div class="card text-white bg-dark ps-card">
-                          <img src="{% static 'core\Images\Fashion\women_black_red_teen_dress.jpg' %}" class="ps-image" alt="">
-                          <div class="card-header ps-card-header">
-                            <h5>Lorem ipsum dolor sit amet, consectetur </h5>
-                          </div>
-                          <div class="card-body">
-                            <h6 class="fw-bold">Seller's Score</h6>
-                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                              <div class="progress-bar" style="width: 75%">75%</div>
-                            </div>
-                            <h6 class="fw-bold">Seller rating</h6>
-                            <div class="seller-rating d-flex justify-content-between mr-mb-3 mr-lg-5">
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                            </div>
-                          
-                              <a href="" class="d-grid mt-3">
-                                <button class="btn btn-primary" type="button">Visit Store</button>
-                              </a>
-      
-                          </div>
-                      </div>
-                      </div>
-                      <div class="swiper-slide col-lg-3 col-md-4 col-6 mx-2">
-                        <div class="card text-white bg-dark ps-card">
-                          <img src="{% static 'core\Images\Fashion\women_black_red_teen_dress.jpg' %}" class="ps-image" alt="">
-                          <div class="card-header ps-card-header">
-                            <h5>Lorem ipsum dolor sit amet, consectetur </h5>
-                          </div>
-                          <div class="card-body">
-                            <h6 class="fw-bold">Seller's Score</h6>
-                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                              <div class="progress-bar" style="width: 75%">75%</div>
-                            </div>
-                            <h6 class="fw-bold">Seller rating</h6>
-                            <div class="seller-rating d-flex justify-content-between mr-mb-3 mr-lg-5">
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill text-warning"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                            </div>
-                          
-                              <a href="" class="d-grid mt-3">
-                                <button class="btn btn-primary" type="button">Visit Store</button>
-                              </a>
-      
-                          </div>
-                      </div>
-                      </div>
-                </div>
-                <div class="swiper-button-prev "></div>
-                <div class="swiper-button-next "></div>
-              </div> <!--Popular fashion stores swiper ends -->
+              <!--Popular fashion stores swiper ends -->
+              {% include 'core\patials\popularCategoryStores.html' %}
             </div>
           </div>
           </div>
@@ -431,7 +195,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Electronics\iphone-13-pro.png' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -444,7 +208,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Electronics\iphone-13-pro.png' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -457,7 +221,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Electronics\iphone-13-pro.png' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -470,7 +234,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Electronics\iphone-13-pro.png' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -645,7 +409,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Supermarket\Lays snaks.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -658,7 +422,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Supermarket\Lays snaks.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -671,7 +435,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Supermarket\Lays snaks.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -684,7 +448,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Supermarket\Lays snaks.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -859,7 +623,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Scolastic\marker-and-pens-collection.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -872,7 +636,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Scolastic\marker-and-pens-collection.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -885,7 +649,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Scolastic\marker-and-pens-collection.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -898,7 +662,7 @@
                             <div class="card-image">
                               <img src="{% static 'core\Images\Scolastic\marker-and-pens-collection.jpg' %}" class="img-fluid rounded" alt="">
                             </div>
-                            <div class="card-content mt-1  p-2 is-dark">
+                            <div class="card-body mt-1  p-2 is-dark">
                               <p class=" mb-1 is-size-7-mobile  " style="height: 44px; overflow: hidden;">{{"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod, consequuntur?"| truncatewords:5}}</p>
                               <p class="is-size-7-mobile is-size-6 has-text-primary fw-bold ">UGX 30,000</p>
                             </div>
@@ -1055,7 +819,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card-content p-2 fw-bold ">
+              <div class="card-body p-2 fw-bold ">
                 <h6 class="is-size-7-mobile" style="height: 30px;">{{ 'Large sole women shoes with laces and in all sizes'| truncatewords:9 }}</h6>
                 <div class="text-center">
                   <span class="has-text-success">UGX 50,000</span>
@@ -1074,12 +838,8 @@
           </div>
         </div>
         
-        </div>
-
-        {% include 'oscar/partials/backtotop.html' %}
         <div style="height: 1000px;"></div>
       
     </main>
 </div>
-{% include 'oscar/partials/Footer.html' %}
-{% endblock layout %}
+{% endblock main-content %}

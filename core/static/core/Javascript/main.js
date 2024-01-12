@@ -18,25 +18,39 @@
   }
 
 
-//   Category slides
-const swiper1 = new Swiper('.category-intro', {
-    loop: true,
-    pagination: {
-        el: '.swiper-pagination',
-        clickable: 'true'
-    },
-    navigation : {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
 
-    },
+// Generic category slider
+const category_swiper = (selector) => {
+    var swipers = select(selector, true)
 
-    scrollbar: {
-        el: '.swiper-scrollbar'
-    },
+    
+    var swipers = select(selector, true)
 
-    slidesPerView: 'auto'
+    swipers.forEach(function(swiper){
+        const Myswiper = new Swiper(swiper, {
+          loop: true,
+          pagination: {
+              el: '.swiper-pagination',
+              clickable: 'true'
+          },
+          navigation : {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+      
+          },
+          
+          autoplay:{
+            delay: 5000,
+          },
+      
+          slidesPerView: 'auto'
+      }
+    )
+
 })
+}
+
+category_swiper('.category-intro')
 
 // Generic swiper function
 const swiper_func = (selector) => {
@@ -45,20 +59,20 @@ const swiper_func = (selector) => {
 
     swipers.forEach(function(swiper){
         const Myswiper = new Swiper(swiper, {
-            loop: true,
-        navigation : {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-    
-        },
-        slidesPerView: 'auto',
-        autoplay:{
-            delay: 5000,
-        },
-        autoplayDisableOnInteraction :true,
-        pauseOnMouseEnter: true,
-    },
-    )
+          loop: true,
+      navigation : {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+  
+      },
+      slidesPerView: 'auto',
+      autoplay:{
+          delay: 5000,
+      },
+      autoplayDisableOnInteraction :true,
+      pauseOnMouseEnter: true,
+  },
+  )
 
 })}
 

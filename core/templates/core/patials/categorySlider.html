@@ -1,0 +1,25 @@
+{% load static %}
+{% load image_tags %}
+
+<div class="row my-3">
+    <div class="swiper category-intro">
+      <div class="swiper-wrapper">
+        {% for category in categories %}
+        <div class="swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">
+            <a href="#">
+              <div class="image-container" class="w-25">
+                <img src="{% oscar_thumbnail category.image  '300x400' crop='center' upscale='false' %}" alt="" class="rounded img-fluid">
+                <div class="image-info">
+                  <h6 class="text-white  text-uppercase fs-4 ">{{ category.name }}</h6>
+              </div>
+            </div>
+            </a>
+        </div>
+        {% endfor %} 
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-next "></div>
+      <div class="swiper-button-prev "></div>
+    </div>
+
+  </div>

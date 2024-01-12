@@ -1,0 +1,98 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load category_tags %}
+{% load image_tags %}
+{% block main-content %}
+<div class="fashion-main-banner d-flex">
+    <div class="fashion-header-info  justify-content-center align-items text-center">
+        <h1 class="text-white ">Welcome to our</h1>
+        <h5 class="text-white fw-bold fst-italic ">Trustlink Fashion Collection</h5>
+    </div>
+</div>
+
+<div class="container-fluid my-3">
+    <div class="row justify-content-center">
+        <div class="col-3 d-none d-mb-block d-lg-block">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="fs-bold">Show Resuls for:</h4>
+                </div>
+
+                <div class="card-content">
+                   
+                    <div class="d-grid">
+                        <button class="btn btn-outline-primary is-size-7-mobile" data-bs-toggle="collapse" data-bs-target="#category-collapse" role="button" aria-expanded="false" aria-controls="category-collapse">
+                            Fashion Categories
+                        </button>
+                    </div>
+                    <div class="collapse" id="category-collapse">
+                        <div class="card card-body mt-1">
+                        {% category_tree parent=Fashion as tree_categories  %}
+                        <ul>
+                        {% for category, info in tree_categories %}
+                            <li>
+                                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                {% if info.has_children %}
+                                   <ul>
+                                {% else %}
+                                    </li>
+                                {% endif %}
+                            {% for n in info.num_to_close %}
+                                </ul></li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            {% block category_content %}
+            {% block category_description %}
+                <div class="card mb-3 d-none d-mb-block d-lg-block" style="max-width: 760px;">
+                    <div class="row g-0 ">
+                        <div class="col-4">
+                            <img src="{{ Fashion.image.url }}" alt="" class="img-fluid rounded-start">
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ Fashion.name }}</h5>
+                                 {{ Fashion.description|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+            <div class="text-center">
+                <h3>Find you interest</h3>
+                <hr>
+
+            </div>
+         
+            {% include 'core/patials/subcategorySlider.html' with categories=Fashion.get_tree %}
+
+            <div class="text-captialise text-center my-3">
+                <h2>Popular stores in Fashion</h2>  
+            </div>
+            {% include 'core/patials/popularCategoryStores.html' %}
+            
+            <div class="section">
+                <div class="text-captialise">
+                    <h2>Women's Fashion</h2>
+                    <hr>
+                </div>
+
+                <div class="text-captialise text-center my-3">
+                    <h2>Top Deals in Women's Fashion</h2>  
+                </div>
+                
+                {% include 'core/patials/topDealsSlider.html' %}
+
+                
+            </div>
+            {% endblock category_content %}
+        </div>
+    </div>
+</div>
+{% endblock %}

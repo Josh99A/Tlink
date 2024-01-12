@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView,  View, TemplateView
@@ -32,6 +34,13 @@ class indexList(ListView):
 
 class Subscribe(TemplateView):
     template_name = 'core/subscription_plans.html'
+
+class FashionCategory(DetailView):
+    template_name = 'core/Fashion/Fashion.html'
+    context_object_name = 'Fashion'
+
+    def get_object(self) :
+        return Category.objects.get(name='Fashion')
 
 class SignUp(CreateView):
     model = User
