@@ -1,6 +1,9 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% load image_tags %}
+{% load currency_filters %}
+{% load purchase_info_tags %}
+{% load i18n %}
 
 
 
@@ -807,12 +810,13 @@
            <h3>Featured Products</h3>
            <hr>
           </div>
-          <div class="row products mx-1">
-            <div class="col-lg-3 col-mb-4 col-6 card p-0">
+          <div class="row products ms-3 ">
+            {% for product in products %}
+            <div class="col-lg-3 col-mb-4 col-5 card p-0 mx-1 my-2  ">
               <div class=" card-image product-wrap ">
-                <img src="{% static 'core\Images\Fashion\Thick-soled-women-canvas-shoes.jpg' %}" alt="">
+                <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
                 <div class="product-info fs-3">
-                  <h4><a href="" class="text-white">App 1</a></h4>
+                  <h4><a href="" class="text-white is-size-7-mobile">{% trans product.get_title %}</a></h4>
                   <div class="product-links fs-4">
                     <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
                     <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
@@ -820,9 +824,12 @@
                 </div>
               </div>
               <div class="card-body p-2 fw-bold ">
-                <h6 class="is-size-7-mobile" style="height: 30px;">{{ 'Large sole women shoes with laces and in all sizes'| truncatewords:9 }}</h6>
+                <h6 class="is-size-7-mobile" style="height: 30px;">{{ product.get_title | truncatewords:9 }}</h6>
                 <div class="text-center">
-                  <span class="has-text-success">UGX 50,000</span>
+                  {% purchase_info_for_product request product as session %}
+                  {% if session.price.exists %}
+                  <span class="has-text-success">{{session.price.incl_tax|currency:session.price.currency  }}</span>
+                  {% endif %}
                   <div class="product-rating d-flext justify-content-between me-auto">
                     <i class="bi bi-star-fill"></i>
                     <i class="bi bi-star-fill"></i>
@@ -835,6 +842,7 @@
                 </div>
               </div>
             </div>
+            {% endfor %}
           </div>
         </div>
         

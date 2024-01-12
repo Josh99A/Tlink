@@ -2,6 +2,7 @@
 {% load static %}
 {% load category_tags %}
 {% load image_tags %}
+{% load puchase_info_tags %}
 {% block main-content %}
 <div class="fashion-main-banner d-flex">
     <div class="fashion-header-info  justify-content-center align-items text-center">
@@ -70,7 +71,7 @@
 
             </div>
          
-            {% include 'core/patials/subcategorySlider.html' with categories=Fashion.get_tree %}
+            {% include 'core/patials/subcategorySlider.html' with categories=Fashion.get_descendants_and_self %}
 
             <div class="text-captialise text-center my-3">
                 <h2>Popular stores in Fashion</h2>  
