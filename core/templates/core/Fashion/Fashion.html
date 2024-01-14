@@ -22,7 +22,22 @@
                 </div>
 
                 <div class="card-content">
-                   
+                    {% category_tree parent=Fashion as tree_categories  %}
+                        <ul>
+                        {% for category, info in tree_categories %}
+                            <li>
+                                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                {% if info.has_children %}
+                                   <ul>
+                                {% else %}
+                                    </li>
+                                {% endif %}
+                            {% for n in info.num_to_close %}
+                                </ul></li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul> 
+<!--                    
                     <div class="d-grid">
                         <button class="btn btn-outline-primary is-size-7-mobile" data-bs-toggle="collapse" data-bs-target="#category-collapse" role="button" aria-expanded="false" aria-controls="category-collapse">
                             Fashion Categories
@@ -46,12 +61,12 @@
                         {% endfor %}
                     </ul> 
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
+        {% block category_content %}
         <div class="col-9">
-            {% block category_content %}
             {% block category_description %}
                 <div class="card mb-3 d-none d-mb-block d-lg-block" style="max-width: 760px;">
                     <div class="row g-0 ">
@@ -74,68 +89,71 @@
             </div>
          
             {% include 'core/patials/subcategorySlider.html' with categories=Fashion.get_descendants_and_self %}
+        </div><!--End of second column-->
+            {% endblock category_content %}
+    </div><!--End of row-->
 
-            <div class="text-captialise text-center my-3">
-                <h2>Popular stores in Fashion</h2>  
+    <div class="container-fluid" >
+        <div class="container my-3">
+            <div class="text-center">
+             <h3>Featured Products</h3>
+             <hr>
             </div>
-            {% include 'core/patials/popularCategoryStores.html' %}
-            
-            <div class="section">
-                <div class="text-captialise">
-                    <h2>Women's Fashion</h2>
-                    <hr>
-                </div>
-
-                <div class="text-captialise text-center my-3">
-                    <h2>Top Deals in Women's Fashion</h2>  
-                </div>
-                
-                {% include 'core/patials/topDealsSlider.html' %}
-
-                <div class="container my-3">
-                    <div class="text-center">
-                     <h3>Featured Products</h3>
-                     <hr>
-                    </div>
-                    <div class="row products ms-3 ">
-                      {% for product in products %}
-                      <div class="col-lg-3 col-mb-4 col-5 card p-0 mx-1 my-2  ">
-                        <div class=" card-image product-wrap ">
-                          <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
-                          <div class="product-info fs-3">
-                            <h4><a href="" class="text-white is-size-7-mobile">{% trans product.get_title %}</a></h4>
-                            <div class="product-links fs-4">
-                              <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
-                              <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card-body p-2 fw-bold ">
-                          <h6 class="is-size-7-mobile" style="height: 30px;">{{ product.get_title | truncatewords:9 }}</h6>
-                          <div class="text-center">
-                            {% purchase_info_for_product request product as session %}
-                            {% if session.price.exists %}
-                            <span class="has-text-success">{{session.price.incl_tax|currency:session.price.currency  }}</span>
-                            {% endif %}
-                            <div class="product-rating d-flext justify-content-between me-auto">
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                              <i class="bi bi-star-fill"></i>
-                            </div>
-          
-                            <a href=""><button class="btn text-primary fw-bold">View details</button></a>
-                          </div>
-                        </div>
-                      </div>
-                      {% endfor %}
+            <div class="row products ms-3 ">
+              {% for product in category_products %}
+              <div class="col-lg-3 col-mb-4 col-5 card p-0 mx-1 my-2  ">
+                <div class=" card-image product-wrap ">
+                  <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
+                  <div class="product-info fs-3">
+                    <h4><a href="" class="text-white is-size-7-mobile">{% trans product.get_title %}</a></h4>
+                    <div class="product-links fs-4">
+                      <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                      <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
                     </div>
                   </div>
-                
+                </div>
+                <div class="card-body p-2 fw-bold ">
+                  <h6 class="is-size-7-mobile" style="height: 30px;">{{ product.get_title | truncatewords:9 }}</h6>
+                  <div class="text-center">
+                    {% purchase_info_for_product request product as session %}
+                    {% if session.price.exists %}
+                    <span class="has-text-success">{{session.price.incl_tax|currency:session.price.currency  }}</span>
+                    {% endif %}
+                    <div class="product-rating d-flext justify-content-between me-auto">
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                    </div>
+    
+                    <a href=""><button class="btn text-primary fw-bold">View details</button></a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
             </div>
-            {% endblock category_content %}
+          </div>
+        <div class="text-captialise text-center my-3">
+            <h2>Popular stores in Fashion</h2>  
+        </div>
+        {% include 'core/patials/popularCategoryStores.html' %}
+        <div class="section">
+            <div class="text-captialise">
+                <h2>Women's Fashion</h2>
+                <hr>
+            </div>
+
+            <div class="text-captialise text-center my-3">
+                <h2>Top Deals in Women's Fashion</h2>  
+            </div>
+            
+            {% include 'core/patials/topDealsSlider.html' %}
+
+            
+            
         </div>
     </div>
+  
 </div>
 {% endblock %}

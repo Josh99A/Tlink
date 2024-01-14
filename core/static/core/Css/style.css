@@ -405,3 +405,41 @@ li {
 
     background-color: #0d6efd;
 }
+
+/* Pricing page */
+.pricing-body {
+    background: url(../Images/blue-bg-happy-family.jpg) center/cover fixed no-repeat;
+    height: 100vh;
+    margin: 0;
+    overflow: auto;
+
+}
+
+@media(min-width:991px) {
+    .pricing-body {
+        max-height: inherit;
+    }
+}
+
+.pricing-body .card {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.pricing-body .card:hover {
+    transform: scale(1.05);
+}
+
+.pricing-body .list-group-item i {
+    margin-right: 5px;
+}
+
+.pricing-body .available {
+    color: #28a745;
+}
+
+.pricing-body .unavailable {
+    color: #dc3545;
+}

@@ -12,6 +12,18 @@ from core.models import User
 from oscar.apps.catalogue.models import Category
 
 
+def get_category_products(category):
+    category_products = []
+    products = Product.objects.all()
+
+    for product in products:
+        product_cat = product.get_categories()[0]
+        if product_cat.get_root() == category:
+            category_products.append(product)
+
+    return category_products
+
+
 
 class indexList(ListView):
     model = Product
@@ -27,20 +39,29 @@ class indexList(ListView):
         for category in categories:
             if category.is_root():
                 root_categories.append(category)
-
+        
+        
 
         context['categories'] = root_categories
         return context
 
 class Subscribe(TemplateView):
-    template_name = 'core/subscription_plans.html'
+    template_name = 'core/pricing.html'
 
 class FashionCategory(DetailView):
     template_name = 'core/Fashion/Fashion.html'
     context_object_name = 'Fashion'
 
     def get_object(self) :
-        return Category.objects.get(name='Fashion')
+        self.category = Category.objects.get(name='Fashion')
+        return self.category
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        context['category_products'] = get_category_products(self.category)
+        print(context)
+        return context
 
 class SignUp(CreateView):
     model = User
