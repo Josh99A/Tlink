@@ -1,20 +1,20 @@
 {% extends 'core/base.html' %}
 
 {% block main-content %}
+{% include 'core/partials/payment_modal.html' with modal_id="basic_sub"  subscription="basic" %}
+{% include 'core/partials/payment_modal.html' with modal_id="premium_sub"  subscription="premium" %}
+{% include 'core/partials/payment_modal.html' with modal_id="enterprise_sub"  subscription="enterprise" %}
 <div class="container-fluid pricing-body">
 <div style="height: 100px; margin-bottom: 20px;"></div>
    <div class=" d-flex align-items-center justify-content-center">
-    <style>
-        
-    </style>
-
+    
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mb-4"><!--Basic plan-->
                 <div class="card">
                     <div class="card-header text-center d-block">
-                        <h4 class="card-title ">Basic Plan</h4>
-                        <h5><sup>UGX</sup>1000 unlimited <!--<span> / month</span>--> </h5>
+                        <h4 class="card-title display-6 fw-bold">Basic Plan</h4>
+                        <h5 class="has-text-success fw-bold"><sup>UGX</sup>1000/unlimited </h5>
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between">Feauture 1<i class="bi bi-check-circle-fill available"></i></li>
@@ -24,14 +24,14 @@
                         <li class="list-group-item d-flex justify-content-between">Feauture 5<i class="bi bi-check-circle-fill available"></i></li>
                         <li class="list-group-item d-flex justify-content-between">Feature 6<i class="bi bi-x-circle-fill unavailable"></i></li>
                     </ul>
-                    <a href="" class="btn btn-primary">Buy Now</a>
+                    <button  class="btn is-fullwidth btn-primary fw-bold fs-5 " data-bs-toggle="modal" data-bs-target="#basic_sub">Buy Now</button>
                 </div>
             </div><!--End of basic plan-->
             <div class="col-lg-4 mb-4"><!--Basic plan-->
                 <div class="card">
                     <div class="card-header text-center d-block">
-                        <h4 class="card-title ">Premium Plan</h4>
-                        <h5><sup>UGX</sup>50,000 <span> / month</span> </h5>
+                        <h4 class="card-title display-6 fw-bold">Premium Plan</h4>
+                        <h5 class="has-text-success fw-bold"><sup>UGX</sup>50,000 <span> / month</span> </h5>
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between">Feauture 1<i class="bi bi-check-circle-fill available"></i></li>
@@ -41,14 +41,14 @@
                         <li class="list-group-item d-flex justify-content-between">Feauture 5<i class="bi bi-check-circle-fill available"></i></li>
                         <li class="list-group-item d-flex justify-content-between">Feature 6<i class="bi bi-x-circle-fill unavailable"></i></li>
                     </ul>
-                    <a href="" class="btn btn-primary">Buy Now</a>
+                    <button  class="btn is-fullwidth btn-primary fw-bold fs-5" data-bs-toggle="modal" data-bs-target="#premium_sub">Buy Now</button>
                 </div>
             </div><!--End of basic plan-->
             <div class="col-lg-4 mb-4"><!--Basic plan-->
                 <div class="card">
                     <div class="card-header text-center d-block">
-                        <h4 class="card-title ">Enterise Plan</h4>
-                        <h5><sup>UGX</sup>100,000 <span> / month</span> </h5>
+                        <h4 class="card-title display-6 fw-bold">Enterise Plan</h4>
+                        <h5 class="has-text-success fw-bold"><sup>UGX</sup>100,000 <span> / month</span> </h5>
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between">Feauture 1<i class="bi bi-check-circle-fill available"></i></li>
@@ -58,7 +58,7 @@
                         <li class="list-group-item d-flex justify-content-between">Feauture 5<i class="bi bi-check-circle-fill available"></i></li>
                         <li class="list-group-item d-flex justify-content-between">Feature 6<i class="bi bi-check-circle-fill available"></i></li>
                     </ul>
-                    <a href="" class="btn btn-primary">Buy Now</a>
+                    <button  class="btn is-fullwidth btn-primary fw-bold fs-5" data-bs-toggle="modal" data-bs-target="#enterprise_sub">Buy Now</button>
                 </div>
             </div><!--End of basic plan-->
         </div>
