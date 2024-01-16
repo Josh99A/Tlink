@@ -1,8 +1,112 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
-{% block main_content %}
-<div style="height: 100px; margin-bottom: 20px;"></div>
+{% block main-content %}
+<div style="height: 100px; margin-bottom: 20px;" ></div>
 <div class="settings_body container-fluid">
+    <style>
+        .profile-image{
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            border: 6px solid rgba(255, 255, 255, 0.15);
+            margin: 5px auto;
+        }
+    </style>
+    <nav aria-label="breadcrumb d-inline-block">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'core:index' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <a href="{% url 'store:settings' %}">Settings</a>
+            </li>
+        </ol>
+     </nav>
     
+     <h3 class="me-auto">Account Settings</h3>
+     <hr>
+    <div class="d-flex justify-content-sm-end justify-content-center flex-wrap-wrap">
+        <div class=""> 
+            <img src="{{ user.profile.url }}" alt="" class="profile-image img-fluid" id="profileImage">
+        </div>
+        <form action="" class=" pt-container align-self-center ">
+            {% csrf_token%}
+            <label for="imageInput">
+                <a class="btn btn-primary text-white fw-bold" id="updateImageButton">Edit image</a>
+                <input type="file" name="profile-image" class="d-none" id="imageInput">
+            </label>
+        </form>
+    </div>
+    <script>
+        document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+        // document.getElementById('updateImageButton').addEventListener('click', handleImageUpload);
+
+        function handleImageUpload(){
+            const input = document.getElementById('imageInput');
+            const file = input.files[0];
+
+            const formData = new FormData();
+            formData.append('profile_image', file);
+
+            const csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+            fetch("{% url  'store:profile' %}", {
+                method: "POST",
+                body: formData,
+                headers:{
+                    'X-CSRFToken':csrftoken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const imageUrl = data.profile_image_url;
+                console.log(imageUrl)
+                updateBackendProfileImage(imageUrl);
+                updateFrontendProfileImage(imageUrl);
+            })
+            .catch(error => console.log('Error: ',error));
+        }
+
+        function updateFrontendProfileImage(imageUrl){
+            const profileImage = document.getElementById('profileImage');
+            // console.log(imageUrl)
+            profileImage.src = imageUrl;
+        }
+
+        function updateBackendProfileImage(imageUrl){
+            console.log({'image_url': imageUrl})
+            const csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            fetch("{% url 'store:update' %}", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken':csrftoken
+                },
+                body: JSON.stringify({profile_image_url: imageUrl}),
+            })
+            .then(response.json())
+            .then(data => {
+                console.log("Profile image updated on the backend: ", data);
+            })
+            .catch(error => console.error('Error', error));
+        }  
+    </script>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-store-tab" data-bs-toggle="tab" data-bs-target="#nav-store" type="button" role="tab" aria-controls="nav-store" aria-slected="true">Store settings</button>
+            <button class="nav-link " id="nav-userInfo-tab" data-bs-toggle="tab" data-bs-target="#nav-userInfo" type="button" role="tab" aria-controls="nav-userInfo" aria-slected="false">User settings</button>
+            <button class="nav-link " id="nav-referral-tab" data-bs-toggle="tab" data-bs-target="#nav-referral" type="button" role="tab" aria-controls="nav-referral" aria-slected="false">Referral settings</button>
+            <button class="nav-link " id="nav-makeMoney-tab" data-bs-toggle="tab" data-bs-target="#nav-makeMoney" type="button" role="tab" aria-controls="nav-makeMoney" aria-slected="false">How to make money with Tlink</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">Store</div>
+        <div class="tab-pane" id="nav-userInfo" role="tabpanel" aria-labelledby="nav-userInfo-tab" tabindex="0">UserInfo</div>
+        <div class="tab-pane" id="nav-referral" role="tabpanel" aria-labelledby="nav-referral-tab" tabindex="0">Referral</div>
+        <div class="tab-pane" id="nav-makeMoney" role="tabpanel" aria-labelledby="nav-makeMoney-tab" tabindex="0">MakeMoney</div>
+    </div>
+
+     <div style="height: 1000px;"></div>
 </div>
-{% endblock main_content %}
+{% endblock main-content %}
