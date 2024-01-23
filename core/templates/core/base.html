@@ -16,12 +16,14 @@
             <li class="nav-item">
               <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'core:index' %}">Home</a>
             </li>
+            {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="#">MyStore</a>
+              <a class="nav-link mx-lg-2" href="{% url 'store:store' user.shop.pk user.shop.get_slug %}">MyStore</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="{% url 'store:settings' %}">MySettings</a>
+              <a class="nav-link mx-lg-2" href="{% url 'store:settings' user.pk %}">MySettings</a>
             </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link mx-lg-2" href="{% url 'dashboard:index' %}">Dashboard</a>
             </li>

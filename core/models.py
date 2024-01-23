@@ -13,5 +13,7 @@ class User(AbstractUser):
     loation = models.CharField(max_length=2, choices=LOCATION_CHOICES)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     profile = models.ImageField(upload_to='profiles', default='blank-profile.png')
+    referral_code = models.TextField(max_length=6, unique=True)
+    referrals = models.ManyToManyField('self')
+    referral_url = models.URLField()
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE,  null=True, blank=True)
-

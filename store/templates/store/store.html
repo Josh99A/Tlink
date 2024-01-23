@@ -1,0 +1,300 @@
+{% extends 'core/base.html' %}
+{% load image_tags %}
+{% load i18n %}
+{% load static %}
+{% load currency_filters %}
+{% load purchase_info_tags %}
+{% load reviews_tags %}
+
+{% block main-content %}
+<div class="container-fluid">
+    <div style="height:100px; margin-bottom: 20px;" ></div> 
+    <style>
+
+    </style>
+  <div class="row">
+    <div class="card mb-3 ms-2" style="max-width: 500px;">
+        <div class="row g-0 my-3">
+            <div class="col-4">
+                <img src="{{ store.primary_image.url }}" alt="" class="img-fluid rounded-start">
+            </div>
+            <div class="col-8">
+                <div class="card-body">
+                    <h5 class="card-title ">{{ store.name }}</h5>
+                    <h6 class="fw-bold">Store Rating</h6>
+                    <div class="star-rating Three  me-auto">
+                        <i class="bi bi-star-fill "></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill "></i>
+                        <i class="bi bi-star-fill "></i>
+                        <i class="bi bi-star-fill"></i>
+                      </div>
+                      <h6 class="fw-bold">Seller's Score</h6>
+                      <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" style="width: 75%">75%</div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col text-center mt-md-4 ps-4 ">
+        <h4 class="display-3 fw-bold text-primary d-none d-md-block d-lg-block me-auto">Welcome to {{ store.name }}</h4>
+        <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-start mt-n3">
+                <i class="bi bi-whatsapp fs-3 has-text-success fw-bold mx-3"></i>
+                <i class="bi bi-facebook fs-3 has-text-info fw-bold mx-3"></i>
+                <i class="bi bi-instagram fs-3 has-text-danger fw-bold mx-3"></i>
+            </div>
+            <div class="d-flex flex-warp-nowrap">
+                <span class="text-danger fs-sm-6 fs-4 text-captialise ">5K followers</span>
+                <a href="" class="mx-2 fs-3"><i class="bi bi-heart-fill"></i></a>
+            </div>
+        </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-4 col-lg-3 card">
+        <dic class="card-header">
+            <h3>Quick access</h3>
+        </dic>
+        <div class="card-body">
+            <form action="">
+               <div class="input-group">
+                <button class="input-group-text" id="search-addon"><i class="bi bi-search"></i></button>
+                <input type="search" class="form-control" list="datalistOptions" placeholder="Search product or category" aria-label="Product or category search" aria-describedby="search-addon"> 
+                <datalist id="datalistOptions">
+                    <option value="T-shirts">
+                    <option value="Bras">
+                    <option value="Jackets">
+                </datalist>
+               </div> 
+            </form>
+
+           <div class="mt-2">
+            <h3 class="text-center">Tags</h3>
+            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">T-shirts</botton>
+            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">Bras</botton>
+            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">Shoes</botton>
+            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">Belts</botton>
+           </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-lg-9">
+        <h5 class="text-center">Catalogue</h5>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a href="" class="nav-link active" aria-current="page">All products</a>
+            </li>
+            <li class="nav-item dropdown" >
+                <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Fashion</a>
+                <ul class="dropdown-menu">
+                    <li><a href="" class="dorpdown-item">Men's Fashion</li>
+                    <li><a href="" class="dorpdown-item">Women's Fashion</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="" class="nav-link" >Contact Seller</a>
+            </li>
+        </ul>
+        <div class="row products ms-3 my-4 ">
+            {% for product in products %}
+            <div class="col-lg-3 col-mb-4 col-5 card p-0 mx-1 my-2  ">
+              <div class=" card-image product-wrap ">
+                <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
+                <div class="product-info fs-3">
+                  <h4><a href="" class="text-white is-size-7-mobile">{% trans product.get_title %}</a></h4>
+                  <div class="product-links fs-4">
+                    <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                    <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body p-2 fw-bold ">
+                <h6 class="is-size-7-mobile" style="height: 30px;">{{ product.get_title | truncatewords:9 }}</h6>
+                <div class="text-center">
+                  {% purchase_info_for_product request product as session %}
+                  {% if session.price.exists %}
+                  <span class="has-text-success">{{session.price.incl_tax|currency:session.price.currency  }}</span>
+                  {% endif %}
+                  <div class="product-rating  me-auto">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                  </div>
+
+                  <a href=""><button class="btn text-primary fw-bold">View details</button></a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row my-3">
+    <div class="col-md-4 col-lg-3 card">
+        <div class="card-header">
+            <h3>Store Status</h3>
+        </div>
+    <div class="card-body">
+        <h4>Average Rating</h4>
+        <div class="store-rating  me-auto d-flex justify-content-between">
+            <i class="bi bi-star-fill text-warning fs-1"></i>
+            <i class="bi bi-star-fill text-warning fs-1"></i>
+            <i class="bi bi-star-fill text-warning fs-1"></i>
+            <i class="bi bi-star-fill text-warning fs-1"></i>
+            <i class="bi bi-star-fill fs-1"></i>
+        </div>
+        <hr>
+        <a href="">
+            <div class="store-rating  me-auto text-dark d-flex">
+                <i class="bi bi-star-fill text-warning fs-6 mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <span class="fw-bold fs-5  ms-4">(3)</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="store-rating  me-auto text-dark d-flex">
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <span class="fw-bold fs-5 ms-4">(4)</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="store-rating  me-auto text-dark d-flex">
+                <i class="bi bi-star-fill text-warning fs-6 mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <span class="fw-bold fs-5 ms-4">(5)</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="store-rating  me-auto text-dark d-flex">
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <span class="fw-bold fs-5 ms-4">(2)</span>
+            </div>
+        </a>
+        <a href="">
+            <div class="store-rating  me-auto text-dark d-flex">
+                <i class="bi bi-star-fill text-warning fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <i class="bi bi-star-fill  fs-6  mx-2"></i>
+                <span class="fw-bold fs-5 ms-4">(1)</span>
+            </div>
+        </a>
+
+    </div>
+
+    </div>
+    <div class="col-md-8 col-lg-9 pt-3 my-3">
+        <h1 class="text-center">Store Comments</h1>
+        <article class="media">
+            <figure class="media-left">
+                <p class="image is-64x64">
+                    <img src="{% static 'core\Images\Fashion\8414ce16fab38c2c8ee81096b7b70092.jpg' %}" alt="">
+                </p>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <div class="d-flex justify-content-between">
+                            <strong>Barbra Middleton</strong>
+                            <div class="store-rating   text-dark d-flex">
+                                <i class="bi bi-star-fill text-warning fs-4  mx-2"></i>
+                                <i class="bi bi-star-fill  fs-4 mx-2"></i>
+                                <i class="bi bi-star-fill  fs-4  mx-2"></i>
+                                <i class="bi bi-star-fill  fs-4  mx-2"></i>
+                                <i class="bi bi-star-fill  fs-4  mx-2"></i>
+                            </div>
+                        </div>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ducimus.</p>
+                       <div class="d-flex flex-warp-nowrap ">
+                        <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>.
+                        <small class="fs-6"><a href="" class="text-dark"><i class="bi bi-reply-fill  "></i>Reply(4)</a></small>
+                       </div>
+                    </p>
+
+                </div>
+            </div>
+        </article>
+        <hr>
+        <div class="media">
+            {% if user.is_authenticated %}
+            <figure class="media-left">
+                <p class="image is-64x64">
+                    <img src="{{ user.profile.url }}" alt="Profile Image">
+                </p>
+            </figure>
+            {% endif %}
+            <div class="media-content">
+                <form action="">
+                    {% csrf_token %}
+                    {% if commnetForm.errors %}
+                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                        {% for field in commentForm %}
+                        {% if field.errors %}
+                        {{field.label_tag}}
+                        {{field.errors}}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="col-md-6">
+                        <label for="{{commnetForm.title.id_for_label}}" class="form-label fw-bold  {% if commentForm.title.error %} tex-danger {% else %} text-dark {% endif %}">Title:</label>
+                        {{ commentForm.title }}
+                    </div>
+                    <div class="col-md-12 my-3 store-rating">
+                        <label for="{{commentForm.score.id_for_label}}" class="form-label fw-bold {% if commentForm.score.error %} tex-danger {% else %} text-dark {% endif %}">Rate Store:</label>
+                        {{commentForm.score}}
+                        <div class="star-rating d-flex">
+                            <i class="bi bi-star-fill  fs-3  mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3 mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3  mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3  mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3  mx-2"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{commnetForm.message.id_for_label}}" class="form-label fw-bold  {% if commentForm.message.error %} tex-danger {% else %} text-dark {% endif %}">Comment:</label>
+                        {{ commentForm.message }}
+                    </div>
+                    <script>
+                        // Handle Rating
+                        var ratings = $('.store-rating')
+                        console.log(ratings)
+                        if(ratings.length){
+                            ratings.find('.star-rating i').on('click', starFunc)
+                        }
+
+                        function starFunc(){
+                            console.log('Run func')
+                        var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
+                        $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
+                        $(this).closest('.col-md-12').find('select').val($(this).index() + 1); //select is hidden, set value
+                        }
+    
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock main-content %}

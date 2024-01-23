@@ -1,32 +1,91 @@
-from django.shortcuts import render
+from typing import Any
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import JsonResponse
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, DetailView
+from django.views.generic.edit import FormView
+from django.views.generic.detail import SingleObjectMixin
+from .forms import StoreForm, CommentForm
+from core.models import User
+from .models import Store
 
-class SettingsView(TemplateView):
+class SettingsView(DetailView):
+    model= User
     template_name = 'store/settings.html'
 
+    def get(self, request, *args, **kwargs):
+        print("Started get request")
+        # Get the user shop 
+        try: 
+            user_shop = Store.objects.get(owner=request.user)
+        except (User.shop.RelatedObjectDoesNotExist, Store.DoesNotExist):
+            # create if it does not exist
+            user_shop = Store(owner=request.user, primary_image=request.user.profile)
+            user_shop.save() 
 
-class ProfileImageView(View):
+
+        self.form = StoreForm(instance=user_shop)
+
+        return super().get(request,*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['storeForm'] = self.form
+        return context
+
+class StoreCreationView(SingleObjectMixin, FormView):
+    template_name = 'store/settings.html'
+    form_class = StoreForm
+    model = User
+
     def post(self, request, *args, **kwargs):
-        upload_image = request.FILES.get('profile_image')
-
-        profile_image_url = '/media/profiles/' + str(upload_image)
-
-
-        return JsonResponse({'profile_image_url': profile_image_url})
-
-class UpdateProfileImageView(View):
-    def post(self, request, *args, **kwargs):
-        print(request.POST)
-        profile_image_url = request.POST.get('profile_image_url')
-
-        if profile_image_url:
-            request.user.profile = profile_image_url
-            request.user.save()
+        storeForm = self.form_class(request.POST, request.FILES, instance=request.user.shop)
+        self.object = self.get_object()
+        if storeForm.is_valid():
+           store = storeForm.save(commit=False)
+           store.staff.add(request.user)
+           store.slug = store.get_slug()
+           store.save()
+           return redirect(reverse('store:settings', kwargs={'pk':self.object.pk}))
         else:
-            print('Not found')
-            print(profile_image_url)
-        return JsonResponse({'message': 'Profile image updated successfully'})
+            context = self.get_context_data(storeForm=storeForm)
+            return render(request, 'store/settings.html', context)
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        for kw in kwargs:
+            context[kw] = kwargs[kw]
+        return context
+        
+    
+
+
+    
+class UploadProfileImageView(View):
+    def post(self, request, *args, **kwargs):
+        print(request.FILES)
+        print(request.user.profile)
+        new_image = request.FILES.get('profile-image')
+
+        request.user.profile = new_image
+        request.user.save()
+        # Update Store image
+        if hasattr(request.user, 'shop'):
+            request.user.shop.primary_image = request.user.profile
+            request.user.shop.save()
+        new_image_url = request.user.profile.url
+
+        return JsonResponse({'new_image': new_image_url })
 
 
 
+class StoreView(DetailView):
+    model=Store
+    template_name='store/store.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['commentForm'] = CommentForm()
+        context['products'] = context['store'].products.all()
+        print(context)
+        return context

@@ -445,4 +445,42 @@ li {
 }
 
 
-/* Settings */
+/* Rating */
+.star-rating {
+    color: #ced4da;
+}
+
+.star-rating i {
+    letter-spacing: -1px;
+    width: auto;
+}
+
+.star-rating a {
+    margin-left: 10px;
+}
+
+.star-rating.One i:first-child {
+    color: #ffc107;
+}
+
+.star-rating.Two i:first-child,
+.star-rating.Two i:first-child+i {
+    color: #ffc107;
+}
+
+.star-rating.Three i:first-child,
+.star-rating.Three i:first-child+i,
+.star-rating.Three i:first-child+i+i {
+    color: #ffc107;
+}
+
+.star-rating.Four i:first-child,
+.star-rating.Four i:first-child+i,
+.star-rating.Four i:first-child+i+i,
+.star-rating.Four i:first-child+i+i+i {
+    color: #ffc107;
+}
+
+.star-rating.Five i {
+    color: #ffc107;
+}

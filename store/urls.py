@@ -4,7 +4,8 @@ from . import views
 
 app_name='store'
 urlpatterns = [
-    path('settings/', views.SettingsView.as_view(), name='settings'),
-    path('change-profile-format/', views.ProfileImageView.as_view(), name='profile'),
-    path('update-profile/', views.UpdateProfileImageView.as_view(), name='update')
+    path('<int:pk>/settings/', views.SettingsView.as_view(), name='settings'),
+    path('<int:pk>/<slug:slug>/store', views.StoreView.as_view(), name='store'),
+    path('upload-profile-image/', views.UploadProfileImageView.as_view(), name='profile_upload'),
+    path('<int:pk>/create/store/settings', views.StoreCreationView.as_view(),  name="createStore")
 ]

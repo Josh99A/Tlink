@@ -1,9 +1,11 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load image_tags %}
 
 {% block main-content %}
 <div style="height: 100px; margin-bottom: 20px;" ></div>
 <div class="settings_body container-fluid">
+    
     <style>
         .profile-image{
             width: 12rem;
@@ -19,7 +21,7 @@
                 <a href="{% url 'core:index' %}">Home</a>
             </li>
             <li class="breadcrumb-item active">
-                <a href="{% url 'store:settings' %}">Settings</a>
+                <a href="{% url 'store:settings' user.pk %}">Settings</a>
             </li>
         </ol>
      </nav>
@@ -30,67 +32,33 @@
         <div class=""> 
             <img src="{{ user.profile.url }}" alt="" class="profile-image img-fluid" id="profileImage">
         </div>
-        <form action="" class=" pt-container align-self-center ">
+        <form  class=" pt-container align-self-center " id="profileForm">
             {% csrf_token%}
             <label for="imageInput">
-                <a class="btn btn-primary text-white fw-bold" id="updateImageButton">Edit image</a>
-                <input type="file" name="profile-image" class="d-none" id="imageInput">
+                <span class="btn btn-primary text-white fw-bold" id="updateImageButton">Edit image</span>
+                <input type="file" name="profile-image" class="d-none" id="imageInput" onchange="uploadImage()">
             </label>
         </form>
     </div>
     <script>
-        document.getElementById('imageInput').addEventListener('change', handleImageUpload);
-        // document.getElementById('updateImageButton').addEventListener('click', handleImageUpload);
+        function uploadImage(){
+            const form = document.getElementById('profileForm')
+            const formData = new FormData(form)
 
-        function handleImageUpload(){
-            const input = document.getElementById('imageInput');
-            const file = input.files[0];
-
-            const formData = new FormData();
-            formData.append('profile_image', file);
-
-            const csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-
-            fetch("{% url  'store:profile' %}", {
-                method: "POST",
+            fetch("{% url 'store:profile_upload' %}", {
+                method: 'POST',
                 body: formData,
                 headers:{
-                    'X-CSRFToken':csrftoken
-                }
+                    'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                },
             })
             .then(response => response.json())
             .then(data => {
-                const imageUrl = data.profile_image_url;
-                console.log(imageUrl)
-                updateBackendProfileImage(imageUrl);
-                updateFrontendProfileImage(imageUrl);
+                console.log(data);
+                document.getElementById('profileImage').src = data.new_image
             })
-            .catch(error => console.log('Error: ',error));
+            .catch(error => console.error('Error:', error))
         }
-
-        function updateFrontendProfileImage(imageUrl){
-            const profileImage = document.getElementById('profileImage');
-            // console.log(imageUrl)
-            profileImage.src = imageUrl;
-        }
-
-        function updateBackendProfileImage(imageUrl){
-            console.log({'image_url': imageUrl})
-            const csrftoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-            fetch("{% url 'store:update' %}", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken':csrftoken
-                },
-                body: JSON.stringify({profile_image_url: imageUrl}),
-            })
-            .then(response.json())
-            .then(data => {
-                console.log("Profile image updated on the backend: ", data);
-            })
-            .catch(error => console.error('Error', error));
-        }  
     </script>
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -101,7 +69,143 @@
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">Store</div>
+        <div class="tab-pane fade show active" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
+            <div class="container-fluid">
+            <form action="{% url 'store:createStore' pk=user.id %}" method="POST" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-end mt-3 mx-2">
+                        <button class="btn btn-primary" type="submit">Save changes</button>
+                    </div>
+                    {% if storeForm.errors %}
+                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                        {% for field in storeForm %}
+                        {% if field.errors %}
+                        {{field.label_tag}}
+                        {{field.errors}}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h3>About Store</h3>
+                    </div> 
+                <div class="my-2">
+                    {{storeForm.no_field_errors}}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ storeForm.name.id_for_label }}" class="form-label fw-blod">Name:</label>
+                    {{storeForm.name}}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ storeForm.location.id_for_label }}" class="form-label fw-blod">Location:</label>
+                    {{storeForm.location}}
+                    <p>
+                        {{ storeForm.location.value }}
+                    </p>
+                </div>       
+                
+                <div class=" row my-3">
+                    <div>
+                        <h4>Upload shop site images</h4>
+                    </div> 
+                    
+                    <div class="col-md-3 bordered mt-2 col-6 ">
+                        {{storeForm.location_image1.errors}}
+                        <div class="card border {% if storeForm.location_image1.errors %} border-danger {% else %}border-primary{% endif %} border-4" id="card1">
+                            <div class="card-header text-center" id="imageName1">Location image 1</div>
+                            <div class="card-image">
+                            <img src="{% oscar_thumbnail user.shop.location_image1 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 1">
+                            <div class="card-body">
+                              <label for="{{storeForm.location_image1.id_for_label }}">
+                                <a class="btn btn-primary">Edit image</a>
+                                <div class="d-none">
+                                    {{ storeForm.location_image1 }}
+                                </div>
+                              </label>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 bordered  mt-2 col-6 ">
+                        {{storeForm.location_image2.errors}}
+                        <div class="card border border-primary border-4" id="card2">
+                            <div class="card-header text-center" id="imageName2">Location image 2</div>
+                            <div class="card-image">
+                                <img src="{% oscar_thumbnail user.shop.location_image2 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 2">
+                            <div class="card-body">
+                              <label for="{{storeForm.location_image2.id_for_label }}">
+                                <a class="btn btn-primary">Edit image</a>
+                                <div class="d-none">
+                                    {{ storeForm.location_image2 }}
+                                </div>
+                              </label>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 bordered  mt-2 col-6">
+                        {{storeForm.location_image3.errors}}
+                        <div class="card border border-primary border-4" id="card3">
+                            <div class="card-header text-center" id="imageName3">Location image 3</div>
+                            <div class="card-image">
+                                <img src="{% oscar_thumbnail user.shop.location_image3 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 3">
+                            <div class="card-body">
+                              <label for="{{storeForm.location_image3.id_for_label }}">
+                                <a class="btn btn-primary">Edit image</a>
+                                <div class="d-none">
+                                    {{ storeForm.location_image3}}
+                                </div>
+                              </label>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 bordered  mt-2 col-6">
+                        {{storeForm.location_image4.errors}}
+                        <div class="card border border-primary border-4" id="card4">
+                            <div class="card-header text-center" id="imageName4">Location image 4</div>
+                            <div class="card-image">
+                                <img src="{% oscar_thumbnail user.shop.location_image4 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 4">
+                            <div class="card-body">
+                              <label for="{{storeForm.location_image4.id_for_label }}">
+                                <a class="btn btn-primary">Edit image</a>
+                                <div class="d-none">
+                                    {{ storeForm.location_image4 }}
+                                </div>
+                              </label>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                       
+                       function  imageUploaded(elem, cardid, imageNamediv){
+                        card = document.getElementById(cardid)
+                        divName = document.getElementById(imageNamediv)
+                        
+                  
+                        if (elem.files[0]){
+                            originalName = divName.textContent
+                           card.className =  card.className.replace('border-primary', 'border-success ')
+                           divName.innerHTML = elem.files[0].name
+
+                        } else {
+                           card.className =  card.className.replace('border-success', 'border-primary ')
+                           divName.innerHTML = originalName
+                           console.log(originalName)
+                        }
+                       }
+                    </script>
+
+                </div>
+                <div class="d-block fullwidth">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+                
+            </form>
+        </div>
+        </div>
         <div class="tab-pane" id="nav-userInfo" role="tabpanel" aria-labelledby="nav-userInfo-tab" tabindex="0">UserInfo</div>
         <div class="tab-pane" id="nav-referral" role="tabpanel" aria-labelledby="nav-referral-tab" tabindex="0">Referral</div>
         <div class="tab-pane" id="nav-makeMoney" role="tabpanel" aria-labelledby="nav-makeMoney-tab" tabindex="0">MakeMoney</div>
