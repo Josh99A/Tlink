@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from core.models import User
 from datetime import datetime
@@ -44,12 +43,3 @@ class Comment(models.Model):
     def __str__(self):
         return self.title
     
-    
-    def clean(self):
-        if  self.store.owner == self.user:
-            raise ValidationError("You cannot comment on your own store")
-        if not self.user.id:
-            raise ValidationError("Only signed-in users can comment on stores")
-        previous_comments = self.store.commnets.filter(user=self.user)
-        if len(previous_comments) > 0:
-                raise ValidationError("You can only comment once on a store")

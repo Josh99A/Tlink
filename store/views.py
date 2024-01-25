@@ -1,7 +1,7 @@
 from typing import Any
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView, View, DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
@@ -49,7 +49,7 @@ class StoreCreationView(SingleObjectMixin, FormView):
            return redirect(reverse('store:settings', kwargs={'pk':self.object.pk}))
         else:
             context = self.get_context_data(storeForm=storeForm)
-            return render(request, 'store/settings.html', context)
+            return render(request, self.template_name, context)
     
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -63,8 +63,6 @@ class StoreCreationView(SingleObjectMixin, FormView):
     
 class UploadProfileImageView(View):
     def post(self, request, *args, **kwargs):
-        print(request.FILES)
-        print(request.user.profile)
         new_image = request.FILES.get('profile-image')
 
         request.user.profile = new_image
@@ -85,7 +83,37 @@ class StoreView(DetailView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['commentForm'] = CommentForm()
+        self.object = self.get_object()
+        print('Object', self.object)
+        context['commentForm'] = CommentForm(store=self.object, user=self.request.user)
         context['products'] = context['store'].products.all()
         print(context)
         return context
+
+class StoreCommentView(SingleObjectMixin, View):
+    model=Store
+    form_class = CommentForm
+    template_name = 'store/store.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object() 
+        commentForm = self.form_class(data=request.POST, store=self.object, user=request.user)
+       
+ 
+        if commentForm.is_valid():
+            comment = commentForm.save(commit=False)
+            comment.store = self.object
+            comment.user = request.user
+            comment.save()
+            return redirect(reverse('store:store', kwargs={'pk':self.object.pk, 'slug':self.object.get_slug()}))
+        else:
+            context = self.get_context_data(commentForm=commentForm)
+            return render(request, self.template_name, context)
+
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        for kw in kwargs:
+            context[kw] = kwargs[kw]
+        return context
+

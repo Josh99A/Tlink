@@ -9,9 +9,7 @@
 {% block main-content %}
 <div class="container-fluid">
     <div style="height:100px; margin-bottom: 20px;" ></div> 
-    <style>
-
-    </style>
+   
   <div class="row">
     <div class="card mb-3 ms-2" style="max-width: 500px;">
         <div class="row g-0 my-3">
@@ -244,18 +242,20 @@
             </figure>
             {% endif %}
             <div class="media-content">
-                <form action="">
+                <form action="{% url 'store:comment' store.pk store.slug %}" method="POST" >
                     {% csrf_token %}
-                    {% if commnetForm.errors %}
-                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                    {% if commentForm.errors %}
+                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6 text-secondary">
                         {% for field in commentForm %}
                         {% if field.errors %}
                         {{field.label_tag}}
                         {{field.errors}}
                         {% endif %}
                         {% endfor %}
+                        {{commentForm.non_field_errors}}
                     </div>
                     {% endif %}
+              
                     <div class="col-md-6">
                         <label for="{{commnetForm.title.id_for_label}}" class="form-label fw-bold  {% if commentForm.title.error %} tex-danger {% else %} text-dark {% endif %}">Title:</label>
                         {{ commentForm.title }}
@@ -263,7 +263,7 @@
                     <div class="col-md-12 my-3 store-rating">
                         <label for="{{commentForm.score.id_for_label}}" class="form-label fw-bold {% if commentForm.score.error %} tex-danger {% else %} text-dark {% endif %}">Rate Store:</label>
                         {{commentForm.score}}
-                        <div class="star-rating d-flex">
+                        <div class="star-rating {{commentForm.instance.score|as_stars }} d-flex">
                             <i class="bi bi-star-fill  fs-3  mx-2"></i>
                             <i class="bi bi-star-fill  fs-3 mx-2"></i>
                             <i class="bi bi-star-fill  fs-3  mx-2"></i>
@@ -275,26 +275,29 @@
                         <label for="{{commnetForm.message.id_for_label}}" class="form-label fw-bold  {% if commentForm.message.error %} tex-danger {% else %} text-dark {% endif %}">Comment:</label>
                         {{ commentForm.message }}
                     </div>
-                    <script>
-                        // Handle Rating
-                        var ratings = $('.store-rating')
-                        console.log(ratings)
-                        if(ratings.length){
-                            ratings.find('.star-rating i').on('click', starFunc)
-                        }
-
-                        function starFunc(){
-                            console.log('Run func')
-                        var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
-                        $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
-                        $(this).closest('.col-md-12').find('select').val($(this).index() + 1); //select is hidden, set value
-                        }
-    
-                    </script>
+                   <div class="d-grid col-6 mx-auto my-3">
+                    <button class="btn btn-primary rounded fw-bold" type="submit">Post Comment</button>
+                   </div>
                 </form>
             </div>
         </div>
     </div>
   </div>
+  <script>
+    // Handle Rating
+    var ratings = $('.store-rating')
+    console.log(ratings)
+    if(ratings.length){
+        ratings.find('.star-rating i').on('click', starFunc)
+    }
+
+    function starFunc(){
+        console.log('Run func')
+    var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
+    $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
+    $(this).closest('.col-md-12').find('select').val($(this).index() + 1); //select is hidden, set value
+    }
+
+</script>
 </div>
 {% endblock main-content %}
