@@ -12,6 +12,7 @@ class Store(models.Model):
     owner = models.OneToOneField(User, related_name="shop", on_delete=models.CASCADE)
     location = models.CharField(max_length=20, choices=location_choices)
     staff = models.ManyToManyField(User, related_name='stores')
+    is_active = models.BooleanField(default=False)
     products = models.ManyToManyField(Product, related_name='store', blank=True)
     slug = models.SlugField()
     date_created = models.DateField('Date created', auto_now_add=True)

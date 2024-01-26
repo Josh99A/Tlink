@@ -117,3 +117,7 @@ class StoreCommentView(SingleObjectMixin, View):
             context[kw] = kwargs[kw]
         return context
 
+
+class DashBoardView(TemplateView):
+    template_name = 'store/dashboard.html'
+

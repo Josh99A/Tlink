@@ -2,6 +2,7 @@ from typing import Any
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView,  View, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from apps.catalogue.models import Product
@@ -62,6 +63,8 @@ class FashionCategory(DetailView):
         context['category_products'] = get_category_products(self.category)
         print(context)
         return context
+    
+
 
 class SignUp(CreateView):
     model = User
