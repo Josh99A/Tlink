@@ -1,0 +1,486 @@
+a,
+a:hover {
+    text-decoration: none;
+}
+
+.primary-nav.navbar {
+    height: 80px;
+    margin: 20px;
+    border-radius: 16px;
+    padding: 0.5rem;
+}
+
+.primary-nav .login_or_register_action_btn {
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    transition: 0.3 background-color;
+}
+
+.primary-nav .navbar-brand {
+    font-weight: 500;
+    color: #0d6efd;
+    font-size: 24px;
+    transition: 0.3s color;
+}
+
+.primary-nav .navbar-toggler {
+    border: none;
+    font-size: 1.25rem;
+}
+
+.navbar-toggler:focus,
+.btn-close:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.primary-nav .nav-link {
+    font-weight: 500;
+    position: relative;
+}
+
+@media(min-width:991px) {
+
+    .primary-nav .nav-link::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background-color: #0d6efd;
+        visibility: hidden;
+        transition: 0.3s ease-in-out;
+    }
+
+    .primary-nav .nav-link:hover::before,
+    .primary-nav .nav-link.active::before {
+        width: 100%;
+        visibility: visible;
+    }
+}
+
+
+
+.carousel-item {
+    position: relative;
+    height: 100vh;
+}
+
+.dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media(max-width:575.98px) {
+    .carousel-item {
+        height: 80vh;
+    }
+
+    .carousel-caption {
+        position: absolute;
+        top: 56% !important;
+    }
+
+    .carousel-caption h3 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+
+    .carousel-item .fs-6 {
+        font-size: 0.73rem !important;
+    }
+}
+
+.carousel-item .img-fluid {
+    height: 100% !important;
+}
+
+
+.carousel-caption {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+}
+
+.carousel-inner {
+    position: relative;
+}
+
+.main-header {
+    position: absolute;
+    z-index: 2;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    text-align: center;
+}
+
+.mtn-momo-panel {
+    background-color: rgb(54, 54, 52);
+    border-radius: 10px;
+}
+
+.airtel-momo-panel {
+    border-radius: 10px;
+    background-color: red;
+}
+
+
+li {
+    list-style: none !important;
+}
+
+.image-container {
+    position: relative;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.image-container::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    transition: 0.3s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.6);
+
+}
+
+.image-container .image-info {
+    text-transform: capitalize;
+    z-index: 4;
+    position: absolute;
+    top: 40%;
+    left: 12%;
+}
+
+
+.image-container img {
+    transition: 0.3s ease-in-out;
+}
+
+.image-container:hover img {
+    transform: scale(1.1);
+}
+
+.image-container:hover .image-info {
+    display: none;
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    right: 15px;
+    bottom: 15px;
+    z-index: 996;
+    background: #0d6efd;
+    width: 40px;
+    height: 40px;
+    transition: all 0.4s;
+}
+
+.back-to-top i {
+    font-size: 28px;
+    color: #fff;
+    line-height: 0;
+}
+
+.back-to-top:hover {
+    background: #60ccdc;
+    color: #fff;
+}
+
+.back-to-top.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Fashion banner */
+.fashion-banner {
+    background-image: url(../Images/black-woman-and-man-jumping.jpg);
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top center;
+    background-attachment: fixed;
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+.td-cards:hover img {
+    transition: 0.3s ease-in-out;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Popular Stores card section */
+.ps-image {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    border: 6px solid rgba(255, 255, 255, 0.15);
+    margin: 5px auto;
+
+}
+
+.ps-card-header {
+    height: 65px;
+    overflow-y: auto;
+}
+
+/* Electronics section */
+.electronics-banner {
+    background: url(../Images/Electronics/gadgets.jpg) center/cover no-repeat;
+}
+
+.electronics-banner .row {
+    min-height: 60vh;
+}
+
+/* Supermarket section */
+
+.supermarket-banner {
+    background: url(../Images/Supermarket/veges.jpg) center/cover no-repeat;
+    position: relative;
+}
+
+.supermarket-banner .row {
+    min-height: 60vh;
+
+}
+
+.supermarket-banner .supermarket-banner-content {
+    z-index: 1;
+}
+
+/* Scholastic section */
+.scholastic-banner {
+    background-image: url(../Images/Scolastic/small-girl-with-pencil.jpg);
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+.scholastic-banner .row {
+    min-height: 40vh;
+}
+
+/* Product styling */
+.products .product-wrap {
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    background: rgba(85, 98, 112, 0.6);
+}
+
+.products .product-wrap::before {
+    content: "";
+    background: rgba(85, 98, 112, 0.6);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transition: all ease-in-out 0.3s;
+    z-index: 2;
+    opacity: 0;
+}
+
+.products .product-wrap img {
+    transition: all ease-in-out 0.3s;
+}
+
+.products .product-wrap .product-info {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    transition: all ease-in-out 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+
+
+.products .product-wrap .product-links {
+    text-align: center;
+    z-index: 4;
+}
+
+.products .product-wrap .product-links a {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 5px 0 0;
+    font-size: 28px;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.products .product-wrap .product-links a:hover {
+    color: #0d6efd;
+}
+
+.products .product-wrap:hover::before {
+    opacity: 1;
+}
+
+.products .product-wrap:hover img {
+    transform: scale(1.2);
+}
+
+.products .product-wrap:hover .product-info {
+    opacity: 1;
+}
+
+
+.fashion-main-banner {
+    background: url(../Images/Fashion/unisex-fashion-image.jpg) top/cover no-repeat;
+    min-height: 40vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.fashion-main-banner::before {
+    content: "";
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+}
+
+.fashion-header-info {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 15%;
+}
+
+@media(min-width: 540px) {
+    .fashion-header-info {
+        left: 35%;
+    }
+}
+
+.swiper-pagination .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+}
+
+.swiper-pagination .swiper-pagination-bullet-active {
+
+    background-color: #0d6efd;
+}
+
+/* Pricing page */
+.pricing-body {
+    background: url(../Images/blue-bg-happy-family.jpg) center/cover fixed no-repeat;
+    height: 100vh;
+    margin: 0;
+    overflow: auto;
+
+}
+
+@media(min-width:991px) {
+    .pricing-body {
+        max-height: inherit;
+    }
+}
+
+.pricing-body .card {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.pricing-body .card:hover {
+    transform: scale(1.05);
+}
+
+.pricing-body .list-group-item i {
+    margin-right: 5px;
+}
+
+.pricing-body .available {
+    color: #28a745;
+}
+
+.pricing-body .unavailable {
+    color: #dc3545;
+}
+
+
+/* Rating */
+.star-rating {
+    color: #ced4da;
+}
+
+.star-rating i {
+    letter-spacing: -1px;
+    width: auto;
+}
+
+.star-rating a {
+    margin-left: 10px;
+}
+
+.star-rating.One i:first-child {
+    color: #ffc107;
+}
+
+.star-rating.Two i:first-child,
+.star-rating.Two i:first-child+i {
+    color: #ffc107;
+}
+
+.star-rating.Three i:first-child,
+.star-rating.Three i:first-child+i,
+.star-rating.Three i:first-child+i+i {
+    color: #ffc107;
+}
+
+.star-rating.Four i:first-child,
+.star-rating.Four i:first-child+i,
+.star-rating.Four i:first-child+i+i,
+.star-rating.Four i:first-child+i+i+i {
+    color: #ffc107;
+}
+
+.star-rating.Five i {
+    color: #ffc107;
+}

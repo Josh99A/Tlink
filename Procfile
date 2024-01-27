@@ -1,0 +1,1 @@
+web: gunicorn tlink_django.wsgi --log-file -
