@@ -10,7 +10,7 @@ from .forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from core.models import User
 
-from oscar.apps.catalogue.models import Category
+from apps.catalogue.models import Category
 
 
 def get_category_products(category):

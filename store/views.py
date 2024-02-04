@@ -2,12 +2,14 @@ from typing import Any
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
-from django.views.generic import TemplateView, View, DetailView
+from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
 from .forms import StoreForm, CommentForm
 from core.models import User
-from .models import Store
+from .models import Store, Product
+
+from apps.catalogue.models import Category
 
 class SettingsView(DetailView):
     model= User
@@ -118,6 +120,22 @@ class StoreCommentView(SingleObjectMixin, View):
         return context
 
 
-class DashBoardView(TemplateView):
-    template_name = 'store/dashboard.html'
+class DashBoardView(ListView):
+    model = Product
+    template_name = 'store/dashboard/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(*kwargs)
+
+        categories = Category.objects.all()
+        root_categories = []
+
+        for category in categories:
+            if category.is_root():
+                root_categories.append(category)
+        
+        
+
+        context['categories'] = root_categories
+        return context
 

@@ -1,5 +1,6 @@
-from oscar.apps.dashboard.catalogue.views import ProductCreateUpdateView 
-from .forms import ProductForm
+from oscar.apps.dashboard.catalogue.views import ProductCreateUpdateView , ProductClassCreateView as OscarProductClassCreateView
+
+from .forms import ProductForm, ProductClassForm
 
 
 class TlinkProductCreateUpdateView(ProductCreateUpdateView):
@@ -8,9 +9,15 @@ class TlinkProductCreateUpdateView(ProductCreateUpdateView):
 
 
     def form_valid(self, form ,*args, **kwargs):
-        print("Form is valid")
         form.instance.seller = self.request.user
 
         response = super().form_valid(form, *args, **kwargs)
 
         return response
+    
+class ProductClassCreateView(OscarProductClassCreateView):
+    form_class= ProductClassForm
+    
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+

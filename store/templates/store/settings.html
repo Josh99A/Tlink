@@ -4,7 +4,7 @@
 
 {% block main-content %}
 <div style="height: 100px; margin-bottom: 20px;" ></div>
-<div class="settings_body container-fluid">
+<div class="settings_body container-fluid my-4">
     
     <style>
         .profile-image{
@@ -40,32 +40,13 @@
             </label>
         </form>
     </div>
-    <script>
-        function uploadImage(){
-            const form = document.getElementById('profileForm')
-            const formData = new FormData(form)
-
-            fetch("{% url 'store:profile_upload' %}", {
-                method: 'POST',
-                body: formData,
-                headers:{
-                    'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value,
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                document.getElementById('profileImage').src = data.new_image
-            })
-            .catch(error => console.error('Error:', error))
-        }
-    </script>
+   
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-store-tab" data-bs-toggle="tab" data-bs-target="#nav-store" type="button" role="tab" aria-controls="nav-store" aria-slected="true">Store settings</button>
-            <button class="nav-link " id="nav-userInfo-tab" data-bs-toggle="tab" data-bs-target="#nav-userInfo" type="button" role="tab" aria-controls="nav-userInfo" aria-slected="false">User settings</button>
-            <button class="nav-link " id="nav-referral-tab" data-bs-toggle="tab" data-bs-target="#nav-referral" type="button" role="tab" aria-controls="nav-referral" aria-slected="false">Referral settings</button>
-            <button class="nav-link " id="nav-makeMoney-tab" data-bs-toggle="tab" data-bs-target="#nav-makeMoney" type="button" role="tab" aria-controls="nav-makeMoney" aria-slected="false">How to make money with Tlink</button>
+            <button class="nav-link active" id="nav-store-tab" data-bs-toggle="tab" data-bs-target="#nav-store" type="button" role="tab" aria-controls="nav-store" aria-selected="true">Store settings</button>
+            <button class="nav-link " id="nav-userInfo-tab" data-bs-toggle="tab" data-bs-target="#nav-userInfo" type="button" role="tab" aria-controls="nav-userInfo" aria-selected="false">User settings</button>
+            <button class="nav-link " id="nav-referral-tab" data-bs-toggle="tab" data-bs-target="#nav-referral" type="button" role="tab" aria-controls="nav-referral" aria-selected="false">Referral settings</button>
+            <button class="nav-link " id="nav-makeMoney-tab" data-bs-toggle="tab" data-bs-target="#nav-makeMoney" type="button" role="tab" aria-controls="nav-makeMoney" aria-selected="false">How to make money with Tlink</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -99,9 +80,6 @@
                 <div class="col-md-6">
                     <label for="{{ storeForm.location.id_for_label }}" class="form-label fw-blod">Location:</label>
                     {{storeForm.location}}
-                    <p>
-                        {{ storeForm.location.value }}
-                    </p>
                 </div>       
                 
                 <div class=" row my-3">
@@ -211,6 +189,28 @@
         <div class="tab-pane" id="nav-makeMoney" role="tabpanel" aria-labelledby="nav-makeMoney-tab" tabindex="0">MakeMoney</div>
     </div>
 
-     <div style="height: 1000px;"></div>
+    <script>
+        function uploadImage(){
+            const form = document.getElementById('profileForm')
+            const formData = new FormData(form)
+
+            fetch("{% url 'store:profile_upload' %}", {
+                method: 'POST',
+                body: formData,
+                headers:{
+                    'X-CSRFToken': document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('profileImage').src = data.new_image
+            })
+            .catch(error => console.error('Error:', error))
+        }
+
+    </script>
+
+     
 </div>
 {% endblock main-content %}

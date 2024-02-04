@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'apps.catalogue.apps.CatalogueConfig',
     'oscar.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
     'oscar.apps.communication.apps.CommunicationConfig',
-    'oscar.apps.partner.apps.PartnerConfig',
+    'apps.partner.apps.PartnerConfig',
     'oscar.apps.basket.apps.BasketConfig',
     'oscar.apps.payment.apps.PaymentConfig',
     'oscar.apps.offer.apps.OfferConfig',
@@ -153,23 +153,23 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': "postgres",
-        'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
-        'HOST':"roundhouse.proxy.rlwy.net",
-        'PORT':"37458",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'Tlink',
+#         'USER': "postgres",
+#         'PASSWORD':"awule" ,
+#         'HOST':"localhost",
+#         'PORT':"5432",
+#     }
+# }
 
 
 

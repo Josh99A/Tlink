@@ -1,5 +1,6 @@
 {% extends 'oscar/base.html' %}
 {% load static %}
+{% load image_tags %}
 {% block morestyles %}
 <link rel="stylesheet" href="{% static 'store/CSS/dashboard.css' %}">
 {% endblock %}
@@ -7,6 +8,36 @@
 {% block layout %}
 <div class="contaniner-fluid">
 	<!-------------Left side bar----------->
+	<div class="modal" tabindex="-1" id="category_select">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title ">Choose  product category </h5>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+						{% for category in categories %}
+						<div class="col-lg-4 col-md-4 col-6 my-2">
+							<a href="#">
+								<div class="image-container" class="w-25">
+								  <img src="{% oscar_thumbnail category.image  '300x400' crop='center' upscale='false' %}" alt="" class="rounded img-fluid">
+								  <div class="image-info">
+									<h6 class="text-white  text-uppercase  fs-6">{{ category.name }}</h6>
+								</div>
+							  </div>
+							  </a>
+						</div>
+						{% endfor %}
+					</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" data-bs-dismiss="modal" >Cancel</button>
+                </div>
+
+            </div>
+        </div>
+</div>
 		<div class="navigation">
 			<ul>
 				<li>
@@ -21,7 +52,7 @@
 				<li>
 					<a href="{% url 'core:index' %}">
 						<span class="icon">
-							<i class="bi bi-home"></i>
+							<i class="bi bi-house-fill"></i>
 						</span>
 						<span class="sidenav-title">
 							Home
@@ -31,7 +62,7 @@
 				<li>
 					<a href="{% url 'store:store' user.shop.pk user.shop.get_slug %}">
 						<span class="icon">
-							<i class="bi bi-home"></i>
+							<i class="bi bi-shop"></i>
 						</span>
 						<span class="sidenav-title">
 							MyStore
@@ -55,7 +86,7 @@
 				<li>
 					<a href="">
 						<span class="icon">
-							<i class="bi bi-home"></i>
+							<i class="bx bxs-t-shirt"></i>
 						</span>
 						<span class="sidenav-title">
 							Fashion
@@ -65,7 +96,7 @@
 				<li>
 					<a href="">
 						<span class="icon">
-							<i class="bi bi-home"></i>
+							<i class="bi bi-phone-landscape"></i>
 						</span>
 						<span class="sidenav-title">
 							Electronics
@@ -75,7 +106,7 @@
 				<li>
 					<a href="">
 						<span class="icon">
-							<i class="bi bi-gear"></i>
+							<i class="bi bi-bag-heart"></i>
 						</span>
 						<span class="sidenav-title">
 							Supermarket
@@ -85,7 +116,7 @@
 				<li>
 					<a href="">
 						<span class="icon">
-							<i class="bi bi-gear"></i>
+							<i class="bi bi-pen"></i>
 						</span>
 						<span class="sidenav-title">
 							Scholastics
@@ -105,16 +136,14 @@
 			
 			<div class="profile d-flex align-items-center ">
 				<div class="add-btn mx-2">
-					<a href="">
-						<button  class="btn rounded-pill btn-primary fw-bold fs-6 d-none d-md-block d-lg-block text-center">Add product+</button>
-					</a>
+					<button  class="btn rounded-pill btn-primary fw-bold fs-6 d-none d-md-block d-lg-block text-center" data-bs-toggle="modal" data-bs-target="#category_select">Add product+</button>
 				</div>
 				<div class="notifications position-relative mx-1">
 					<i class="bi bi-bell fs-4"></i>
 					<span class=" translate-middle badge rounded-pill bg-danger">99+</span>
 				</div>
 				<div class="user  mx-2">
-					<img src="{% static 'core\Images\9973ae95495ad119d5ee1894ee121f1c.jpg' %}" alt="Profile image" class="user-profile-img">	
+					<img src="{% static 'core/Images/9973ae95495ad119d5ee1894ee121f1c.jpg' %}" alt="Profile image" class="user-profile-img">	
 				</div>
 				<div class="profile-links">
 					<ul class="list-group">
@@ -129,29 +158,10 @@
 			</div>
 		</div>
 		<div class="container-fluid my-3">
-			<div class="row" id="topcards">
-				<div class="col-md-3 col-sm-6 col-lg-3 my-2 ">
-					<div class="card  rounded-5">
-						<a href="">
-							<div class="card-body  bg-primary text-warning text-center fw-bold border border-primary-subtle rounded-5">
-								<h3>15000</h3>
-								<span class="lead  fw-bold ">Weekly Traffic</span>
-							</div>
-						</a>
-					</div>
-				</div>
-					<div class="col-md-3 col-sm-6 col-lg-3 my-2 ">
-						<a href="">
-							<div class="card rounded-5">
-								<div class="card-body  text-bg-secondary bg-primary text-center fw-bold border border-primary-subtle rounded-5">
-									<h3>145</h3>
-									<span class="lead  fw-bold ">Products</span>
-								</div>
-							</div>
-						</a>
-					</div>
-	
-			</div>
+			{% block dashboard_content %}
+			
+			{% endblock %}
+
 		</div>
 		{% include 'oscar/partials/backtotop.html' %}
 {% include 'oscar/partials/footer.html' %}
