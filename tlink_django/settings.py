@@ -28,7 +28,7 @@ print(SECRET_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ["localhost", "web-production-a191.up.railway.app"]
+ALLOWED_HOSTS = ["localhost", "https://web-production-a191.up.railway.app"]
 
 AUTHENTICATION_BACKENDS = (
     # 'oscar.apps.customer.auth_backends.EmailBackend',
