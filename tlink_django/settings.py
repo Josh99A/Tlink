@@ -23,12 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-print(SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ["localhost", "web-production-a191.up.railway.app"]
+ALLOWED_HOSTS = ["127.0.0.1", "web-production-a191.up.railway.app"]
 
 AUTHENTICATION_BACKENDS = (
     # 'oscar.apps.customer.auth_backends.EmailBackend',
@@ -153,12 +152,12 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -171,16 +170,16 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': "postgres",
-        'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
-        'HOST':"roundhouse.proxy.rlwy.net",
-        'PORT':"37458",
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': "postgres",
+#         'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
+#         'HOST':"roundhouse.proxy.rlwy.net",
+#         'PORT':"37458",
+#     }
+# }
 
 
 

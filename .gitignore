@@ -1,2 +1,12 @@
+# Virtual environment
+/venv/
+
+#Environment variables
+.env
+
+# Editor 
 .vscode/
-venv/
+
+# Database
+*.sqlite3
+
