@@ -26,6 +26,9 @@
                         <ul>
                         {% for category, info in tree_categories %}
                             <li>
+                                {% if category.productclass_set.all.exists %}
+                                {{ category }} has product class
+                                {% endif %}
                                 <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                                 {% if info.has_children %}
                                    <ul>

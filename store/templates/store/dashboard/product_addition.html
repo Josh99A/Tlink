@@ -1,0 +1,50 @@
+{% extends 'store/dashboard/base.html' %}
+
+{% block dashboard_content %}
+
+<div class="main-body">
+    <style>
+        .main-body {
+        background: url(../../../static/store/Images/blue-bg-happy-family.jpg) center/cover  no-repeat;
+        height: 100vh;
+        margin: 0;
+        overflow: auto;
+
+         }
+
+        @media(min-width:991px) {
+            .main-body {
+                max-height: inherit;
+            }
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="row my-6">
+            <div class="col m-auto d-flex justify-content-center align-items-center">
+                <div class="card" style="opacity:0.88;">
+                    <div class="card-header">
+                        <h3>Choose product class</h3>
+                    </div>
+                    <div class="card-body" >
+                        {% for productclass_category in productclass_categories %}
+                        <div class="row mt-2">
+                         <div class="col">
+                             <h4>{{ productclass_category.get_parent.name }} {{ productclass_category.name }}</h4>
+                             {% for productclass in productclass_category.productclass_set.all %}
+                             <a href="">
+                                 <div class="btn btn-outline-info fw-bold my-1">{{ productclass }}</div>
+                             </a>
+                             {% endfor %}
+                            
+                         </div>
+                        </div>
+                        {% endfor %}
+                       
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

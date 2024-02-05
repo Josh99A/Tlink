@@ -62,7 +62,7 @@ body {
 
 .navigation ul li:nth-child(1) {
     margin-bottom: 40px;
-    pointer-events: none;
+
 }
 
 .navigation ul li a {
@@ -74,8 +74,8 @@ body {
 
 
 
-.navigation ul li:hover,
-.navigation ul li.hovered {
+.navigation ul li:not(.excluded):hover,
+.navigation ul li.hovered:not(.excluded) {
     background-color: var(--white);
 }
 
@@ -90,8 +90,8 @@ body {
     background-color: var(--blue);
 }
 
-.navigation ul li:hover a,
-.navigation ul li.hovered a {
+.navigation ul li:not(.excluded):hover a,
+.navigation ul li:not(.excluded).hovered a {
     color: var(--blue);
 }
 
@@ -121,8 +121,8 @@ body {
 
 
 /* --------- curve outside ---------- */
-.navigation ul li:hover a::before,
-.navigation ul li.hovered a::before {
+.navigation ul li:not(.excluded):hover a::before,
+.navigation ul li.hovered:not(.excluded) a::before {
     content: "";
     position: absolute;
     right: 0;
@@ -135,8 +135,8 @@ body {
     pointer-events: none;
 }
 
-.navigation ul li:hover a::after,
-.navigation ul li.hovered a::after {
+.navigation ul li:not(.excluded):hover a::after,
+.navigation ul li.hovered:not(.excluded) a::after {
     content: "";
     position: absolute;
     right: 0;

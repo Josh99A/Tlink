@@ -139,3 +139,16 @@ class DashBoardView(ListView):
         context['categories'] = root_categories
         return context
 
+
+class ProductCreation(TemplateView):
+    template_name='store/dashboard/product_addition.html'
+
+
+    def get(self, request, *args, **kwargs ):
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['root_category'] = Category.objects.get(name=kwargs['category'])
+        context['productclass_categories'] = context['root_category'].get_descendants().filter(productclass__isnull=False).distinct()
+        return context
