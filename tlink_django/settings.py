@@ -30,7 +30,7 @@ DEBUG = os.getenv("DEBUG") != 'False'
 
 ALLOWED_HOSTS = ["localhost", "web-production-a191.up.railway.app"]
 
-CSRF_TRUSTED_ORIGINS = ["web-production-a191.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://web-production-a191.up.railway.app"]
 
 AUTHENTICATION_BACKENDS = (
     # 'oscar.apps.customer.auth_backends.EmailBackend',
