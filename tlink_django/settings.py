@@ -10,9 +10,6 @@ load_dotenv(dotenv_path)
 
 
 
-OSCAR_ACCOUNTS_REDIRECT_URL = 'store:settings'
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
