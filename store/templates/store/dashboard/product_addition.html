@@ -1,24 +1,240 @@
 {% extends 'store/dashboard/base.html' %}
+{% load static %}
+{% load i18n %}
 
 {% block dashboard_content %}
 
 <div class="main-body">
-    <style>
-        .main-body {
-        background: url(../../../static/store/Images/blue-bg-happy-family.jpg) center/cover  no-repeat;
-        height: 100vh;
-        margin: 0;
-        overflow: auto;
-
-         }
-
-        @media(min-width:991px) {
-            .main-body {
-                max-height: inherit;
-            }
-        }
-    </style>
     <div class="container-fluid">
+        {% if form %}
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!--================================PRODUCT DETAILS  MODAL==================================-->
+            <div class="modal fade " tabindex="-1" id="product_details" data-bs-backdrop="static"  role="dialog" data-bs-keyboard="false" aria-labelledby="productdetailslabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ">Enter product Details </h5>
+                           
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                {% if form.errors or form.non_field_errors %}
+                                <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                                    {% for field in form %}
+                                    {% if field.errors %}
+                                    {{field.label_tag}}
+                                    {{field.errors}}
+                                    {% endif %}
+                                    {% endfor %}   
+                                    <div class="row my-2">
+                                        {{ form.non_field_errors  }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                               <div class="row">
+                                <label for="{{form.title.id_for_label}}" class="form-label fw-bold {% if form.title.errors %} text-danger {% else %} text-primary {% endif %} fs-5">Title:</label>
+                                 {{ form.title }}
+                               </div>
+
+                               <div class="row">
+                                <label for="{{form.upc.id_for_label}}" class="form-label fw-bold {% if form.upc.errors %} text-danger {% else %} text-primary {% endif%} fs-5">Upc:</label>
+                                 {{ form.upc }}
+                               </div>
+
+                               <div class="row">
+                                <label for="{{form.description.id_for_label}}" class="form-label fw-bold {% if form.description.errors %} text-danger {% else %} text-primary {% endif%} fs-5">Description:</label>
+                                 {{ form.description }}
+                               </div>
+                            </div>
+
+                            {{form.structure }}
+                        </div>
+                        <div class="modal-footer">
+                            <a href="" class="btn btn-danger" >Cancel</a>
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_attributes" >Next</span>
+                        </div>
+        
+                    </div>
+                </div>
+             </div>
+
+             <!--================================PRODUCT ATTRIBUTES MODAL==================================-->
+            <div class="modal fade " tabindex="-1" id="product_attributes" data-bs-backdrop="static"  role="dialog" data-bs-keyboard="false" aria-labelledby="productattributeslabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ">Enter product Attributes </h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <table class="table table-striped table-bordered">
+  
+                                       {% for field in form %}
+                                            {% if 'attr' in field.id_for_label %}
+                                                <tr>
+                                                    <td>
+                                                        {% include "oscar/dashboard/partials/form_field.html" %}
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                </div>
+ 
+                        
+                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_details" >Previous</span>
+                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_images" >Next</span>
+                        </div>
+        
+                    </div>
+                </div>
+             </div>
+
+             <!--================================PRODUCT IMAGE MODAL==================================-->
+            <div class="modal fade " tabindex="-1" id="product_images" data-bs-backdrop="static"  role="dialog" data-bs-keyboard="false" aria-labelledby="productimageslabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ">Select product Images</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="text-center">
+                                    {{ image_formset.management_form }}
+                                    {% if image_formset.non_form_errors %}
+                                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                                        {{ image_formset.non_form_errors }}
+                                    </div>
+                                    {% endif %}
+                                    <ol class='upload-image p-0'>
+                                        {% for image_form in image_formset %}
+                                            {% include "oscar/dashboard/partials/product_images.html" with form=image_form %}
+                                        {% endfor %}
+                                    </ol>
+                                    <p class="form-text">
+                                        {% trans 'Drag images to re-order them. Space for additional images will appear when images are added.' %}
+                                    </p>
+                                </div>
+
+                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_attributes" >Previous</span>
+                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_stock_records" >Next</span>
+                        </div>
+        
+                    </div>
+                </div>
+             </div>
+             <!--================================STOCK RECORD MODAL==================================-->
+             <div class="modal fade " tabindex="-1" id="product_stock_records" data-bs-backdrop="static"  role="dialog" data-bs-keyboard="false" aria-labelledby="productstockrecordslabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ">Enter Stock records </h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                {{ stockrecord_formset.management_form }}
+                                <div>
+                                    {{ stockrecord_formset.non_form_errors }}
+                                </div>
+                                <div>
+                                    {% for stockrecord_form in stockrecord_formset %}
+                                     {% if stockrecord_form.non_field_errors %}
+                                     <ul>
+                                        {% for error in stockrecord_form.non_field_errors  %}
+                                        <li class="error-block errorlist bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6"><i class="fas fa-exclamation"></i> {{ error }}</li>
+                                         {% endfor %}
+                                     </ul>
+                                     {% endif %}
+
+                                     <div class="row">
+                                        <div class="col-sm-6 my-1">
+                                            <label for="{{ stockrecord_form.partner.id_for_label }}" class="form-label">Partner:</label>
+                                            {{ stockrecord_form.partner  }}
+                                        </div>
+                                        <div class="col-sm-6 my-1">
+                                            <label for="{{ stockrecord_form.partner_sku.id_for_label }}" class="form-label">SKU:</label>
+                                            {{ stockrecord_form.partner_sku  }}
+                                            
+                                        </div>
+                                        <div class="col-sm-6 my-1">
+                                            <label for="{{ stockrecord_form.price_currency.id_for_label }}" class="form-label">Currency:</label>
+                                            {{ stockrecord_form.price_currency}}
+                                        </div>
+                                        <div class="col-sm-6 my-1">
+                                            <label for="{{ stockrecord_form.price.id_for_label }}" class="form-label">Price:</label>
+                                            {{ stockrecord_form.price}}
+                                        </div>
+                                        <div class="col-sm-6 my-1">
+                                            <label for="{{ stockrecord_form.num_in_stock.id_for_label }}" class="form-label">Number in Stock:</label>
+                                            {{ stockrecord_form.num_in_stock}}
+                                        </div>
+                                        <div class="col-sm-6 my-1">
+                                            <label for="{{ stockrecord_form.low_stock_threshold.id_for_label }}" class="form-label">Low stock threshhold:</label>
+                                            {{ stockrecord_form.low_stock_threshold}}
+                                        </div>
+                                     </div>
+                                     {% endfor %}
+                                </div>
+                        
+                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_images" >Previous</span>
+                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_recommendation" >Previous</span>
+                        </div>
+                    </div>
+                </div>
+             </div>
+             <!--================================PRODUCT RECOMMENDATIONS  MODAL==================================-->
+             <div class="modal fade " tabindex="-1" id="product_recommendation" data-bs-backdrop="static"  role="dialog" data-bs-keyboard="false" aria-labelledby="productrecommendationlabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ">Enter Stock records </h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                            {{ recommended_formset.management_form }}
+                            {% if recommended_formset.non_form_errors %}
+                            <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                                {{ recommended_formset.non_form_errors }}
+                            </div>
+                            {% endif %}
+                            <table class="table table-striped table-bordered">
+                                        <caption>{% trans "Recommended products" %}</caption>
+                                        {% for recommended_form in recommended_formset %}
+                                            <tr>
+                                                <td class="form-inline">
+                                                    {% include "oscar/dashboard/partials/form_fields_inline.html" with form=recommended_form %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>        
+                           </div>
+                        </div>
+                        <div class="modal-footer">
+                            <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_stock_records" >Previous</span>
+                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <button class="btn btn-primary" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
+                                {% trans "Save" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </form>
+        {% else %}
         <div class="row my-6">
             <div class="col m-auto d-flex justify-content-center align-items-center">
                 <div class="card" style="opacity:0.88;">
@@ -31,8 +247,8 @@
                          <div class="col">
                              <h4>{{ productclass_category.get_parent.name }} {{ productclass_category.name }}</h4>
                              {% for productclass in productclass_category.productclass_set.all %}
-                             <a href="">
-                                 <div class="btn btn-outline-info fw-bold my-1">{{ productclass }}</div>
+                             <a href="{% url 'store:product_create' productclass.slug %}">
+                                 <button class="btn btn-outline-info fw-bold my-1">{{ productclass }}</button>
                              </a>
                              {% endfor %}
                             
@@ -45,6 +261,19 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
+{% endblock %}
+{% block extrascripts %}
+{% if form %}
+<script>
+	$(document).ready(function(){
+		$("#product_details").modal('show');
+	});
+
+</script>
+
+{% endif %}
+{{ block.super  }}
 {% endblock %}

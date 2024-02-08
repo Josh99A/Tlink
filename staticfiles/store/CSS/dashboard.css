@@ -62,7 +62,7 @@ body {
 
 .navigation ul li:nth-child(1) {
     margin-bottom: 40px;
-    pointer-events: none;
+
 }
 
 .navigation ul li a {
@@ -74,8 +74,8 @@ body {
 
 
 
-.navigation ul li:hover,
-.navigation ul li.hovered {
+.navigation ul li:not(.excluded):hover,
+.navigation ul li.hovered:not(.excluded) {
     background-color: var(--white);
 }
 
@@ -90,8 +90,8 @@ body {
     background-color: var(--blue);
 }
 
-.navigation ul li:hover a,
-.navigation ul li.hovered a {
+.navigation ul li:not(.excluded):hover a,
+.navigation ul li:not(.excluded).hovered a {
     color: var(--blue);
 }
 
@@ -121,8 +121,8 @@ body {
 
 
 /* --------- curve outside ---------- */
-.navigation ul li:hover a::before,
-.navigation ul li.hovered a::before {
+.navigation ul li:not(.excluded):hover a::before,
+.navigation ul li.hovered:not(.excluded) a::before {
     content: "";
     position: absolute;
     right: 0;
@@ -135,8 +135,8 @@ body {
     pointer-events: none;
 }
 
-.navigation ul li:hover a::after,
-.navigation ul li.hovered a::after {
+.navigation ul li:not(.excluded):hover a::after,
+.navigation ul li.hovered:not(.excluded) a::after {
     content: "";
     position: absolute;
     right: 0;
@@ -326,3 +326,84 @@ body {
 #topcards .card-body:hover {
     transform: scale(1.1);
 }
+
+.main-body {
+    background: url(../Images/blue-bg-happy-family.jpg) center/cover  no-repeat;
+    height: 100vh;
+    margin: 0;
+    overflow: auto;
+
+     }
+
+    @media(min-width:991px) {
+        .main-body {
+            max-height: inherit;
+        }
+    }
+
+    /* Product Image css */
+    .upload-image {
+        margin: 0;
+        z-index: 1;
+        position: relative;
+      }
+      .upload-image::after {
+        display: block;
+        clear: both;
+        content: "";
+      }
+      .upload-image li {
+        display: block;
+        width: 200px;
+        margin: 0 1% 2%;
+        float: left;
+        text-align: center;
+      }
+      .upload-image li > div {
+        padding: 4px;
+        background: #ced4da;
+        margin-bottom: 10px;
+      }
+      .upload-image li > div + label,
+      .upload-image li > div + label + input {
+        display: none;
+      }
+      .upload-image div {
+        background: #fff;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        z-index: 200;
+      }
+      .upload-image img {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        max-height: 200px;
+        max-width: 200px;
+        width: auto;
+        height: auto;
+        left: 0;
+      }
+      .upload-image .image-input {
+        z-index: 800;
+      }
+      .upload-image .image-input button {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        border-radius: 0;
+      }
+      .upload-image .input-field {
+        position: relative;
+        z-index: 1000;
+        opacity: 0;
+      }
+      .upload-image .input-field input {
+        border-width: 0;
+        direction: ltr;
+        cursor: pointer;
+        width: 200px;
+        height: 200px;
+      }

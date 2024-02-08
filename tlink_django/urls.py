@@ -10,6 +10,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('tlink/', include('store.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
     path('', include(apps.get_app_config('oscar').urls[0])),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT )

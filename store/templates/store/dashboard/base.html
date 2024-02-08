@@ -1,14 +1,16 @@
 {% extends 'oscar/base.html' %}
 {% load static %}
 {% load image_tags %}
-{% block morestyles %}
+{% block extrastyles %}
+{{ block.super  }}
+<link rel="stylesheet" href="{% static 'oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.css' %}" />
 <link rel="stylesheet" href="{% static 'store/CSS/dashboard.css' %}">
 {% endblock %}
 
 {% block layout %}
 <div class="contaniner-fluid">
 	<!-------------Left side bar----------->
-	<div class="modal" tabindex="-1" id="category_select">
+	<div class="modal fade " tabindex="-1" id="category_select" >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -151,10 +153,7 @@
 						<li  class="fw-bold list-group-item " ><a href="">Logout</a></li>
 					</ul>
 				</div>
-				<style>
-					
-				</style>
-	
+			
 			</div>
 		</div>		
 			{% block dashboard_content %}
@@ -169,8 +168,48 @@
 
 {% endblock %}
 
-{% block morescripts %}
-<script src="{% static 'store/Javascript/dashboard.js' %}"></script>
+{% block extrascripts %}
+{{ block.super }}
 
+
+	<script src="{% static 'store/Javascript/dashboard.js' %}"></script>
+{# jQuery plugins #}
+    <script src="{% static 'oscar/js/mousewheel/jquery.mousewheel.js' %}"></script>
+    <script src="{% static 'oscar/js/bootstrap4-datetimepicker/moment-with-locales.min.js' %}"></script>
+    <script src="{% static 'oscar/js/bootstrap4-datetimepicker/tempusdominus-bootstrap-4.min.js' %}"></script>
+    <script src="{% static 'oscar/js/inputmask/jquery.inputmask.min.js' %}"></script>
+    <script src="{% static 'oscar/js/jquery-sortable/jquery-sortable-min.js' %}"></script>
+    <script src="{% static 'oscar/js/oscar/dashboard.js' %}"></script>
+    <script src="{% static 'oscar/js/oscar/RelatedObjectLookups.js' %}"></script>
+    <script src="{% static 'oscar/js/tinymce/tinymce.min.js' %}"></script>
+    <script src="{% static 'oscar/js/tinymce/jquery.tinymce.min.js' %}"></script>
 
 {% endblock %}
+
+
+{% block onbodyload %}
+    {{ block.super }}
+
+    // Javascript to enable link to tab
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.bs-docs-sidenav a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-list a').on('shown.bs.tab', function (e) {
+        window.location.hash = e.target.hash;
+    });
+
+    options = {
+      'languageCode': '{{ LANGUAGE_CODE }}'
+    };
+    oscar.dashboard.init(options);
+
+	$(document).ready(function(){
+		console.log('Running')
+		oscar.dashboard.filereader.init()
+	})
+{% endblock %}
+
+
