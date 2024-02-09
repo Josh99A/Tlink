@@ -17,7 +17,7 @@
               <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'core:index' %}">Home</a>
             </li>
             {% if user.is_authenticated  %}
-            {% if user.shop.pk and user.shop.get_slug() %}
+            {% if user.shop.pk and user.shop.get_slug %}
             <li class="nav-item">
               <a class="nav-link mx-lg-2" href="{% url 'store:store' user.shop.pk user.shop.get_slug %}">MyStore</a>
             </li>
