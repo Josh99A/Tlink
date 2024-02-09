@@ -27,6 +27,7 @@ class ProductForm(OscarProductForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['title'].widget.attrs.update({'class':'form-control'})
+        self.fields['is_public'].widget.attrs.update({'class':'form-check'})
         self.fields['upc'].widget.attrs.update({'class':'form-control'})
         self.fields['description'].widget.attrs.update({'class':'form-control', 'cols':40, 'rows': 5, 'placeholder':'Give a product description'})
 

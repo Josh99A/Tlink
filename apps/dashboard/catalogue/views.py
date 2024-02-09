@@ -13,17 +13,17 @@ class TlinkProductCreateUpdateView(ProductCreateUpdateView):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.formsets = {
-            "category_formset": self.category_formset,
             "image_formset": self.image_formset,
-            "recommended_formset": self.recommendations_formset,
             "stockrecord_formset": self.stockrecord_formset,
         }
 
 
     def form_valid(self, form ,*args, **kwargs):
-        form.instance.seller = self.request.user
-         
-
+        product = form.save(commit=False)
+        product.seller = self.request.user
+        product.save()
+        product.categories.add(self.get_context_data()['product_class'].category)
+    
         response = super().form_valid(form, *args, **kwargs)
 
         return response
