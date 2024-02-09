@@ -10,9 +10,6 @@ load_dotenv(dotenv_path)
 
 
 
-
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,12 +20,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c604ec879be2dacb8851f4402cffea54523cb472
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "web-production-a191.up.railway.app"]
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
+
+CSRF_TRUSTED_ORIGINS =["https://*.railway.app"]
 
 AUTHENTICATION_BACKENDS = (
     # 'oscar.apps.customer.auth_backends.EmailBackend',
