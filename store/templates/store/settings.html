@@ -21,7 +21,7 @@
                 <a href="{% url 'core:index' %}">Home</a>
             </li>
             <li class="breadcrumb-item active">
-                <a href="{% url 'store:settings' user.pk %}">Settings</a>
+                <a href="{% url 'store:settings'  %}">Settings</a>
             </li>
         </ol>
      </nav>
@@ -58,13 +58,14 @@
                         <button class="btn btn-primary" type="submit">Save changes</button>
                     </div>
                     {% if storeForm.errors %}
-                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                    <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
                         {% for field in storeForm %}
                         {% if field.errors %}
                         {{field.label_tag}}
                         {{field.errors}}
                         {% endif %}
                         {% endfor %}
+                        <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
                     </div>
                     {% endif %}
                     <div>
@@ -74,7 +75,7 @@
                     {{storeForm.non_field_errors}}
                 </div>
                 <div class="col-md-6">
-                    <label for="{{ storeForm.name.id_for_label }}" class="form-label fw-blod">Name:</label>
+                    <label for="{{ storeForm.name.id_for_label }}" class="form-label fw-blod">Shop name:</label>
                     {{storeForm.name}}
                 </div>
                 <div class="col-md-6">

@@ -12,7 +12,7 @@ class AccountAuthView(OscarAccountAuthView):
     def get_login_success_url(self, *args, **kwargs):
     
         if self.request.user.is_staff:
-            return reverse("store:settings", kwargs={'pk': self.request.user.pk })
+            return reverse("store:settings")
 
         return super().get_login_success_url(*args, **kwargs)
     

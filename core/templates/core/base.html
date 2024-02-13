@@ -8,7 +8,7 @@
       
       <div class="offcanvas text-bg-dark offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">TrustLink</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -21,12 +21,12 @@
             <li class="nav-item">
               <a class="nav-link mx-lg-2" href="{% url 'store:store' user.shop.pk user.shop.get_slug %}">MyStore</a>
             </li>
-            {% endif %}
             <li class="nav-item">
               <a class="nav-link mx-lg-2" href="{% url 'store:dashboard' user.pk %}">Dashboard</a>
             </li>
+            {% endif %}
             <li class="nav-item">
-              <a class="nav-link mx-lg-2" href="{% url 'store:settings' user.pk  %}">MySettings</a>
+              <a class="nav-link mx-lg-2" href="{% url 'store:settings'  %}">MySettings</a>
             </li>
             {% endif %}
             <li class="nav-item dropdown">

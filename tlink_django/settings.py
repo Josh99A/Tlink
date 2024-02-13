@@ -32,6 +32,7 @@ CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 AUTHENTICATION_BACKENDS = (
     # 'oscar.apps.customer.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 HAYSTACK_CONNECTIONS = {
@@ -54,9 +55,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
-    'subscription.apps.SubscriptionConfig',
     'store.apps.StoreConfig',
     'core.apps.CoreConfig',
+    'guardian',
     
      'django.contrib.sites',
     'django.contrib.flatpages',
@@ -155,12 +156,12 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -173,16 +174,16 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': "postgres",
-        'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
-        'HOST':"roundhouse.proxy.rlwy.net",
-        'PORT':"37458",
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': "postgres",
+#         'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
+#         'HOST':"roundhouse.proxy.rlwy.net",
+#         'PORT':"37458",
+#     }
+# }
 
 
 

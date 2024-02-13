@@ -20,18 +20,19 @@
                         <div class="modal-body">
                             <div class="container-fluid">
                                 {% if form.errors or form.non_field_errors %}
-                                <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
-                                    {% for field in form %}
-                                    {% if field.errors %}
-                                    {{field.label_tag}}
-                                    {{field.errors}}
-                                    {% endif %}
-                                    {% endfor %}   
-                                    <div class="row my-2">
-                                        {{ form.non_field_errors  }}
-                                    </div>
-                                </div>
-                                {% endif %}
+                                     <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
+                                         {% for field in form %}
+                                         {% if field.errors %}
+                                         {{field.label_tag}}
+                                         {{field.errors}}
+                                         {% endif %}
+                                         {% endfor %}   
+                                         <div class="row my-2">
+                                             {{ form.non_field_errors  }}
+                                         </div>
+                                         <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+                                     </div>
+                                     {% endif %}
                                <div class="row">
                                 <label for="{{form.title.id_for_label}}" class="form-label fw-bold {% if form.title.errors %} text-danger {% else %} text-primary {% endif %} fs-5">Title:</label>
                                  {{ form.title }}
@@ -116,8 +117,9 @@
                                 <div class="text-center">
                                     {{ image_formset.management_form }}
                                     {% if image_formset.non_form_errors %}
-                                    <div class="bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6">
+                                    <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
                                         {{ image_formset.non_form_errors }}
+                                        <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
                                     </div>
                                     {% endif %}
                                     <ol class='upload-image p-0'>
@@ -156,12 +158,20 @@
                                 </div>
                                 <div>
                                     {% for stockrecord_form in stockrecord_formset %}
-                                     {% if stockrecord_form.non_field_errors %}
-                                     <ul>
-                                        {% for error in stockrecord_form.non_field_errors  %}
-                                        <li class="error-block errorlist bg-danger bg-opacity-75 bg-gradient  border border-danger box fw-bold fs-6"><i class="fas fa-exclamation"></i> {{ error }}</li>
-                                         {% endfor %}
-                                     </ul>
+                        
+                                     {% if stockrecord_form.errors or stockrecord_form.non_field_errors %}
+                                     <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
+                                         {% for field in stockrecord_form %}
+                                         {% if field.errors %}
+                                         {{field.label_tag}}
+                                         {{field.errors}}
+                                         {% endif %}
+                                         {% endfor %}   
+                                         <div class="row my-2">
+                                             {{ stockrecord_form.non_field_errors  }}
+                                         </div>
+                                         <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+                                     </div>
                                      {% endif %}
 
                                      <div class="row">

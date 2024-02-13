@@ -32,7 +32,7 @@ class indexList(ListView):
     context_object_name = 'products'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(*kwargs)
+        context = super().get_context_data()
 
         categories = Category.objects.all()
         root_categories = []
@@ -66,10 +66,7 @@ class FashionCategory(DetailView):
     
 
 
-class SignUp(CreateView):
-    model = User
-    form_class = UserCreationForm
-    template_name = 'core/Forms/signup.html'
+
 
 class UserStoreView(SingleObjectMixin, ListView):
     template_name= 'core/Store.html'

@@ -3,6 +3,13 @@
 
 <div class="row my-3">
     <div class="swiper category-intro">
+      <style>
+        @media(max-width: 572px){
+          .image-info{
+            left: 24%!important;
+          }
+        }
+      </style>
       <div class="swiper-wrapper">
         {% for category in categories %}
         <div class="swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">

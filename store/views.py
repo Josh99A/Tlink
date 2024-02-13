@@ -11,8 +11,7 @@ from .models import Store, Product
 
 from apps.catalogue.models import Category
 
-class SettingsView(DetailView):
-    model= User
+class SettingsView(TemplateView):
     template_name = 'store/settings.html'
 
     def get(self, request, *args, **kwargs):
@@ -27,8 +26,9 @@ class SettingsView(DetailView):
 
 
         self.form = StoreForm(instance=user_shop)
+        context = self.get_context_data()
 
-        return super().get(request,*args, **kwargs)
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -48,7 +48,7 @@ class StoreCreationView(SingleObjectMixin, FormView):
            store.staff.add(request.user)
            store.slug = store.get_slug()
            store.save()
-           return redirect(reverse('store:settings', kwargs={'pk':self.object.pk}))
+           return redirect(reverse('store:settings'))
         else:
             context = self.get_context_data(storeForm=storeForm)
             return render(request, self.template_name, context)

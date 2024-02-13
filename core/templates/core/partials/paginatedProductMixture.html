@@ -1,0 +1,48 @@
+{% load static %}
+{% load category_tags %}
+{% load image_tags %}
+{% load purchase_info_tags %}
+{% load i18n %}
+{% load currency_filters %}
+
+
+<div class="container my-3">
+    <div class="text-center">
+     <h3>Featured Women Fashion Products</h3>
+     <hr>
+    </div>
+    <div class="row products mx-2">
+      {% for product in category_products %}
+      <div class="col-lg-2 col-mb-4  col-sm-5 card p-0 mx-1 my-2  ">
+        <div class=" card-image product-wrap ">
+          <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
+          <div class="product-info fs-3">
+            <h4><a href="" class="text-white">{% trans product.get_title %}</a></h4>
+            <div class="product-links fs-5">
+              <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+              <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body p-2 fw-bold ">
+          <h6 class="fs-6" style="height: 30px;">{{ product.get_title | truncatewords:9 }}</h6>
+          <div class="text-center">
+            {% purchase_info_for_product request product as session %}
+            {% if session.price.exists %}
+            <span class="has-text-success is-size-6">{{session.price.incl_tax|currency:session.price.currency  }}</span>
+            {% endif %}
+            <div class="product-rating d-flext justify-content-between me-auto is-size-7">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+
+            <a href=""><button class="btn text-primary fw-bold">View details</button></a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>

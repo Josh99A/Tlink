@@ -5,7 +5,7 @@
     <div class="swiper category-intro ">
         <div class="swiper-wrapper">
           {% for category in Fashion.get_children %}
-          <p></p>
+          {% if category.image %}
             <div class=" swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">
                 <a href="#">
                   <div class="image-container" class="w-25">
@@ -16,6 +16,9 @@
                 </div>
                 </a>
             </div>
+            {% else %}
+            <p class="fw-bold text-centered ">You have no images associated with the {{ category.name }} category</p>
+            {% endif %}
             {% endfor %} 
           </div>
           
