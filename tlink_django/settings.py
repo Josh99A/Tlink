@@ -159,12 +159,12 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -177,16 +177,16 @@ DATABASES = {
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'railway',
-#         'USER': "postgres",
-#         'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
-#         'HOST':"roundhouse.proxy.rlwy.net",
-#         'PORT':"37458",
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': "postgres",
+        'PASSWORD':"-B2B*BdAf3D56665G566DAd3e-A4DCFD" ,
+        'HOST':"roundhouse.proxy.rlwy.net",
+        'PORT':"37458",
+    }
+}
 
 
 
