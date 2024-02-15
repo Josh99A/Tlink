@@ -14,6 +14,7 @@ class Store(models.Model):
     staff = models.ManyToManyField(User, related_name='stores')
     is_active = models.BooleanField(default=False)
     products = models.ManyToManyField(Product, related_name='store', blank=True)
+    prompted = models.BooleanField(default=False)
     slug = models.SlugField()
     date_created = models.DateField('Date created', auto_now_add=True)
     date_modified = models.DateTimeField('Date modified', auto_now=True)

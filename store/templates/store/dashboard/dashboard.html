@@ -1,10 +1,22 @@
 {% extends 'store/dashboard/base.html' %}
 {% load static %}
+{% load i18n %}
+{% load render_table from django_tables2 %}
 
 {% block dashboard_content %}
-
-
 <div class="container-fluid my-3">
+
+	{% if messages %}
+	{% for message in messages %}
+	   <div class="alert alert-success alert-dismissible fade show  box fw-bold fs-6 my-3" role="alert">
+	   <p>{{ message }}</p>
+	   <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+		</div>
+	   {% endfor %}
+   {% endif %}
+
+   
+	{% block dashboard_cards %}
 	<div class="row" id="topcards">
 		<div class="col-md-3 col-sm-6 col-lg-3 my-2 ">
 			<div class="card  rounded-5">
@@ -47,7 +59,37 @@
 					</div>
 				</a>
 			</div>
-	
 	</div>	
+	{% endblock %}
+	
+	
+
+	{% block dashboard_tables %}
+			<div class="my-3">
+		{% if products %}
+			{% block product_list %}
+				<form method="post">
+					{% csrf_token %}
+					{% render_table products %}
+				</form>
+				<div class="modal fade" id="product-image-modal" tabindex="-1" role="dialog">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title"></h4>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							</div>
+							<div class="modal-body text-center">
+								<img class="img-fluid mx-auto">
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endblock product_list %}
+		{% else %}
+			<p>{% trans "No products found." %}</p>
+		{% endif %}
+			</div>
+	{% endblock dashboard_tables %}
 </div>
 {% endblock %}

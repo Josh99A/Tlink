@@ -60,7 +60,7 @@
                             {{form.structure }}
                         </div>
                         <div class="modal-footer">
-                            <a href="" class="btn btn-danger" >Cancel</a>
+                            <a href="{% url 'store:dashboard' user.pk %}" class="btn btn-danger" >Cancel</a>
                             <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_attributes" >Next</span>
                         </div>
         
@@ -97,7 +97,7 @@
                         </div>
                         <div class="modal-footer">
                             <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_details" >Previous</span>
-                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <a href="{% url 'store:dashboard' user.pk %}" class="btn btn-danger" >Cancel</a>
                             <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_images" >Next</span>
                         </div>
         
@@ -136,7 +136,7 @@
                         </div>
                         <div class="modal-footer">
                             <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_attributes" >Previous</span>
-                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <a href="{% url 'store:dashboard' user.pk %}" class="btn btn-danger" >Cancel</a>
                             <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_stock_records" >Next</span>
                         </div>
         
@@ -158,8 +158,12 @@
                                 </div>
                                 <div>
                                     {% for stockrecord_form in stockrecord_formset %}
-                        
+                                    <div class="id">
+                                        {{ stockrecord_form.id  }}
+                                    </div>
+                                    
                                      {% if stockrecord_form.errors or stockrecord_form.non_field_errors %}
+
                                      <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
                                          {% for field in stockrecord_form %}
                                          {% if field.errors %}
@@ -208,7 +212,7 @@
                         </div>
                         <div class="modal-footer">
                             <span class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product_images" >Previous</span>
-                            <span class="btn btn-danger" data-bs-dismiss="modal" >Cancel</span>
+                            <a href="{% url 'store:dashboard' user.pk %}" class="btn btn-danger" >Cancel</a>
                             <button class="btn btn-primary" name="action" type="submit" value="save" data-loading-text="{% trans 'Saving...' %}">
                                 {% trans "Save" %}
                             </button>

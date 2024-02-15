@@ -15,6 +15,11 @@ class CatalogueDashboardConfig(apps.CatalogueDashboardConfig):
 
     def get_urls(self):
         urls = [ 
+             path(
+                "products/<int:pk>/",
+                self.product_createupdateproduct_view.as_view(),
+                name="catalogue-product",
+            ),
             path(
                 "product-type/create/",
                 self.product_class_create_view.as_view(),

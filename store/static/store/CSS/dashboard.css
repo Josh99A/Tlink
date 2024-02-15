@@ -249,7 +249,7 @@ body {
     box-shadow: 4px 4px 16px rgba(0, 0, 0, .1);
     border-radius: 10px;
     width: 160px;
-    opacity: 0;
+    display: none;
     z-index: 20;
     transition: all .3s ease;
 }
@@ -261,7 +261,7 @@ body {
 }
 
 .topbar .profile .profile-links.show {
-    opacity: 1;
+    display: block;
     top: 100%;
 }
 
@@ -306,7 +306,7 @@ body {
     }
 
     .toggle {
-        z-index: 10001;
+        z-index: 1000;
     }
 
     .main.active .toggle {

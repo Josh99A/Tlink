@@ -1,6 +1,7 @@
 from typing import Any
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
@@ -9,13 +10,14 @@ from .forms import StoreForm, CommentForm
 from core.models import User
 from .models import Store, Product
 
+from apps.dashboard.catalogue.views import ProductListView
+
 from apps.catalogue.models import Category
 
 class SettingsView(TemplateView):
     template_name = 'store/settings.html'
 
     def get(self, request, *args, **kwargs):
-        print("Started get request")
         # Get the user shop 
         try: 
             user_shop = Store.objects.get(owner=request.user)
@@ -47,7 +49,10 @@ class StoreCreationView(SingleObjectMixin, FormView):
            store = storeForm.save(commit=False)
            store.staff.add(request.user)
            store.slug = store.get_slug()
+           store.prompted = True
            store.save()
+           message = "Your store has successfully been created. Enjoy"
+           messages.success(request, message)
            return redirect(reverse('store:settings'))
         else:
             context = self.get_context_data(storeForm=storeForm)
@@ -120,12 +125,12 @@ class StoreCommentView(SingleObjectMixin, View):
         return context
 
 
-class DashBoardView(ListView):
+class DashBoardView(ProductListView):
     model = Product
     template_name = 'store/dashboard/dashboard.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(*kwargs)
+        context = super().get_context_data(**kwargs)
 
         categories = Category.objects.all()
         root_categories = []
@@ -137,6 +142,7 @@ class DashBoardView(ListView):
         
 
         context['categories'] = root_categories
+        print(context)
         return context
 
 

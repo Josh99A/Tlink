@@ -1,7 +1,15 @@
 from oscar.apps.dashboard.catalogue.views import ProductCreateUpdateView , ProductClassCreateView as OscarProductClassCreateView
+from oscar.apps.dashboard.catalogue.views import ProductListView as OscarProductListView
+
+from django.urls import reverse
 
 from .forms import ProductForm, ProductClassForm
 from .formsets import StockRecordFormSet
+from .tables import ProductTable
+
+
+class ProductListView(OscarProductListView):
+    table_class = ProductTable
 
 
 class TlinkProductCreateUpdateView(ProductCreateUpdateView):
@@ -31,6 +39,16 @@ class TlinkProductCreateUpdateView(ProductCreateUpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+    
+    def get_success_url(self, **kwargs):
+        super().get_success_url(**kwargs)
+        action = self.request.POST.get("action")
+        if action == "continue":
+            url = reverse("dashboard:catalogue-product", kwargs={"pk": self.object.id})
+        else:
+            url = reverse("store:dashboard", kwargs={'pk':self.request.user.pk})
+        return self.get_url_with_querystring(url)
+
         
 class ProductClassCreateView(OscarProductClassCreateView):
     form_class= ProductClassForm
