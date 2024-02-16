@@ -2,11 +2,11 @@
 /venv/
 
 #Environment variables
-.env
+
 
 # Editor 
 .vscode/
 
 # Database
-*.sqlite3
+
 
