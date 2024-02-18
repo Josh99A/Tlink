@@ -1,8 +1,20 @@
-from django.forms import ModelForm, HiddenInput
+from django.forms import ModelForm
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
+from django.utils.translation import gettext as _
+
+
 from .models import Store, Comment
 from core.models import User
-from django.utils.translation import gettext as _
+
+
+class PasswordChangeForm(BasePasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
+        self.fields['new_password1'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
+        self.fields['new_password2'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
+
 
 class StoreForm(ModelForm):
     class Meta:
@@ -15,8 +27,8 @@ class StoreForm(ModelForm):
 
     def __init__(self, *args,**kwargs):
         super().__init__(*args,  **kwargs)
-        self.fields['name'].widget.attrs.update({'class':'form-control'})
-        self.fields['location'].widget.attrs.update({'class':'form-select'})
+        self.fields['name'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
+        self.fields['location'].widget.attrs.update({'class':'form-select border border-primary-subtle'})
         self.fields['location_image1'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card1', 'imageName1')"})
         self.fields['location_image2'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card2', 'imageName2')"})
         self.fields['location_image3'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card3', 'imageName3')"})

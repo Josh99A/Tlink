@@ -1,43 +1,56 @@
+from re import template
 from typing import Any
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
-from .forms import StoreForm, CommentForm
+
+
+
+from .forms import StoreForm, CommentForm, PasswordChangeForm
 from core.models import User
 from .models import Store, Product
+from .mixins import settingsMixin
+
 
 from apps.dashboard.catalogue.views import ProductListView
-
+from apps.customer.views import ProfileUpdateView, ProfileDeleteView, ChangePasswordView
+from apps.customer.views import ProfileView
 from apps.catalogue.models import Category
 
-class SettingsView(TemplateView):
-    template_name = 'store/settings.html'
-
-    def get(self, request, *args, **kwargs):
-        # Get the user shop 
-        try: 
-            user_shop = Store.objects.get(owner=request.user)
-        except (User.shop.RelatedObjectDoesNotExist, Store.DoesNotExist):
-            # create if it does not exist
-            user_shop = Store(owner=request.user, primary_image=request.user.profile)
-            user_shop.save() 
 
 
-        self.form = StoreForm(instance=user_shop)
-        context = self.get_context_data()
+class SettingsView(settingsMixin, ProfileView):
+    template_name = 'store/profile.html'
+    active_tab = 'profile'
+    page_title = 'Profile'
 
-        return self.render_to_response(context)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['storeForm'] = self.form
-        return context
+class ProfileUpdateView(settingsMixin, ProfileUpdateView):
+    template_name = 'store/profile_form.html'
+    active_tab = 'profile'
+    success_url = reverse_lazy('store:settings')
+
+class ProfileDeleteView(settingsMixin, ProfileDeleteView):
+    template_name = 'store/profile_delete.html'
+    active_tab = 'profile'
+    success_url = reverse_lazy('core:index')
+
+
+class ChangePasswordView(settingsMixin, ChangePasswordView):
+    form_class = PasswordChangeForm
+    template_name = 'store/change_password.html'
+    success_url = reverse_lazy('store:settings')
+
 
 class StoreCreationView(SingleObjectMixin, FormView):
+    """
+     Get the existing user store and create a form for updating it.
+
+    """
     template_name = 'store/settings.html'
     form_class = StoreForm
     model = User
@@ -72,13 +85,13 @@ class UploadProfileImageView(View):
     def post(self, request, *args, **kwargs):
         new_image = request.FILES.get('profile-image')
 
-        request.user.profile = new_image
+        request.user.profile_image = new_image
         request.user.save()
         # Update Store image
         if hasattr(request.user, 'shop'):
-            request.user.shop.primary_image = request.user.profile
+            request.user.shop.primary_image = request.user.profile_image
             request.user.shop.save()
-        new_image_url = request.user.profile.url
+        new_image_url = request.user.profile_image.url
 
         return JsonResponse({'new_image': new_image_url })
 
@@ -158,3 +171,5 @@ class ProductCreation(TemplateView):
         context['root_category'] = Category.objects.get(name=kwargs['category'])
         context['productclass_categories'] = context['root_category'].get_descendants().filter(productclass__isnull=False).distinct()
         return context
+
+

@@ -6,6 +6,9 @@ from apps.dashboard.catalogue import views as  OscarViews
 app_name='store'
 urlpatterns = [
     path('settings/', views.SettingsView.as_view(), name='settings'),
+    path('profile/update/', views.ProfileUpdateView.as_view(), name='profile-update'),
+    path('profile/delete/', views.ProfileDeleteView.as_view(), name='profile-delete'),
+    path('profile/change_password/', views.ChangePasswordView.as_view(), name='change-password'),
     path('<int:pk>/dashboard/', views.DashBoardView.as_view(), name='dashboard'),
     path('product_addition/<str:category>/', views.ProductCreation.as_view(), name='add_product'),
     path('<int:pk>/<slug:slug>/store', views.StoreView.as_view(), name='store'),

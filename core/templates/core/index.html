@@ -8,11 +8,28 @@
 
 
 {% block main-content %}
-<style>
-  .seller-rating{
-    margin-right: 20px;
-  }
-</style>
+  <!--================message model======================-->
+  <div class="modal fade" tabindex="-1" id="hp_messages"   role="dialog" >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title"></h4>
+            <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+            <div class="modal-body">
+              {% if messages %}
+              {% for message in messages %}
+                 <div class="alert alert-success  fade show  box fw-bold fs-6" role="alert">
+                 <p>{{ message }}</p>
+                  </div>
+                 {% endfor %}
+             {% endif %}
+        </div>
+    </div>
+  </div>
+  </div>
+  <!--End of message model-->
+  
   <!-- Carousel  -->
   <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" >
     <div class="carousel-inner">
@@ -70,6 +87,7 @@
     </button>
   </div>
   <!--End of Carousel-->
+
   <div class="container-fluid">
     <main class="container-fluid mt-3">
       <!--Find your interest-->
@@ -290,4 +308,13 @@
       
     </main>
 </div>
+{% if messages %}
+<script>
+	$(document).ready(function(){
+		$("#hp_messages").modal('show');
+	});
+
+</script>
+{% endif %}
+
 {% endblock main-content %}

@@ -12,7 +12,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=13)
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    profile = models.ImageField(upload_to='profiles', default='blank-profile.png')
+    profile_image = models.ImageField(upload_to='profiles', default='blank-profile.png')
 
 
 

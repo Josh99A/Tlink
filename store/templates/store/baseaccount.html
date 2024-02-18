@@ -1,13 +1,14 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% load image_tags %}
+{% load i18n %}
 
 {% block main-content %}
 <div style="height: 100px; margin-bottom: 20px;" ></div>
 <div class="settings_body container-fluid my-4">
     
     <div class="modal fade " tabindex="-1" id="shop_prompt" data-bs-backdrop="static"  role="dialog" data-bs-keyboard="false" aria-labelledby="shop_promptlabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title ">Want to make money!!! </h4>       
@@ -25,15 +26,7 @@
             </div>
         </div>
      </div>
-    <style>
-        .profile-image{
-            width: 12rem;
-            height: 12rem;
-            border-radius: 50%;
-            border: 6px solid rgba(255, 255, 255, 0.15);
-            margin: 5px auto;
-        }
-    </style>
+
     <nav aria-label="breadcrumb d-inline-block">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
@@ -46,7 +39,9 @@
      </nav>
     
      <h3 class="me-auto">Account Settings</h3>
-     
+       
+
+     <!--======================= Message alerts====================== -->
      {% if messages %}
      {% for message in messages %}
         <div class="alert alert-success alert-dismissible fade show  box fw-bold fs-6" role="alert">
@@ -55,10 +50,11 @@
          </div>
         {% endfor %}
     {% endif %}
+    <!--=================End of message alerts========================-->
      <hr>
     <div class="d-flex justify-content-sm-end justify-content-center flex-wrap-wrap">
         <div class=""> 
-            <img src="{{ user.profile.url }}" alt="" class="profile-image img-fluid" id="profileImage">
+            <img src="{{ user.profile_image.url }}" alt="" class="profile-image img-fluid" id="profileImage">
         </div>
         <form  class=" pt-container align-self-center " id="profileForm">
             {% csrf_token%}
@@ -71,18 +67,25 @@
    
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-store-tab" data-bs-toggle="tab" data-bs-target="#nav-store" type="button" role="tab" aria-controls="nav-store" aria-selected="true">Store settings</button>
-            <button class="nav-link " id="nav-userInfo-tab" data-bs-toggle="tab" data-bs-target="#nav-userInfo" type="button" role="tab" aria-controls="nav-userInfo" aria-selected="false">User settings</button>
-            <button class="nav-link " id="nav-referral-tab" data-bs-toggle="tab" data-bs-target="#nav-referral" type="button" role="tab" aria-controls="nav-referral" aria-selected="false">Referral settings</button>
-            <button class="nav-link " id="nav-makeMoney-tab" data-bs-toggle="tab" data-bs-target="#nav-makeMoney" type="button" role="tab" aria-controls="nav-makeMoney" aria-selected="false">How to make money with Tlink</button>
+            <button class="nav-link fw-bold {% if active_tab == 'profile' %} active {% endif %}" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+            <button class="nav-link fw-bold {% if active_tab == 'store_settings' %} active {% endif %}" id="nav-store-tab" data-bs-toggle="tab" data-bs-target="#nav-store" type="button" role="tab" aria-controls="nav-store" aria-selected="true">Store settings</button>
+            <button class="nav-link fw-bold {% if active_tab == 'notifications' %} active {% endif %}" id="nav-notifications-tab" data-bs-toggle="tab" data-bs-target="#nav-notifications" type="button" role="tab" aria-controls="nav-notifications" aria-selected="false">Notifications</button>
+            <button class="nav-link fw-bold {% if active_tab == 'wishlist' %} active {% endif %} " id="nav-wishlist-tab" data-bs-toggle="tab" data-bs-target="#nav-wishlist" type="button" role="tab" aria-controls="nav-wishlist" aria-selected="false">Wishlist</button>
+            <button class="nav-link fw-bold {% if active_tab == 'order_history' %} active {% endif %} " id="nav-orderHistory-tab" data-bs-toggle="tab" data-bs-target="#nav-orderHistory" type="button" role="tab" aria-controls="nav-orderHistory" aria-selected="false">Order history</button>
+            <button class="nav-link fw-bold {% if active_tab == 'make_money' %} active {% endif %}" id="nav-make-money-tab" data-bs-toggle="tab" data-bs-target="#nav-make-money" type="button" role="tab" aria-controls="nav-make-money" aria-selected="false">How to make money</button>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
-            <div class="container-fluid">
+        <div class="tab-pane {% if active_tab == 'profile' %} fade show active {% endif %}" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+            <div class="container my-3 table-responsive">
+                {% block profile_tabcontent %}{% endblock %}
+            </div>
+        </div>
+        <div class="tab-pane {% if active_tab == 'store_settings' %} fade show active {% endif %}" id="nav-store" role="tabpanel" aria-labelledby="nav-store-tab" tabindex="0">
+            <div class="container my-3">
             <form action="{% url 'store:createStore' pk=user.id %}" method="POST" enctype="multipart/form-data" class="row g-3">
                     {% csrf_token %}
-                    {% if storeForm.errors %}
+                    {% if storeForm.errors or storeForm.non_field_errors %}
                     <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
                         {% for field in storeForm %}
                         {% if field.errors %}
@@ -90,6 +93,7 @@
                         {{field.errors}}
                         {% endif %}
                         {% endfor %}
+                        {{storeForm.non_field_errors}}
                         <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
                     </div>
                     {% endif %}
@@ -100,9 +104,7 @@
                         <h3>Create your online store</h3>
                         {% endif %}
                     </div> 
-                <div class="my-2">
-                    {{storeForm.non_field_errors}}
-                </div>
+            
                 <div class="col-md-6">
                     <label for="{{ storeForm.name.id_for_label }}" class="form-label fw-blod">Name your store:</label>
                     {{storeForm.name}}
@@ -213,15 +215,16 @@
                 </div>
                 
             </form>
+            </div>
         </div>
-        </div>
-        <div class="tab-pane" id="nav-userInfo" role="tabpanel" aria-labelledby="nav-userInfo-tab" tabindex="0">UserInfo</div>
-        <div class="tab-pane" id="nav-referral" role="tabpanel" aria-labelledby="nav-referral-tab" tabindex="0">Referral</div>
-        <div class="tab-pane" id="nav-makeMoney" role="tabpanel" aria-labelledby="nav-makeMoney-tab" tabindex="0">MakeMoney</div>
+        <div class="tab-pane {% if active_tab == 'notifications' %} fade show active {% endif %}" id="nav-notifications" role="tabpanel" aria-labelledby="nav-notifications-tab" tabindex="0">Notifications</div>
+        <div class="tab-pane {% if active_tab == 'wishlist' %} fade show active {% endif %}" id="nav-wishlist" role="tabpanel" aria-labelledby="nav-whishlist-tab" tabindex="0">Wishlist</div>
+        <div class="tab-pane {% if active_tab == 'order_history' %} fade show active {% endif %} " id="nav-orderHistory" role="tabpanel" aria-labelledby="nav-orderHistory-tab" tabindex="0">Order history</div>
+        <div class="tab-pane {% if active_tab == 'make_money' %} fade show active {% endif %}" id="nav-make-money" role="tabpanel" aria-labelledby="nav-make-money-tab" tabindex="0">How to make money</div>
     </div>
 
-{% block extrascripts %}
-<script>
+
+ <script>
      function uploadImage(){
             const form = document.getElementById('profileForm')
             const formData = new FormData(form)
@@ -240,7 +243,7 @@
             })
             .catch(error => console.error('Error:', error))
         }
-</script>
+</script> 
 
 
 {% if not user.shop.prompted and not user.shop.get_slug %}
@@ -252,8 +255,10 @@
 </script>
 
 {% endif %}
-{{ block.super  }}
-{% endblock %}
+
+
      
 </div>
-{% endblock main-content %}
+
+
+{% endblock %}

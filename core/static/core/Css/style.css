@@ -363,6 +363,15 @@ li {
 }
 
 
+/********************** Account style ****************************/
+.profile-image{
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    border: 6px solid rgba(255, 255, 255, 0.15);
+    margin: 5px auto;
+}
+
 .fashion-main-banner {
     background: url(../Images/Fashion/unisex-fashion-image.jpg) top/cover no-repeat;
     min-height: 40vh;

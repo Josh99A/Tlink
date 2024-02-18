@@ -1,0 +1,44 @@
+{% extends 'store/baseaccount.html' %}
+{% load i18n %}
+
+{% block profile_tabcontent %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="fw-bold fs-3">
+        <h3>Delete Profile</h3>
+        <hr>
+    </div>
+    {% if form.errors or form.non_field_errors %}
+        <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6 my-2" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            {{field.label_tag}}
+            {{field.errors}}
+            {% endif %}
+            {% endfor %}
+            {{ form.non_field_errors}}
+            <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+        </div>
+    {% endif %}
+    <div class="my-2">
+        <p>Please confirm your password to delete your profile </p>
+        <label for="{{ form.password.id_for_label }}" class="form-label">Password:</label>
+        {{ form.password }}
+    </div>
+
+    <div class="alert alert-warning">
+        <h3>{% trans "Warning" %}</h3>
+        {% blocktrans %}
+            This will delete all information about you from the site.  Deleting your profile cannot be
+            undone.
+        {% endblocktrans %}
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button class="btn  btn-danger" type="submit" data-loading-text="{% trans 'Deleting...' %}">{% trans "Delete" %}</button>
+        <a href="{% url 'store:settings' %}" class="btn btn-primary ">Cancel</a>
+    </div>
+
+</form>
+
+{% endblock %}

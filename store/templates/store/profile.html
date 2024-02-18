@@ -1,0 +1,42 @@
+{% extends 'store/baseaccount.html' %}
+{% load static %}
+{% load image_tags %}
+{% load i18n %}
+
+{% block profile_tabcontent %}
+<div class="fw-bold fs-3">
+    <h3>Profile</h3>
+    <hr>
+</div> 
+<table class="table table-striped table-bordered">
+    <tbody>
+        <tr>
+            <th>{% trans 'Name' %}</th>
+            <td>{{ user.get_full_name|default:'-' }}</td>
+        </tr>
+        <tr>
+            <th>{% trans 'Email address' %}</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        {% block profile_fields %}
+            {% for field in profile_fields %}
+                <tr>
+                    <th>{{ field.name }}</th>
+                    <td>{{ field.value|default:"-" }}</td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+        <tr>
+            <th>{% trans 'Date registered' %}</th>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href="{% url 'store:change-password' %}" class="btn btn-primary">{% trans 'Change password' %}</a>
+    <a href="{% url 'store:profile-update' %}" class="btn btn-primary">{% trans 'Edit profile' %}</a>
+    <a id="delete_profile" href="{% url 'store:profile-delete' %}" class="btn btn-danger">{% trans 'Delete profile' %}</a>
+</div>
+
+
+{% endblock %}
