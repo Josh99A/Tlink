@@ -1,5 +1,3 @@
-from re import template
-from typing import Any
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
@@ -12,7 +10,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from .forms import StoreForm, CommentForm, PasswordChangeForm
 from core.models import User
-from .models import Store, Product
+from .models import Store, Product, StoreRecord
 from .mixins import settingsMixin
 
 
@@ -60,10 +58,17 @@ class StoreCreationView(SingleObjectMixin, FormView):
         self.object = self.get_object()
         if storeForm.is_valid():
            store = storeForm.save(commit=False)
-           store.staff.add(request.user)
            store.slug = store.get_slug()
            store.prompted = True
            store.save()
+
+           # Create a store record if it does not exist
+           store_record_exists = StoreRecord.objects.filter(store=store).exists()
+
+           if not store_record_exists:
+                store_record =  StoreRecord.objects.create(store=store)
+                store_record.staff.add(request.user)
+
            message = "Your store has successfully been created. Enjoy"
            messages.success(request, message)
            return redirect(reverse('store:settings'))
@@ -77,10 +82,7 @@ class StoreCreationView(SingleObjectMixin, FormView):
             context[kw] = kwargs[kw]
         return context
         
-    
-
-
-    
+        
 class UploadProfileImageView(View):
     def post(self, request, *args, **kwargs):
         new_image = request.FILES.get('profile-image')
@@ -96,7 +98,6 @@ class UploadProfileImageView(View):
         return JsonResponse({'new_image': new_image_url })
 
 
-
 class StoreView(DetailView):
     model=Store
     template_name='store/store.html'
@@ -104,11 +105,14 @@ class StoreView(DetailView):
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
         self.object = self.get_object()
-        print('Object', self.object)
         context['commentForm'] = CommentForm(store=self.object, user=self.request.user)
-        context['products'] = context['store'].products.all()
+        store_record_exists = StoreRecord.objects.filter(store=self.object).exists()
+
+        if store_record_exists:
+            context['products'] = context['store'].record.products.all()
         print(context)
         return context
+
 
 class StoreCommentView(SingleObjectMixin, View):
     model=Store

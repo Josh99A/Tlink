@@ -11,9 +11,7 @@ class Store(models.Model):
     name = models.CharField(max_length=15)
     owner = models.OneToOneField(User, related_name="shop", on_delete=models.CASCADE)
     location = models.CharField(max_length=20, choices=location_choices)
-    staff = models.ManyToManyField(User, related_name='stores')
     is_active = models.BooleanField(default=False)
-    products = models.ManyToManyField(Product, related_name='store', blank=True)
     prompted = models.BooleanField(default=False)
     slug = models.SlugField()
     date_created = models.DateField('Date created', auto_now_add=True)
@@ -30,6 +28,20 @@ class Store(models.Model):
     def get_slug(self):
         return slugify(self.name)
 
+class StoreRecord(models.Model):
+    store = models.OneToOneField(Store, on_delete=models.CASCADE ,  related_name='record')
+    views = models.IntegerField(default=0)
+    # Ratings are between 0 and 5
+    RATING_CHOICES = tuple([(x, x) for x in range(0, 6)])
+    rating = models.PositiveSmallIntegerField( "Rating", choices=RATING_CHOICES, default=0)
+    products = models.ManyToManyField(Product, related_name='store', blank=True)
+    staff = models.ManyToManyField(User, related_name='stores')
+    followers = models.ManyToManyField(User)
+
+    def __str__(self):
+        return self.store.name
+
+
 class Comment(models.Model):
     title = models.CharField(max_length=30)
     user = models.ForeignKey(User, related_name='comment_user', on_delete=models.CASCADE)
@@ -39,7 +51,7 @@ class Comment(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='comments')
     # Scores are between 0 and 5
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
-    score = models.SmallIntegerField( "Score", choices=SCORE_CHOICES)
+    score = models.PositiveSmallIntegerField( "Score", choices=SCORE_CHOICES)
 
 
     def __str__(self):

@@ -39,6 +39,26 @@ rel="stylesheet"
 <script src="{% static 'core\Css\bootstrap-5.3.2-dist\js\bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'core\Css\package\swiper-bundle.min.js' %}"></script>
 <script src="{% static 'core\Javascript\main.js' %}"></script>
+<script>
+  var swiper = new Swiper(".product_thumbnails", {
+    loop: true,
+    spaceBetween: 10,
+    slidesPerView: 4,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+  var swiper2 = new Swiper(".product_gallery", {
+    loop: true,
+    spaceBetween: 10,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    thumbs: {
+      swiper: swiper,
+    },
+  });
+</script>
 
 {% endblock %}
 

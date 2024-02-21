@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %}
+{% load image_tags %}
+{% load i18n %}
+{% load history_tags %}
+{% load currency_filters %}
+{% load reviews_tags %}
+{% load product_tags %}
+{% load display_tags %}
+{% load purchase_info_tags %}
+
+{% block main-content %}
+<div style="height: 100px; margin-bottom: 20px;" ></div>
+<style>
+   
+    .swiper {
+      width: 100%;
+      height: 100%;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+   
+
+    .swiper {
+      width: 100%;
+      height: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .swiper-slide {
+      background-size: cover;
+      background-position: center;
+    }
+
+   .product_gallery {
+      height: 80%;
+      width: 100%;
+    }
+
+   .product_thumbnails {
+      height: 20%;
+      box-sizing: border-box;
+      padding: 10px 0;
+    }
+
+   .product_thumbnails .swiper-slide {
+      width: 25%;
+      height: 100%;
+      opacity: 0.4;
+    }
+
+   .product_thumbnails .swiper-slide-thumb-active {
+      opacity: 1;
+    }
+
+    .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="container" >
+        <div class="row">
+                <div class="col-sm-6 "><!--Image Gallery-->
+                  <div class="">
+                    <div class=" col-sm-10 col-md-8 col-lg-6 text-center">
+                      {% with all_images=product.get_all_images %}
+                    <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper product_gallery">
+                        <div class="swiper-wrapper">
+                            {% for image in all_images %}
+                            {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
+                            <div class="swiper-slide" >
+                                <img src="{{ thumb.url }}" class="img-fluid" alt="{{ product.get_title }}">
+                            </div>
+                        {% endfor %}
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                        </div>
+                        <!--Thumb nails-->
+                        <div thumbsSlider="" class="swiper product_thumbnails">
+                        <div class="swiper-wrapper">
+                            {% for image in all_images %}
+                            <div class="swiper-slide">
+                            {% oscar_thumbnail image.original "65x55" crop="center" as thumb %}
+                                <img src="{{ thumb.url }}" class="img-fluid" alt="{{ product.get_title }}" />
+                            </div>
+                        {% endfor %}
+                            
+                        </div>
+                        </div>
+                    
+                        {% endwith %} 
+                    </div>
+                  </div>
+                </div><!--End of Image gallery-->
+                {% block product_main %}
+        <div class="col-sm-6 product_main">
+            {% comment %}
+                This is a bit clunky here.  Better to have some kind of JS-driven dashboard menu that
+                pops out when clicked.  A bit like the Django-Debug-Toolbar button
+            {% endcomment %}
+            {% if user.is_staff %}
+                <a class="float-right d-none d-md-block" href="{% url 'dashboard:catalogue-product' pk=product.id %}">
+                    <small><i class="fas fa-pencil-alt"></i> {% trans "Edit this product" %}</small>
+                </a>
+            {% endif %}
+            <h1>{{ product.get_title }}</h1>
+
+            {% block product_stock_record %}
+                {% include "oscar/catalogue/partials/stock_record.html" with verbose=1 %}
+            {% endblock %}
+
+            {% iffeature "reviews" %}
+                {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
+            {% endiffeature %}
+
+            <hr/>
+
+            {% if not product.is_parent %}
+                {% block product_basket_form %}
+                    {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
+                {% endblock %}
+            {% else %}
+                {% block variants %}
+                    <h2>{% trans 'Variants:' %}</h2>
+                    {% for child in product.children.public %}
+                        {% purchase_info_for_product request child as child_session %}
+                        {% if child_session.availability.is_available_to_buy %}
+                            <a href="{{ child.get_absolute_url }}">{{ child.get_title }}</a><br>
+                        {% endif %}
+                    {% endfor %}
+                {% endblock %}
+            {% endif %}
+        </div><!-- /col-sm-6 -->
+        {% endblock %}
+
+                <div style="height:500px;"></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

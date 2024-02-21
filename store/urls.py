@@ -20,4 +20,5 @@ urlpatterns = [
                 OscarViews.TlinkProductCreateUpdateView.as_view(),
                 name="product_create",
             ),
+   
 ]
