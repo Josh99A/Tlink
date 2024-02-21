@@ -118,9 +118,9 @@
                 This is a bit clunky here.  Better to have some kind of JS-driven dashboard menu that
                 pops out when clicked.  A bit like the Django-Debug-Toolbar button
             {% endcomment %}
-            {% if user.is_staff %}
+            {% if user.is_staff or product.seller == user %}
                 <a class="float-right d-none d-md-block" href="{% url 'dashboard:catalogue-product' pk=product.id %}">
-                    <small><i class="fas fa-pencil-alt"></i> {% trans "Edit this product" %}</small>
+                    <small><i class="bi bi-pencil-fill"></i> {% trans "Edit this product" %}</small>
                 </a>
             {% endif %}
             <h1>{{ product.get_title }}</h1>
@@ -140,15 +140,7 @@
                     {% include "oscar/catalogue/partials/add_to_basket_form.html" %}
                 {% endblock %}
             {% else %}
-                {% block variants %}
-                    <h2>{% trans 'Variants:' %}</h2>
-                    {% for child in product.children.public %}
-                        {% purchase_info_for_product request child as child_session %}
-                        {% if child_session.availability.is_available_to_buy %}
-                            <a href="{{ child.get_absolute_url }}">{{ child.get_title }}</a><br>
-                        {% endif %}
-                    {% endfor %}
-                {% endblock %}
+                
             {% endif %}
         </div><!-- /col-sm-6 -->
         {% endblock %}
