@@ -1,0 +1,22 @@
+{% load i18n %}
+{% load product_tags %}
+
+{% with products_sliced=products|slice:":6" %}
+    {% if products_sliced %}
+        <div class="sub-header m-2">
+            <h2>{% trans 'Products you recently viewed' %}</h2>
+        </div>
+
+        <!-- <ul class="row list-unstyled mx-0">
+            {% for product in products_sliced %}
+                <li class="col-sm-4 col-md-3 col-lg-3">{% render_product product %}</li>
+            {% endfor %}
+        </ul> -->
+        <div class="row products">
+            {% for product in products_sliced %}
+            {% include 'oscar/catalogue/partials/product.html'  %}
+            {% endfor %}
+
+        </div>
+    {% endif %}
+{% endwith %}

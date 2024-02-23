@@ -79,14 +79,14 @@
 
     <div class="container" >
         <div class="row">
-                <div class="col-sm-6 "><!--Image Gallery-->
-                  <div class="">
-                    <div class=" col-sm-10 col-md-8 col-lg-6 text-center">
+                <div class="col-sm-6"><!--Image Gallery-->
+                  <div class="mx-auto">
+                    <div class="ms-md-5 col-sm-10 col-md-8 col-lg-6    border border-primary">
                       {% with all_images=product.get_all_images %}
                     <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper product_gallery">
                         <div class="swiper-wrapper">
                             {% for image in all_images %}
-                            {% oscar_thumbnail image.original "440x400" upscale=False as thumb %}
+                            {% oscar_thumbnail image.original "440x400"  upscale=False as thumb %}
                             <div class="swiper-slide" >
                                 <img src="{{ thumb.url }}" class="img-fluid" alt="{{ product.get_title }}">
                             </div>
@@ -96,7 +96,7 @@
                         <div class="swiper-button-prev"></div>
                         </div>
                         <!--Thumb nails-->
-                        <div thumbsSlider="" class="swiper product_thumbnails">
+                        <div thumbsSlider="" class="swiper product_thumbnails border-top border-primary">
                         <div class="swiper-wrapper">
                             {% for image in all_images %}
                             <div class="swiper-slide">
@@ -113,7 +113,8 @@
                   </div>
                 </div><!--End of Image gallery-->
                 {% block product_main %}
-        <div class="col-sm-6 product_main">
+                
+        <div class="col-sm-6 product_main my-3">
             {% comment %}
                 This is a bit clunky here.  Better to have some kind of JS-driven dashboard menu that
                 pops out when clicked.  A bit like the Django-Debug-Toolbar button
@@ -145,7 +146,101 @@
         </div><!-- /col-sm-6 -->
         {% endblock %}
 
-                <div style="height:500px;"></div>
+        {% block product_description %}
+        {% if product.description %}
+        <div id="product_description" class="sub-header my-3">
+            <h2>{% trans "Product Description" %}</h2>
+        </div>
+        <p>{{ product.description|safe }}</p>
+        {% endif %}
+      {% endblock %}
+
+      {% block product_info %}
+      <div class="sub-header">
+          <h2>{% trans "Product Information" %}</h2>
+      </div>
+      <table class="table table-striped">
+          {% if product.upc %}
+          <tr>
+              <th>{% trans "UPC" %}</th><td>{{ product.upc }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+              <th>{% trans "Product Type" %}</th><td>{{ product.get_product_class.name }}</td>
+          </tr>
+  
+          {% purchase_info_for_product request product as session %}
+          {% if session.price.exists %}
+              <tr>
+                  <th>{% trans "Price (excl. tax)" %}</th><td>{{ session.price.excl_tax|currency:session.price.currency }}</td>
+              </tr>
+              {% if session.price.is_tax_known %}
+                  <tr>
+                      <th>{% trans "Price (incl. tax)" %}</th><td>{{ session.price.incl_tax|currency:session.price.currency }}</td>
+                  </tr>
+                  <tr>
+                      <th>{% trans "Tax" %}</th><td>{{ session.price.tax|currency:session.price.currency }}</td>
+                  </tr>
+              {% endif %}
+              <tr>
+                  <th>{% trans "Availability" %}</th>
+                  <td>{{ session.availability.message }}</td>
+              </tr>
+          {% endif %}
+          {% for av in product.get_attribute_values %}
+              <tr>
+                  <th>{{ av.attribute.name }}</th>
+                  <td>{{ av.value_as_html }}</td>
+              </tr>
+          {% endfor %}
+          {% iffeature "reviews" %}
+              <tr>
+                  <th>{% trans "Number of reviews" %}</th>
+                  <td>{{ product.num_approved_reviews }}</td>
+              </tr>
+          {% endiffeature %}
+      </table>
+      {% endblock %}
+
+      <div id="reviews">
+        {% iffeature "reviews" %}
+        {% block product_review %}
+        <section>
+            <div id="reviews" class="sub-header">
+                {% if product.num_approved_reviews > 3 %}
+                    <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.id %}" class="btn float-right">{% trans "See all reviews" %}</a>
+                {% endif %}
+                <h2>{% trans "Customer Reviews" %}</h2>
+            </div>
+
+            {% if product.num_approved_reviews == 0 %}
+                <p>
+                    {% if product|is_review_permitted:user %}
+                        {% url 'catalogue:reviews-add' product_slug=product.slug product_pk=product.id as add_review_url %}
+                            {% blocktrans %}This product does not have any reviews yet -
+                            <a href="{{ add_review_url }}#addreview">be the first to write one</a>.
+                        {% endblocktrans %}
+                    {% else %}
+                        {% trans "This product does not have any reviews yet" %}.
+                    {% endif %}
+                </p>
+            {% else %}
+            <div class="row">
+                    {% for review in product.reviews.approved.all|slice:":3" %}
+                            <div class="col-md-6 my-2">
+                                {% include 'oscar/catalogue/partials/review.html' %}   
+                            </div>
+                    {% endfor %}
+            </div>
+
+            {% endif %}
+        </section>
+        {% endblock product_review %}
+    {% endiffeature %}
+
+
+    {% recently_viewed_products current_product=product %}
+        <div style="height:500px;"></div>
         </div>
     </div>
 </div>

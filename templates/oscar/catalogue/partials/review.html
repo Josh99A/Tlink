@@ -1,0 +1,81 @@
+{% load reviews_tags %}
+{% load i18n %}
+{% load image_tags %}
+<article class="card border-secondary">
+    <div class="card-header d-flex justify-content-between">
+            <figure>
+                <img src="{% oscar_thumbnail review.user.profile_image  '65x55' upscale='False' %}" alt="">
+            </figure>
+            <span class="ms-3 lh-sm">
+                
+                {% if review.user == user %}
+                  <span class=" fs-5 fw-bold">You</span>
+                  <span class="star-rating {{ review.score|as_stars }} d-block fs-4">
+                    <span>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </span>
+                </span>
+                {% else %}
+                {% blocktrans with name=review.reviewer_name review_date=review.date_created %}
+                    <span class=" fs-5 fw-bold">{{ name }}</span>
+                {% endblocktrans %}
+                <span class="star-rating {{ review.score|as_stars }} d-block fs-4">
+                  <span>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                  </span>
+              </span>
+                {% endif %}
+                | <a href="{% url 'catalogue:reviews-detail' product_slug=product.slug product_pk=product.pk pk=review.pk %}" class="fs-6">{% trans 'Permalink' %}</a> 
+            </span>    
+    </div>
+    <div class="card-body">
+        <h5 class="card-title"><a href="{{ review.get_absolute_url }}">{{ review.title }}</a></h5>
+        <p class="card-text">{{ review.body|striptags }}</p>
+        <p class="mb-1">
+            <small>
+            {% if review.has_votes %}
+                {% blocktrans with num_up_votes=review.num_up_votes count num_votes=review.total_votes %}
+                <strong>{{ num_up_votes }}</strong> of {{ num_votes }} customer found this useful
+                {% plural %}
+                <strong>{{ num_up_votes }}</strong> of {{ num_votes }} customers found this useful
+                {% endblocktrans %}
+            {% else %}
+                {% trans "This review has no votes." %}
+            {% endif %}
+            </small>
+        </p>
+        {% if review|may_vote:user %}
+        <small class="fw-bold">{% trans "Is this review helpful?" %}</small>
+       <div class="d-flex">
+        <form action="{% url 'catalogue:reviews-vote' product_slug=product.slug product_pk=product.pk pk=review.pk %}" method="post" class="vote_agree" >
+            {% csrf_token %}
+            <input type="hidden" name="delta" value="1"/>
+            <button type="submit" class="btn btn-success btn-sm mx-2" data-loading-text="{% trans 'Submitting...' %}">{% trans "Yes" %}</button>
+        </form>
+        <form  action="{% url 'catalogue:reviews-vote' product_slug=product.slug product_pk=product.pk pk=review.pk %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="delta" value="-1"/>
+            <button type="submit" class="btn btn-danger btn-sm mx-2" data-loading-text="{% trans 'Submitting...' %}">{% trans "No" %}</button>
+        </form>
+       </div>
+    {% endif %}
+      
+    </div>
+    <div class="card-footer">
+        {% blocktrans with review_date=review.date_created %}
+        <div class="text-end">
+            <small class="is-size-7-mobile is-size-6 fw-semibold text-body-secondary">
+                {{ review_date }}
+            </small>
+        </div>
+        {% endblocktrans %}
+    </div>
+</article>
