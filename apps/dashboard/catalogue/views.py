@@ -13,7 +13,6 @@ class ProductListView(OscarProductListView):
 
 
 class TlinkProductCreateUpdateView(ProductCreateUpdateView):
-    # template_name = "oscar/dashboard/catalogue/product_update.html"
     template_name = "store/dashboard/product_addition.html"
     form_class = ProductForm
     stockrecord_formset = StockRecordFormSet
