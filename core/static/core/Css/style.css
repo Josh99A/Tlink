@@ -372,14 +372,25 @@ li {
     margin: 5px auto;
 }
 
-.fashion-main-banner {
-    background: url(../Images/Fashion/unisex-fashion-image.jpg) top/cover no-repeat;
+
+/*===================Category banner==================== */
+
+.category-main-banner{
     min-height: 40vh;
     overflow: hidden;
     position: relative;
 }
 
-.fashion-main-banner::before {
+.category-main-banner.fashion {
+    background: url(../Images/Fashion/unisex-fashion-image.jpg) top/cover no-repeat;  
+}
+
+.category-main-banner.electronics {
+    background: url(../Images/Electronics/Phone_and_accessories2.jpeg) top/cover no-repeat;  
+}
+
+
+.category-main-banner::before {
     content: "";
     position: absolute;
     background-color: rgba(0, 0, 0, 0.5);
@@ -390,7 +401,7 @@ li {
 
 }
 
-.fashion-header-info {
+.category-header-info {
     position: absolute;
     z-index: 1;
     top: 50%;
@@ -398,10 +409,11 @@ li {
 }
 
 @media(min-width: 540px) {
-    .fashion-header-info {
+    .category-header-info {
         left: 35%;
     }
 }
+/*===========================End of category banner================================ */
 
 .swiper-pagination .swiper-pagination-bullet {
     width: 12px;
@@ -454,7 +466,7 @@ li {
 }
 
 
-/* Rating */
+/*============ Product  Rating================== */
 .star-rating {
     color: #ced4da;
 }

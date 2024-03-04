@@ -7,7 +7,7 @@
 
 
 {% block product %}
-<article class="col-lg-2 col-mb-4 col-5 card p-0 mx-1 my-2">
+<article class="col-lg-2 col-mb-4 col-sm-5 card p-0 mx-1 my-2">
     {% block product_image %}
     <div class=" card-image product-wrap ">
         <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">

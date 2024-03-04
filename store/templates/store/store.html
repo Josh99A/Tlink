@@ -95,38 +95,9 @@
                 <a href="" class="nav-link" >Contact Seller</a>
             </li>
         </ul>
-        <div class="row products ms-3 my-4 ">
+        <div class="row products ms-3 m-4 ">
             {% for product in products %}
-            <div class="col-lg-3 col-mb-4 col-5 card p-0 mx-1 my-2  ">
-              <div class=" card-image product-wrap ">
-                <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
-                <div class="product-info fs-3">
-                  <h4><a href="" class="text-white is-size-7-mobile">{% trans product.get_title %}</a></h4>
-                  <div class="product-links fs-4">
-                    <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
-                    <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
-                  </div>
-                </div>
-              </div>
-              <div class="card-body p-2 fw-bold ">
-                <h6 class="is-size-7-mobile" style="height: 30px;">{{ product.get_title | truncatewords:9 }}</h6>
-                <div class="text-center">
-                  {% purchase_info_for_product request product as session %}
-                  {% if session.price.exists %}
-                  <span class="has-text-success">{{session.price.incl_tax|currency:session.price.currency  }}</span>
-                  {% endif %}
-                  <div class="product-rating  me-auto">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                  </div>
-
-                  <a href=""><button class="btn text-primary fw-bold">View details</button></a>
-                </div>
-              </div>
-            </div>
+            {% include 'oscar/catalogue/partials/product.html'  %}
             {% endfor %}
           </div>
     </div>
@@ -203,37 +174,63 @@
     </div>
     <div class="col-md-8 col-lg-9 pt-3 my-3">
         <h1 class="text-center">Store Comments</h1>
+        {% if store.comments.all.exists %}
+        {% for comment in store.comments.all %}
         <article class="media">
             <figure class="media-left">
                 <p class="image is-64x64">
-                    <img src="{% static 'core\Images\Fashion\8414ce16fab38c2c8ee81096b7b70092.jpg' %}" alt="">
+                    <img src="{{ comment.user.profile_image.url }}" alt="{{ comment.user.get_full_name }}'s comment">
                 </p>
             </figure>
             <div class="media-content">
                 <div class="content">
                     <p>
                         <div class="d-flex justify-content-between">
-                            <strong>Barbra Middleton</strong>
-                            <div class="store-rating   text-dark d-flex">
-                                <i class="bi bi-star-fill text-warning fs-4  mx-2"></i>
+                            <strong>{{ comment.user.get_full_name  }}</strong>
+                            <div class="star-rating {{ comment.score |as_stars }} d-flex">
+                                <i class="bi bi-star-fill fs-4 mx-2"></i>
                                 <i class="bi bi-star-fill  fs-4 mx-2"></i>
                                 <i class="bi bi-star-fill  fs-4  mx-2"></i>
                                 <i class="bi bi-star-fill  fs-4  mx-2"></i>
                                 <i class="bi bi-star-fill  fs-4  mx-2"></i>
                             </div>
                         </div>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ducimus.</p>
+                        <p>{{ comment.message }}</p>
                        <div class="d-flex flex-warp-nowrap ">
                         <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>.
                         <small class="fs-6"><a href="" class="text-dark"><i class="bi bi-reply-fill  "></i>Reply(4)</a></small>
                        </div>
                     </p>
-
                 </div>
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-64x64">
+                            <img src="{% static 'core\Images\Fashion\8414ce16fab38c2c8ee81096b7b70092.jpg' %}" alt="">
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <div class="text-start">
+                                    <strong>Barbra Middleton</strong>    
+                                </div>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ducimus.</p>
+                               <div class="d-flex flex-warp-nowrap ">
+                                <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>
+                               </div>
+                            </p>
+        
+                        </div>
+                    </div>
+                </article>
             </div>
         </article>
+        {% endfor %}
+        {% else %}
+        <p>This store has no comments. <a href="#storeCommentForm">Be the first to comment</a></p>
+        {% endif %}
         <hr>
-        <div class="media">
+        <div class="media" id="storeCommentForm">
             {% if user.is_authenticated %}
             <figure class="media-left">
                 <p class="image is-64x64">

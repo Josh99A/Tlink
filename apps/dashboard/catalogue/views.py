@@ -29,6 +29,9 @@ class TlinkProductCreateUpdateView(ProductCreateUpdateView):
         product = form.save(commit=False)
         product.seller = self.request.user
         product.save()
+        
+        # Add the product to the current user's store
+        self.request.user.shop.record.products.add(product)
         product.categories.add(self.get_context_data()['product_class'].category)
     
         response = super().form_valid(form, *args, **kwargs)

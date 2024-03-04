@@ -20,6 +20,7 @@
                 <div class="modal-body">
                     <div class="row">
 						{% for category in categories %}
+						{% if category in user.shop.product_type.all %}
 						<div class="col-lg-4 col-md-4 col-6 my-2">
 							<a href="{% url 'store:add_product' category.name %}">
 								<div class="image-container" class="w-25">
@@ -30,6 +31,7 @@
 							  </div>
 							  </a>
 						</div>
+						{% endif %}
 						{% endfor %}
 					</div>
                 </div>

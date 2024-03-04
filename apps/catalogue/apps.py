@@ -6,9 +6,10 @@ class CatalogueConfig(apps.CatalogueConfig):
     name = 'apps.catalogue'
 
     def ready(self,*args, **kwargs):
-        from .views import ProductDetailView
+        from .views import ProductDetailView, ProductCategoryView
 
         self.detail_view = ProductDetailView
+        self.category_view = ProductCategoryView
         super().ready()
 
     def get_urls(self):

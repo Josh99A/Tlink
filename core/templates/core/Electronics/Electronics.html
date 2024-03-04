@@ -1,8 +1,6 @@
-{% extends 'core/base.html' %}
-{% load static %}
-{% load category_tags %}
-{% load image_tags %}
-{% load purchase_info_tags %}
-{% load i18n %}
-{% load currency_filters %}
-{% block main-content %}
+{% extends 'core/layout.html' %}
+
+{% block intro %} Electronics {% endblock %}
+
+
+{% block banner_class %} {{ block.super }} electronics {% endblock  %}

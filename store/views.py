@@ -5,13 +5,15 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
+from django.utils import timezone
 
 
 
 from .forms import StoreForm, CommentForm, PasswordChangeForm
 from core.models import User
 from .models import Store, Product, StoreRecord
-from .mixins import settingsMixin
+from .mixins import settingsMixin, PageTitleMixin
+from .signals import store_viewed
 
 
 from apps.dashboard.catalogue.views import ProductListView
@@ -23,7 +25,7 @@ from apps.catalogue.models import Category
 
 class SettingsView(settingsMixin, ProfileView):
     template_name = 'store/profile.html'
-    active_tab = 'profile'
+    active_tab = 'store_settings'
     page_title = 'Profile'
 
 
@@ -44,14 +46,15 @@ class ChangePasswordView(settingsMixin, ChangePasswordView):
     success_url = reverse_lazy('store:settings')
 
 
-class StoreCreationView(SingleObjectMixin, FormView):
+class StoreCreationView(PageTitleMixin, SingleObjectMixin,FormView ):
     """
      Get the existing user store and create a form for updating it.
 
     """
-    template_name = 'store/settings.html'
+    template_name = 'store/profile.html'
     form_class = StoreForm
     model = User
+    active_tab = 'store_settings'
 
     def post(self, request, *args, **kwargs):
         storeForm = self.form_class(request.POST, request.FILES, instance=request.user.shop)
@@ -61,6 +64,7 @@ class StoreCreationView(SingleObjectMixin, FormView):
            store.slug = store.get_slug()
            store.prompted = True
            store.save()
+           storeForm.save_m2m()
 
            # Create a store record if it does not exist
            store_record_exists = StoreRecord.objects.filter(store=store).exists()
@@ -101,17 +105,33 @@ class UploadProfileImageView(View):
 class StoreView(DetailView):
     model=Store
     template_name='store/store.html'
+    view_signal = store_viewed
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if not self.object == request.user.shop:
+            self.send_signal(store=self.object, request=request, datetime=timezone.now())
+        return super().get(request, *args, **kwargs)
+    
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        self.object = self.get_object()
         context['commentForm'] = CommentForm(store=self.object, user=self.request.user)
         store_record_exists = StoreRecord.objects.filter(store=self.object).exists()
 
         if store_record_exists:
             context['products'] = context['store'].record.products.all()
-        print(context)
         return context
+    
+    
+    def send_signal(self, request, store, datetime):
+        self.view_signal.send(
+            sender=self,
+            store=store,
+            user= request.user,
+            datetime=datetime
+        )
 
 
 class StoreCommentView(SingleObjectMixin, View):

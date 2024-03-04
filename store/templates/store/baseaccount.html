@@ -106,121 +106,134 @@
                     </div> 
             
                 <div class="col-md-6">
-                    <label for="{{ storeForm.name.id_for_label }}" class="form-label fw-blod">Name your store:</label>
+                    <label for="{{ storeForm.name.id_for_label }}" class="form-label fw-bold my-1">Name your store:</label>
                     {{storeForm.name}}
                 </div>
                 <div class="col-md-6">
-                    <label for="{{ storeForm.location.id_for_label }}" class="form-label fw-blod">Location:</label>
+                    <label for="{{ storeForm.location.id_for_label }}" class="form-check-label fw-bold my-1">Location:</label>
                     {{storeForm.location}}
                 </div>       
-                
-                <div class=" row my-3">
-                    <div>
-                        <h5 class="fw-bold fs-5">Do you have a shop on ground?</h5>
-                        <p class="fw-medium">Include pysical shop images(Optional)</p>
-                    </div> 
+                <div class="col-md-6 border border-primary-subtle">
+                    <h6 class="fw-bold">Select the kind of products you deal in </h6>
+
+                    {% for checkbox in storeForm.product_type %}
+                    <div class="form-check-inline">
+                        {{ checkbox }} 
+                    </div>
+                        {% endfor %}
+
+
                     
-                    <div class="col-md-3 bordered mt-2 col-6 ">
-                        {{storeForm.location_image1.errors}}
-                        <div class="card border {% if storeForm.location_image1.errors %} border-danger {% else %}border-primary{% endif %} border-4" id="card1">
-                            <div class="card-header text-center" id="imageName1">Location image 1</div>
-                            <div class="card-image">
-                            <img src="{% oscar_thumbnail user.shop.location_image1 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 1">
-                            <div class="card-body">
-                              <label for="{{storeForm.location_image1.id_for_label }}">
-                                <a class="btn btn-primary">Edit image</a>
-                                <div class="d-none">
-                                    {{ storeForm.location_image1 }}
-                                </div>
-                              </label>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 bordered  mt-2 col-6 ">
-                        {{storeForm.location_image2.errors}}
-                        <div class="card border border-primary border-4" id="card2">
-                            <div class="card-header text-center" id="imageName2">Location image 2</div>
-                            <div class="card-image">
-                                <img src="{% oscar_thumbnail user.shop.location_image2 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 2">
-                            <div class="card-body">
-                              <label for="{{storeForm.location_image2.id_for_label }}">
-                                <a class="btn btn-primary">Edit image</a>
-                                <div class="d-none">
-                                    {{ storeForm.location_image2 }}
-                                </div>
-                              </label>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 bordered  mt-2 col-6">
-                        {{storeForm.location_image3.errors}}
-                        <div class="card border border-primary border-4" id="card3">
-                            <div class="card-header text-center" id="imageName3">Location image 3</div>
-                            <div class="card-image">
-                                <img src="{% oscar_thumbnail user.shop.location_image3 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 3">
-                            <div class="card-body">
-                              <label for="{{storeForm.location_image3.id_for_label }}">
-                                <a class="btn btn-primary">Edit image</a>
-                                <div class="d-none">
-                                    {{ storeForm.location_image3}}
-                                </div>
-                              </label>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 bordered  mt-2 col-6">
-                        {{storeForm.location_image4.errors}}
-                        <div class="card border border-primary border-4" id="card4">
-                            <div class="card-header text-center" id="imageName4">Location image 4</div>
-                            <div class="card-image">
-                                <img src="{% oscar_thumbnail user.shop.location_image4 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 4">
-                            <div class="card-body">
-                              <label for="{{storeForm.location_image4.id_for_label }}">
-                                <a class="btn btn-primary">Edit image</a>
-                                <div class="d-none">
-                                    {{ storeForm.location_image4 }}
-                                </div>
-                              </label>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                       
-                       function  imageUploaded(elem, cardid, imageNamediv){
-                        card = document.getElementById(cardid)
-                        divName = document.getElementById(imageNamediv)
+                 </div>
+        
+                    <small>
+                        {{storeForm.product_type.help_text}}
+                    </small>
+                    <div class=" row my-3">
+                        <div>
+                            <h5 class="fw-bold fs-5">Do you have a shop on ground?</h5>
+                            <p class="fw-medium">Include pysical shop images(Optional)</p>
+                        </div> 
                         
-                  
-                        if (elem.files[0]){
-                            originalName = divName.textContent
-                           card.className =  card.className.replace('border-primary', 'border-success ')
-                           divName.innerHTML = elem.files[0].name
-
-                        } else {
-                           card.className =  card.className.replace('border-success', 'border-primary ')
-                           divName.innerHTML = originalName
-                           console.log(originalName)
-                        }
-                       }
-                    </script>
-
-                </div>
-                <div class="d-grid text-center">
-                    <button class="btn btn-success w-25 fw-bold" type="submit">Save</button>
-                </div>
+                        <div class="col-md-3 bordered mt-2 col-6 ">
+                            {{storeForm.location_image1.errors}}
+                            <div class="card border {% if storeForm.location_image1.errors %} border-danger {% else %}border-primary{% endif %} border-4" id="card1">
+                                <div class="card-header text-center" id="imageName1">Location image 1</div>
+                                <div class="card-image">
+                                <img src="{% oscar_thumbnail user.shop.location_image1 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 1">
+                                <div class="card-body">
+                                  <label for="{{storeForm.location_image1.id_for_label }}">
+                                    <a class="btn btn-primary">Edit image</a>
+                                    <div class="d-none">
+                                        {{ storeForm.location_image1 }}
+                                    </div>
+                                  </label>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 bordered  mt-2 col-6 ">
+                            {{storeForm.location_image2.errors}}
+                            <div class="card border border-primary border-4" id="card2">
+                                <div class="card-header text-center" id="imageName2">Location image 2</div>
+                                <div class="card-image">
+                                    <img src="{% oscar_thumbnail user.shop.location_image2 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 2">
+                                <div class="card-body">
+                                  <label for="{{storeForm.location_image2.id_for_label }}">
+                                    <a class="btn btn-primary">Edit image</a>
+                                    <div class="d-none">
+                                        {{ storeForm.location_image2 }}
+                                    </div>
+                                  </label>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 bordered  mt-2 col-6">
+                            {{storeForm.location_image3.errors}}
+                            <div class="card border border-primary border-4" id="card3">
+                                <div class="card-header text-center" id="imageName3">Location image 3</div>
+                                <div class="card-image">
+                                    <img src="{% oscar_thumbnail user.shop.location_image3 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 3">
+                                <div class="card-body">
+                                  <label for="{{storeForm.location_image3.id_for_label }}">
+                                    <a class="btn btn-primary">Edit image</a>
+                                    <div class="d-none">
+                                        {{ storeForm.location_image3}}
+                                    </div>
+                                  </label>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 bordered  mt-2 col-6">
+                            {{storeForm.location_image4.errors}}
+                            <div class="card border border-primary border-4" id="card4">
+                                <div class="card-header text-center" id="imageName4">Location image 4</div>
+                                <div class="card-image">
+                                    <img src="{% oscar_thumbnail user.shop.location_image4 '400x300' crop='center' upscale='False' %}" class="img-fluid rounded " alt="Location image 4">
+                                <div class="card-body">
+                                  <label for="{{storeForm.location_image4.id_for_label }}">
+                                    <a class="btn btn-primary">Edit image</a>
+                                    <div class="d-none">
+                                        {{ storeForm.location_image4 }}
+                                    </div>
+                                  </label>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <script>
+                           
+                           function  imageUploaded(elem, cardid, imageNamediv){
+                            card = document.getElementById(cardid)
+                            divName = document.getElementById(imageNamediv)
+                            
+                      
+                            if (elem.files[0]){
+                                originalName = divName.textContent
+                               card.className =  card.className.replace('border-primary', 'border-success ')
+                               divName.innerHTML = elem.files[0].name
+    
+                            } else {
+                               card.className =  card.className.replace('border-success', 'border-primary ')
+                               divName.innerHTML = originalName
+                               console.log(originalName)
+                            }
+                           }
+                        </script>
+    
+                    </div>
+                    <div class="d-grid text-center">
+                        <button class="btn btn-success w-25 fw-bold" type="submit">Save</button>
+                    </div>
+                </div>       
+                
                 
             </form>
             </div>
         </div>
-        <div class="tab-pane {% if active_tab == 'notifications' %} fade show active {% endif %}" id="nav-notifications" role="tabpanel" aria-labelledby="nav-notifications-tab" tabindex="0">Notifications</div>
-        <div class="tab-pane {% if active_tab == 'wishlist' %} fade show active {% endif %}" id="nav-wishlist" role="tabpanel" aria-labelledby="nav-whishlist-tab" tabindex="0">Wishlist</div>
-        <div class="tab-pane {% if active_tab == 'order_history' %} fade show active {% endif %} " id="nav-orderHistory" role="tabpanel" aria-labelledby="nav-orderHistory-tab" tabindex="0">Order history</div>
-        <div class="tab-pane {% if active_tab == 'make_money' %} fade show active {% endif %}" id="nav-make-money" role="tabpanel" aria-labelledby="nav-make-money-tab" tabindex="0">How to make money</div>
     </div>
 
 

@@ -4,7 +4,7 @@
 <div class="row my-3">
     <div class="swiper category-intro ">
         <div class="swiper-wrapper">
-          {% for category in Fashion.get_children %}
+          {% for category in category.get_children %}
           {% if category.image %}
             <div class=" swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">
                 <a href="#">

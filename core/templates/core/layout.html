@@ -1,0 +1,150 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load category_tags %}
+{% load image_tags %}
+{% load purchase_info_tags %}
+{% load i18n %}
+{% load currency_filters %}
+{% block main-content %}
+<div class="category-main-banner {{ category.get_root.name.lower }} d-flex">
+    <div class="category-header-info  justify-content-center align-items text-center">
+        <h1 class="text-white ">Welcome to Trustlink</h1>
+        <h5 class="text-white fw-bold fst-italic "> {{ category.get_root.name.title  }} Collection</h5>
+    </div>
+</div>
+
+<div class="container-fluid my-3">
+    <div class="row justify-content-center">
+        <div class="col-3 d-none d-mb-block d-lg-block">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="fs-bold">Show Resuls for:</h4>
+                </div>
+
+                <div class="card-content">
+                    {% category_tree parent=category.get_root as tree_categories  %}
+                        <ul>
+                        {% for category, info in tree_categories %}
+                            <li>
+                                {% if category.productclass_set.all.exists %}
+                                {{ category }} has product class
+                                {% endif %}
+                                <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                {% if info.has_children %}
+                                   <ul>
+                                {% else %}
+                                    </li>
+                                {% endif %}
+                            {% for n in info.num_to_close %}
+                                </ul></li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul> 
+
+                </div>
+            </div>
+        </div>
+        {% block category_content %}
+        <div class="col-9">  
+            <div class="my-3 p-2 d-mb-none d-lg-none">
+                
+                <div class="d-grid">
+                    <button class="btn btn-outline-primary fs-5 fw-bold" data-bs-toggle="collapse" data-bs-target="#category-collapse" role="button" aria-expanded="false" aria-controls="category-collapse">
+                        {{ category.name }} Categories
+                    </button>
+                </div>
+                <div class="collapse" id="category-collapse">
+                    <div class="card card-body mt-1">
+                    {% category_tree parent=category as tree_categories  %}
+                    <ul>
+                    {% for category, info in tree_categories %}
+                        <li>
+                            <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                            {% if info.has_children %}
+                               <ul>
+                            {% else %}
+                                </li>
+                            {% endif %}
+                        {% for n in info.num_to_close %}
+                            </ul></li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul> 
+                    </div>
+            </div> 
+            </div>               
+            {% block category_description %}
+                <div class="card mb-3 d-none d-mb-block d-lg-block" style="max-width: 760px;">
+                    <div class="row g-0 ">
+                        <div class="col-4">
+                            <img src="{% oscar_thumbnail category.image 'x250' upscale=False %}" alt="" class="img-fluid rounded-start">
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ category.name }}</h5>
+                                 {{ category.description|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+            <div class="text-center">
+                <h3>Find you interest</h3>
+                <hr>
+
+            </div>
+         
+            {% include 'core/partials/subcategorySlider.html' with categories=category.get_descendants_and_self %}
+        </div><!--End of second column-->
+            {% endblock category_content %}
+    </div><!--End of row-->
+
+    <div class="container-fluid" >
+        {% include 'core/partials/paginatedProductMixture.html' %}
+        <div class="text-captialise text-center my-3">
+            <h2>Popular stores in Fashion</h2>  
+        </div>
+        {% include 'core/partials/storeList.html' %}
+        <div class="section my-3">
+            <div class="text-captialise">
+                <h2>Women's Fashion</h2>
+                <hr>
+            </div>
+
+            <div class="text-captialise text-center my-3">
+                <h2>Top Deals in Women's Fashion</h2>  
+            </div>
+            
+            {% include 'core/partials/topDealsSlider.html' %}
+            {% include 'core/partials/subcategoryFeaturedproducts.html' %}
+        </div>
+        <div class="section my-3">
+            <div class="text-captialise">
+                <h2>Men's Fashion</h2>
+                <hr>
+            </div>
+
+            <div class="text-captialise text-center my-3">
+                <h2>Top Deals in men's Fashion</h2>  
+            </div>
+            
+            {% include 'core/partials/topDealsSlider.html' %}
+            {% include 'core/partials/subcategoryFeaturedproducts.html' %}
+        </div>
+        <div class="section my-3">
+            <div class="text-captialise">
+                <h2>Unisex Fashion</h2>
+                <hr>
+            </div>
+
+            <div class="text-captialise text-center my-3">
+                <h2>Top Deals in Unisex Fashion</h2>  
+            </div>
+            
+            {% include 'core/partials/topDealsSlider.html' %}
+            {% include 'core/partials/subcategoryFeaturedproducts.html' %}
+        </div>
+    </div>
+  
+</div>
+{% endblock %}

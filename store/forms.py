@@ -1,7 +1,9 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, CheckboxSelectMultiple
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 from django.utils.translation import gettext as _
+
+from apps.catalogue.models import Category
 
 
 from .models import Store, Comment
@@ -20,10 +22,14 @@ class StoreForm(ModelForm):
     class Meta:
         model=Store
         fields = [
-            'name', 'location', 'location_image1',
+            'name', 'location','product_type', 'location_image1',
             'location_image2', 'location_image3',
             'location_image4'
-            ]   
+            ]  
+
+        widgets = {
+            'product_type': CheckboxSelectMultiple(attrs={'class':'form-check-input border border-primary-subtle'})
+        } 
 
     def __init__(self, *args,**kwargs):
         super().__init__(*args,  **kwargs)
@@ -33,6 +39,9 @@ class StoreForm(ModelForm):
         self.fields['location_image2'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card2', 'imageName2')"})
         self.fields['location_image3'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card3', 'imageName3')"})
         self.fields['location_image4'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card4', 'imageName4')"})
+
+        # 
+        self.fields['product_type'].queryset = Category.objects.filter(depth=1)
 
 class CommentForm(ModelForm):
     class Meta:

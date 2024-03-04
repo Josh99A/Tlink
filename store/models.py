@@ -1,16 +1,20 @@
+from email.policy import default
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse
 from core.models import User
 from datetime import datetime
 
 
-from apps.catalogue.models import Product
+from apps.catalogue.models import Category, Product
 
 class Store(models.Model):
-    location_choices =[('BW', 'Bweyale'), ('KY', 'Kyradongo')]
+    LOCATION_CHOICES =[('BW', 'Bweyale'), ('KY', 'Kyradongo')]
+  
     name = models.CharField(max_length=15)
     owner = models.OneToOneField(User, related_name="shop", on_delete=models.CASCADE)
-    location = models.CharField(max_length=20, choices=location_choices)
+    location = models.CharField(max_length=20, choices=LOCATION_CHOICES)
+    product_type  = models.ManyToManyField(Category)
     is_active = models.BooleanField(default=False)
     prompted = models.BooleanField(default=False)
     slug = models.SlugField()
@@ -28,24 +32,39 @@ class Store(models.Model):
     def get_slug(self):
         return slugify(self.name)
 
+
+    def get_absolute_url(self):
+        """
+            Get the store 
+        """
+        return reverse('store:store', kwargs={'pk': self.pk , 'slug':self.slug})
+
 class StoreRecord(models.Model):
     store = models.OneToOneField(Store, on_delete=models.CASCADE ,  related_name='record')
     views = models.IntegerField(default=0)
     # Ratings are between 0 and 5
     RATING_CHOICES = tuple([(x, x) for x in range(0, 6)])
     rating = models.PositiveSmallIntegerField( "Rating", choices=RATING_CHOICES, default=0)
-    products = models.ManyToManyField(Product, related_name='store', blank=True)
+    products = models.ManyToManyField(Product, related_name='store_record', blank=True)
     staff = models.ManyToManyField(User, related_name='stores')
     followers = models.ManyToManyField(User)
 
     def __str__(self):
         return self.store.name
 
+class UserStoreRecord(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    no_of_views = models.PositiveBigIntegerField()
+    date_viewed = models.DateTimeField(auto_now_add=True)
+    last_viewed = models.DateTimeField(auto_now=True)
+
 
 class Comment(models.Model):
     title = models.CharField(max_length=30)
     user = models.ForeignKey(User, related_name='comment_user', on_delete=models.CASCADE)
     message = models.TextField('Body')
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
     
     date_created = models.DateField('Date created', auto_now_add=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='comments')
