@@ -152,8 +152,16 @@
 				</div>
 				<div class="profile-links">
 					<ul class="list-group">
-						<li class="fw-bold list-group-item"><a href="">Account</a></li>
+						<li class="fw-bold list-group-item"><a href="{% url 'store:settings'  %}">Account</a></li>
 						<li  class="fw-bold list-group-item " ><a href="{% url 'customer:logout' %}">Logout</a></li>
+						{% if user.is_superuser %}
+						<li  class="fw-bold list-group-item">
+						<a class="nav-link mx-lg-2" href="{% url 'dashboard:index' %}">Oscar</a>
+						</li>
+						<li  class="fw-bold list-group-item">
+						<a class="nav-link mx-lg-2" href="/admin">Admin</a>
+						</li>
+						{% endif %}
 					</ul>
 				</div>
 			

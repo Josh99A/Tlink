@@ -7,7 +7,7 @@
           {% for category in category.get_children %}
           {% if category.image %}
             <div class=" swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">
-                <a href="#">
+                <a href="{{ category.get_absolute_url }}">
                   <div class="image-container" class="w-25">
                     <img src="{% oscar_thumbnail category.image  '400x300' crop='center' upscale='false' %} " alt="" class="rounded img-fluid">
                     <div class="image-info">

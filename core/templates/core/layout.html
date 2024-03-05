@@ -9,13 +9,24 @@
 <div class="category-main-banner {{ category.get_root.name.lower }} d-flex">
     <div class="category-header-info  justify-content-center align-items text-center">
         <h1 class="text-white ">Welcome to Trustlink</h1>
-        <h5 class="text-white fw-bold fst-italic "> {{ category.get_root.name.title  }} Collection</h5>
+        <h5 class="text-white fw-bold fst-italic "> {{ category.name.title  }} Collection</h5>
     </div>
 </div>
 
+<div class="container-fluid mb-2 mt-3 my-sm-0 ms-3">
+    <nav aria-label="breadcrumb" >
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:index' %}" class="fw-bold fs-6">Home</a></li>
+            {% for ancestor in category.get_ancestors %}
+            <li class="breadcrumb-item"><a href="{{ ancestor.get_absolute_url }}" class="fw-bold fs-6">{{ ancestor.name }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active" aria-current="page"><a href="{{ category.get_absolute_url }}" class="fw-bold fs-6">{{ category.name }}</a></li>
+        </ol>
+    </nav>
+</div>
 <div class="container-fluid my-3">
     <div class="row justify-content-center">
-        <div class="col-3 d-none d-mb-block d-lg-block">
+        <div class="col-3 d-none d-mb-block d-lg-block"><!--Medium device Category list-->
             <div class="card">
                 <div class="card-header">
                     <h4 class="fs-bold">Show Resuls for:</h4>
@@ -43,19 +54,19 @@
 
                 </div>
             </div>
-        </div>
+        </div><!--End of medium device Category list-->
         {% block category_content %}
         <div class="col-9">  
-            <div class="my-3 p-2 d-mb-none d-lg-none">
+            <div class="my-3 p-2 d-mb-none d-lg-none"> <!--Mobile Category list--> 
                 
                 <div class="d-grid">
                     <button class="btn btn-outline-primary fs-5 fw-bold" data-bs-toggle="collapse" data-bs-target="#category-collapse" role="button" aria-expanded="false" aria-controls="category-collapse">
-                        {{ category.name }} Categories
+                        {{ category.get_root.name }} Categories
                     </button>
                 </div>
                 <div class="collapse" id="category-collapse">
                     <div class="card card-body mt-1">
-                    {% category_tree parent=category as tree_categories  %}
+                    {% category_tree parent=category.get_root as tree_categories  %}
                     <ul>
                     {% for category, info in tree_categories %}
                         <li>
@@ -72,7 +83,7 @@
                 </ul> 
                     </div>
             </div> 
-            </div>               
+            </div> <!--End of Mobile category list-->            
             {% block category_description %}
                 <div class="card mb-3 d-none d-mb-block d-lg-block" style="max-width: 760px;">
                     <div class="row g-0 ">
@@ -88,23 +99,29 @@
                     </div>
                 </div>
             {% endblock %}
+
+            <!--Find your interests section-->
             <div class="text-center">
                 <h3>Find you interest</h3>
                 <hr>
-
             </div>
+            {% if category.get_children.count > 1%}
+            {% include 'core/partials/subcategorySlider.html'  %}
+            {% else %}
+            {% include 'core/partials/subcategorySlider.html' with category=category.get_root %}
+            {% endif %}
+            <!--End of find your interests section-->
          
-            {% include 'core/partials/subcategorySlider.html' with categories=category.get_descendants_and_self %}
-        </div><!--End of second column-->
+        </div>
             {% endblock category_content %}
     </div><!--End of row-->
 
     <div class="container-fluid" >
-        {% include 'core/partials/paginatedProductMixture.html' %}
         <div class="text-captialise text-center my-3">
-            <h2>Popular stores in Fashion</h2>  
+            <h2>{{ category.get_root }} Vendors</h2>  
         </div>
         {% include 'core/partials/storeList.html' %}
+        {% include 'core/partials/paginatedProductMixture.html' %}
         <div class="section my-3">
             <div class="text-captialise">
                 <h2>Women's Fashion</h2>

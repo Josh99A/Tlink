@@ -8,6 +8,9 @@ from django.views.generic.detail import SingleObjectMixin
 from django.utils import timezone
 
 
+from core.mixins import BaseContextMixin
+
+
 
 from .forms import StoreForm, CommentForm, PasswordChangeForm
 from core.models import User
@@ -102,7 +105,7 @@ class UploadProfileImageView(View):
         return JsonResponse({'new_image': new_image_url })
 
 
-class StoreView(DetailView):
+class StoreView(BaseContextMixin, DetailView):
     model=Store
     template_name='store/store.html'
     view_signal = store_viewed
@@ -134,7 +137,7 @@ class StoreView(DetailView):
         )
 
 
-class StoreCommentView(SingleObjectMixin, View):
+class StoreCommentView(BaseContextMixin, SingleObjectMixin, View):
     model=Store
     form_class = CommentForm
     template_name = 'store/store.html'

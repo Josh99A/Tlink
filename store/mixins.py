@@ -2,7 +2,9 @@ from .forms import StoreForm
 from core.models import User
 from .models import Store
 
-class settingsMixin(object):
+from core.mixins import BaseContextMixin
+
+class settingsMixin(BaseContextMixin):
     def get(self, request, *args, **kwargs):
         # Get the user shop 
         try: 
@@ -23,7 +25,7 @@ class settingsMixin(object):
     
 
 
-class PageTitleMixin(object):
+class PageTitleMixin(BaseContextMixin):
     """
     Passes page_title and active_tab into context, which makes it quite useful
     for the accounts views.

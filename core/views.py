@@ -6,7 +6,7 @@ from apps.catalogue.models import Product
 
 from store.models import Store
 from .models import User
-from .mixins import CategoryDetailMixin
+from .mixins import BaseContextMixin
 
 from apps.catalogue.models import Category
 
@@ -24,7 +24,7 @@ def get_category_products(category):
 
 
 
-class indexList(ListView):
+class indexList(BaseContextMixin, ListView):
     model = Product
     template_name = 'core/index.html'
     context_object_name = 'products'
@@ -43,16 +43,12 @@ class indexList(ListView):
 
         context['categories'] = root_categories
         context['stores'] = stores
+        print(context)
         return context
 
 class Subscribe(TemplateView):
     template_name = 'core/pricing.html'
 
-class FashionDetailView(CategoryDetailMixin, DetailView):
-    template_name = 'core/Fashion/Fashion.html' 
-
-class ElectronicsDetailView(CategoryDetailMixin, DetailView):
-    template_name = 'core/Electronics/Electronics.html' 
    
 
 

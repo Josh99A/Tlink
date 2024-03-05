@@ -1,10 +1,8 @@
 from apps.catalogue.models import Category
 
-class CategoryDetailMixin:
-    model=Category
-    context_object_name = 'category'
-
+class BaseContextMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(context)
+        base_categories = Category.objects.filter(depth=1)
+        context['base_categories'] = base_categories
         return  context

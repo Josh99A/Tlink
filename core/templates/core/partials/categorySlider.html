@@ -11,9 +11,9 @@
         }
       </style>
       <div class="swiper-wrapper">
-        {% for category in categories %}
+        {% for category in base_categories %}
         <div class="swiper-slide col-lg-3 col-mb-4 col-sm-6 mx-2">
-            <a href="#">
+            <a href="{{ category.get_absolute_url }}">
               <div class="image-container" class="w-25">
                 <img src="{% oscar_thumbnail category.image  '400x500' crop='center' upscale='false' %}" alt="" class="rounded img-fluid">
                 <div class="image-info">
