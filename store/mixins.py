@@ -1,6 +1,7 @@
 from .forms import StoreForm
 from core.models import User
 from .models import Store
+from apps.catalogue.models import ProductClass
 
 from core.mixins import BaseContextMixin
 
@@ -47,4 +48,12 @@ class PageTitleMixin(BaseContextMixin):
         return ctx
 
 
+class StoreMixin:
+    """
+        Common context data for the store
+    """
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['user_productclass'] = ProductClass.objects.filter(products__seller=self.object.owner).distinct()
+        return ctx

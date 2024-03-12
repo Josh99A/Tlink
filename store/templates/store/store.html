@@ -70,11 +70,14 @@
             </form>
 
            <div class="mt-2">
-            <h3 class="text-center">Tags</h3>
-            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">T-shirts</botton>
-            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">Bras</botton>
-            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">Shoes</botton>
-            <botton class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">Belts</botton>
+            <h3 class="text-center">Store Tags</h3>
+            {% if user_productclass %}
+            {% for product_class in user_productclass %}
+            <a href="">  <button class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">{{ product_class.name }}</button> </a>
+            {% endfor %}
+            {% else %}
+            <p>No products posted yet</p>
+            {% endif %}
            </div>
         </div>
     </div>

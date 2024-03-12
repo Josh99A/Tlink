@@ -37,6 +37,10 @@
                                 <label for="{{form.title.id_for_label}}" class="form-label fw-bold {% if form.title.errors %} text-danger {% else %} text-primary {% endif %} fs-5">Title:</label>
                                  {{ form.title }}
                                </div>
+                               <div class="row">
+                                <label for="{{form.condition.id_for_label}}" class="form-label fw-bold {% if form.condition.errors %} text-danger {% else %} text-primary {% endif %} fs-5">Condition:</label>
+                                 {{ form.condition }}
+                               </div>
 
                                <div class="row">
                                 <label for="{{form.upc.id_for_label}}" class="form-label fw-bold {% if form.upc.errors %} text-danger {% else %} text-primary {% endif%} fs-5">Upc:</label>
@@ -48,7 +52,9 @@
                                     <label for="{{form.is_public.id_for_label}}" class="form-label fw-bold {% if form.is_public.errors %} text-danger {% else %} text-primary {% endif%} fs-5 mr-3">Is public:</label>
                                      {{ form.is_public }}
                                 </div>
-                                 {{ form.is_public.help_text  }}
+                                <small>
+                                    {{ form.is_public.help_text  }}
+                                </small>
                                </div>
 
                                <div class="row">

@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="container-fluid mb-2 mt-3 my-sm-0 ms-3">
+<div class="container-fluid my-2 ps-3">
     <nav aria-label="breadcrumb" >
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'core:index' %}" class="fw-bold fs-6">Home</a></li>
@@ -24,7 +24,7 @@
         </ol>
     </nav>
 </div>
-<div class="container-fluid my-3">
+<div class="container-fluid my-2">
     <div class="row justify-content-center">
         <div class="col-3 d-none d-mb-block d-lg-block"><!--Medium device Category list-->
             <div class="card">
@@ -120,47 +120,9 @@
         <div class="text-captialise text-center my-3">
             <h2>{{ category.get_root }} Vendors</h2>  
         </div>
+        
         {% include 'core/partials/storeList.html' %}
         {% include 'core/partials/paginatedProductMixture.html' %}
-        <div class="section my-3">
-            <div class="text-captialise">
-                <h2>Women's Fashion</h2>
-                <hr>
-            </div>
-
-            <div class="text-captialise text-center my-3">
-                <h2>Top Deals in Women's Fashion</h2>  
-            </div>
-            
-            {% include 'core/partials/topDealsSlider.html' %}
-            {% include 'core/partials/subcategoryFeaturedproducts.html' %}
-        </div>
-        <div class="section my-3">
-            <div class="text-captialise">
-                <h2>Men's Fashion</h2>
-                <hr>
-            </div>
-
-            <div class="text-captialise text-center my-3">
-                <h2>Top Deals in men's Fashion</h2>  
-            </div>
-            
-            {% include 'core/partials/topDealsSlider.html' %}
-            {% include 'core/partials/subcategoryFeaturedproducts.html' %}
-        </div>
-        <div class="section my-3">
-            <div class="text-captialise">
-                <h2>Unisex Fashion</h2>
-                <hr>
-            </div>
-
-            <div class="text-captialise text-center my-3">
-                <h2>Top Deals in Unisex Fashion</h2>  
-            </div>
-            
-            {% include 'core/partials/topDealsSlider.html' %}
-            {% include 'core/partials/subcategoryFeaturedproducts.html' %}
-        </div>
     </div>
   
 </div>

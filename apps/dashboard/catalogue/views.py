@@ -2,6 +2,7 @@ from oscar.apps.dashboard.catalogue.views import ProductCreateUpdateView , Produ
 from oscar.apps.dashboard.catalogue.views import ProductListView as OscarProductListView
 
 from django.urls import reverse
+from django.shortcuts import render
 
 from .forms import ProductForm, ProductClassForm
 from .formsets import StockRecordFormSet

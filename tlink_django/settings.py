@@ -45,6 +45,15 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# TrustLink Custome Settings
+
+# Product Limits
+BASIC_PRODUCT_LIMIT = 10
+PREMIUM_PRODUCT_LIMIT = 10
+
+#OSCAR settings
+OSCAR_DEFAULT_CURRENCY = 'UGX'
+OSCAR_PRODUCTS_PER_PAGE = 20
 
 
 
@@ -112,9 +121,6 @@ INSTALLED_APPS = [
 SITE_ID = 1
 AUTH_USER_MODEL = 'core.User'
 
-#OSCAR settings
-OSCAR_DEFAULT_CURRENCY = 'UGX'
-
 LOGIN_REDIRECT_URL = 'store:settings'
 
 CORS_ALLOWED_ORIGINS = [
@@ -166,25 +172,25 @@ WSGI_APPLICATION = 'tlink_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': "postgres",
-        'PASSWORD':"1eD1FDg4b*eGbcGdefa6F6DbF6GeBGEa" ,
-        'HOST':"monorail.proxy.rlwy.net",
-        'PORT':"43338",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': "postgres",
+#         'PASSWORD':"1eD1FDg4b*eGbcGdefa6F6DbF6GeBGEa" ,
+#         'HOST':"monorail.proxy.rlwy.net",
+#         'PORT':"43338",
+#     }
+# }
 
 
 

@@ -86,7 +86,7 @@ def _record_user_order(user, order):
 def receive_product_view(sender, product, user, **kwargs):
     if kwargs.get("raw", False):
         return
-    _update_counter(ProductRecord, "num_views", {"product": product, 'category': product.categories.get(), 'store': product.store_record.get().store})
+    _update_counter(ProductRecord, "num_views", {"product": product, 'category': product.categories.get(), 'store': product.store_record.all().first().store})
     if user and user.is_authenticated:
         _update_counter(UserRecord, "num_product_views", {"user": user})
         UserProductView.objects.create(product=product, user=user)

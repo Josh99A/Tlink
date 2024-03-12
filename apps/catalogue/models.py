@@ -19,6 +19,11 @@ class ProductClass(BaseAbstractProductClass):
 
     
 class Product(BaseProduct):
+    CONDITION_CHOICES = [
+        ('N', 'New'),
+        ('U', 'Used')
+    ]
+    condition = models.CharField(max_length = 2, choices=CONDITION_CHOICES)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
 

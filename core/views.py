@@ -1,5 +1,6 @@
 from typing import Any
 from django.db.models.base import Model as Model
+from django.db.models.query import QuerySet
 from django.views.generic import ListView, DetailView,  View, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from apps.catalogue.models import Product
@@ -28,6 +29,10 @@ class indexList(BaseContextMixin, ListView):
     model = Product
     template_name = 'core/index.html'
     context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = Product.objects.all().browsable().base_queryset()  
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()

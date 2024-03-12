@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
@@ -15,7 +16,7 @@ from core.mixins import BaseContextMixin
 from .forms import StoreForm, CommentForm, PasswordChangeForm
 from core.models import User
 from .models import Store, Product, StoreRecord
-from .mixins import settingsMixin, PageTitleMixin
+from .mixins import settingsMixin, PageTitleMixin, StoreMixin
 from .signals import store_viewed
 
 
@@ -105,7 +106,7 @@ class UploadProfileImageView(View):
         return JsonResponse({'new_image': new_image_url })
 
 
-class StoreView(BaseContextMixin, DetailView):
+class StoreView(BaseContextMixin, StoreMixin, DetailView):
     model=Store
     template_name='store/store.html'
     view_signal = store_viewed
@@ -122,9 +123,9 @@ class StoreView(BaseContextMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['commentForm'] = CommentForm(store=self.object, user=self.request.user)
         store_record_exists = StoreRecord.objects.filter(store=self.object).exists()
-
         if store_record_exists:
             context['products'] = context['store'].record.products.all()
+        print(context)
         return context
     
     
@@ -137,7 +138,7 @@ class StoreView(BaseContextMixin, DetailView):
         )
 
 
-class StoreCommentView(BaseContextMixin, SingleObjectMixin, View):
+class StoreCommentView(BaseContextMixin, StoreMixin, SingleObjectMixin, View):
     model=Store
     form_class = CommentForm
     template_name = 'store/store.html'
@@ -182,7 +183,6 @@ class DashBoardView(ProductListView):
         
 
         context['categories'] = root_categories
-        print(context)
         return context
 
 
@@ -191,6 +191,32 @@ class ProductCreation(TemplateView):
 
 
     def get(self, request, *args, **kwargs ):
+        """
+            Set a limit to the number of products based on the subscription package:
+            Basic - 15 products
+            Premium - 30 products
+            Enterprise - Unlimited products
+
+        """
+        is_enterprise = False
+        if request.user.groups.all().first().name == 'Enterprise':
+            is_enterprise = True
+        print('Is Enterprise', is_enterprise)
+        print('Group', request.user.groups.all().first().name)
+
+        if request.user.is_authenticated and not is_enterprise  :
+            user_product_count = request.user.shop.record.products.count()
+            user_group = request.user.groups.all().first().name
+            product_limit = settings.BASIC_PRODUCT_LIMIT
+            if user_group == 'Premium':
+                product_limit = settings.PREMIUM_PRODUCT_LIMIT
+            print('Product limit: ', product_limit)
+
+            if user_product_count >= product_limit:
+                messages.error(request, 'Update to premium or enterprise to add more products')
+                print('Redirecting now to dashboard')
+                return redirect(reverse('store:dashboard', kwargs={'pk': request.user.pk}))
+            
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

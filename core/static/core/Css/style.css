@@ -331,6 +331,19 @@ li {
     padding: 20px;
 }
 
+.product-condition{
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index:5;
+    transition: all ease-in-out 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 20px;
+}
 
 
 .products .product-wrap .product-links {

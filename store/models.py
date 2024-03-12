@@ -47,10 +47,15 @@ class StoreRecord(models.Model):
     rating = models.PositiveSmallIntegerField( "Rating", choices=RATING_CHOICES, default=0)
     products = models.ManyToManyField(Product, related_name='store_record', blank=True)
     staff = models.ManyToManyField(User, related_name='stores')
-    followers = models.ManyToManyField(User)
+    store_followers = models.ManyToManyField(User, through='FollowInfo')
 
     def __str__(self):
-        return self.store.name
+        return self.store
+    
+class FollowInfo(models.Model):
+    follower_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_store')
+    store_record = models.ForeignKey(StoreRecord, on_delete=models.CASCADE)
+    date_followed = models.DateTimeField(auto_now_add=True)
 
 class UserStoreRecord(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

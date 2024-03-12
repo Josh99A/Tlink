@@ -7,12 +7,18 @@
 
 
 {% block product %}
-<article class="col-lg-2 col-mb-4 col-sm-5 card p-0 mx-1 my-2">
+<article class="col-lg-2 col-mb-4 col-5 card p-0 mx-1 my-2">
     {% block product_image %}
     <div class=" card-image product-wrap ">
+    
         <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}">
+        {% if product.condition %}
+        <div class="product-condition p-2 rounded-end {% if product.get_condition_display == 'Used' %} bg-success {% else %} bg-danger {% endif %} text-light fw-semibold bg-opacity-75">
+          <span class="is-size-6 is-size-7-mobile">{{ product.get_condition_display }}</span>
+        </div>
+        {% endif %}
         <div class="product-info fs-3">
-          <h4><a href="{{ product.get_absolute_url }}" class="text-white">{% trans product.get_title %}</a></h4>
+          <h4><a href="{{ product.get_absolute_url }}" class="text-white is-size-5 is-size-6-mobile">{% trans product.get_title %}</a></h4>
           <div class="product-links fs-5  d-none">
             <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
             <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external" title="Portfolio Details"><i class="bx bx-link"></i></a>
