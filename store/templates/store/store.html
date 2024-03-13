@@ -36,17 +36,45 @@
         </div>
     </div>
     <div class="col text-center mt-md-4 ps-4 ">
-        <h4 class="display-3 fw-bold text-primary d-none d-md-block d-lg-block me-auto">Welcome to {{ store.name }}</h4>
-        <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-start mt-n3">
-                <i class="bi bi-whatsapp fs-3 has-text-success fw-bold mx-3"></i>
-                <i class="bi bi-facebook fs-3 has-text-info fw-bold mx-3"></i>
-                <i class="bi bi-instagram fs-3 has-text-danger fw-bold mx-3"></i>
-            </div>
-            <div class="d-flex flex-warp-nowrap">
-                <span class="text-danger fs-sm-6 fs-4 text-captialise ">5K followers</span>
-                <a href="" class="mx-2 fs-3"><i class="bi bi-heart-fill"></i></a>
-            </div>
+        <h4 class="display-3 fw-bold text-primary  d-md-block d-lg-block me-auto ">Welcome to {{ store.name }} online store</h4>
+            <div class="d-flex flex-warp-nowrap justify-content-center ">
+                {% if store.record.products.count == 1 %}
+                <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.count }} product</span>
+                {% else %}
+                <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.count }} products</span>
+                {% endif %}
+
+                {% if store.comments.count == 1 %}
+                <a href="#storeCommentForm" ><span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.comments.count }} comment</span></a>
+                {% else %}
+                <a href="#storeCommentForm" ><span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.comments.count }} comments</span></a>
+                {% endif %}
+
+
+                <div class="d-flex flex-warp-nowrap">
+                    {% if store.record.store_followers.count == 1 %}
+                    <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 align-self-end " id="followers_count">{{ store.record.store_followers.count }} follower</span>
+                    {% else %}
+                    <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 align-self-end " id="followers_count">{{ store.record.store_followers.count }} followers</span>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    {% if not store.owner == user %}
+                    <form  id="followForm">
+                        {% csrf_token %}
+                        {% if user in store.record.store_followers.all  %}
+                        <button class="btn btn-dark text-light ms-2 btn-sm"  id="followbtn" value="{{ store.id  }}">Unfollow <i class="bi bi-heart-fill has-text-danger "></i></button>
+                        {% else %}
+                        <button class="btn btn-dark text-light ms-2 btn-sm"  id="followbtn" value="{{ store.id  }}">Follow <i class="bi bi-heart-fill "></i></button>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                    {% else %}
+                    <a href="{% url 'store:follow' store.id %}">
+                        <button class="btn btn-dark text-light ms-2 btn-sm" >Follow <i class="bi bi-heart-fill"></i></button>   
+                    </a>
+                    
+                    {% endif %}
+                </div>            
         </div>
     </div>
   </div>
@@ -287,17 +315,54 @@
   <script>
     // Handle Rating
     var ratings = $('.store-rating')
-    console.log(ratings)
     if(ratings.length){
         ratings.find('.star-rating i').on('click', starFunc)
     }
 
     function starFunc(){
-        console.log('Run func')
     var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
     $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
     $(this).closest('.col-md-12').find('select').val($(this).index() + 1); //select is hidden, set value
     }
+
+
+    
+    $(document).ready(function(){
+    $('#followbtn').on('click', function(e){
+        e.preventDefault()
+        $.ajax({
+            type:'POST',
+            url: "{% url 'store:follow' store.id %}",
+            data: { 
+                store_id :$('#followbtn').val(),
+                csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response){
+
+                if(response.is_follower == true){
+                    $('#followbtn').html("Unfollow <i class='bi bi-heart-fill has-text-danger '></i>")
+
+                } else {
+                    $('#followbtn').html("Follow <i class='bi bi-heart-fill'></i>")
+                }
+
+                if(response.followers_count == '1' ){
+                    document.getElementById('followers_count').innerHTML = response.followers_count + ' follower' 
+                } else {
+                    document.getElementById('followers_count').innerHTML = response.followers_count + ' followers'
+                    
+                }
+                
+
+    
+                console.log(response.followers_count)
+                console.log(response.is_follower)
+            }, 
+            error: function(error){
+                console.log(error)
+            }
+        })
+    })})
 
 </script>
 </div>

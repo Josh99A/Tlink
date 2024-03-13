@@ -1,3 +1,5 @@
+import re
+from urllib import request
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
@@ -6,6 +8,8 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.utils import timezone
 
 
@@ -104,6 +108,42 @@ class UploadProfileImageView(View):
         new_image_url = request.user.profile_image.url
 
         return JsonResponse({'new_image': new_image_url })
+    
+class FollowView(LoginRequiredMixin, BaseContextMixin, StoreMixin, DetailView):
+    model =Store
+    template_name = 'store/store.html'
+    redirect_field_name = 'next'
+
+    def get(self, request , *args, **kwargs):
+        store = self.get_object()
+
+        if request.user in store.record.store_followers.all():
+            store.record.store_followers.remove(request.user)
+        else:
+            store.record.store_followers.add(request.user)
+
+        return super().get(request ,*args, **kwargs)
+
+    def get_redirect_field_name(self) -> str:
+        print(super().get_redirect_field_name())
+        return super().get_redirect_field_name()
+    
+    def post(self, request, *args, **kwargs):
+        store_id = int(request.POST['store_id'])
+        store = Store.objects.filter(id=store_id).first()
+
+        if request.user in store.record.store_followers.all():
+            store.record.store_followers.remove(request.user)
+            is_follower = False
+        else:
+            store.record.store_followers.add(request.user)
+            is_follower = True
+
+        followers_count = store.record.store_followers.all().count()
+        
+
+        return JsonResponse({'followers_count': followers_count, 'is_follower': is_follower}) 
+
 
 
 class StoreView(BaseContextMixin, StoreMixin, DetailView):
@@ -114,8 +154,10 @@ class StoreView(BaseContextMixin, StoreMixin, DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        if not self.object == request.user.shop:
-            self.send_signal(store=self.object, request=request, datetime=timezone.now())
+        if request.user.is_authenticated:
+            if not self.object == request.user.shop:
+                self.send_signal(store=self.object, user=request.user , datetime=timezone.now())
+                
         return super().get(request, *args, **kwargs)
     
 
@@ -129,11 +171,11 @@ class StoreView(BaseContextMixin, StoreMixin, DetailView):
         return context
     
     
-    def send_signal(self, request, store, datetime):
+    def send_signal(self, user, store, datetime):
         self.view_signal.send(
             sender=self,
             store=store,
-            user= request.user,
+            user= user,
             datetime=datetime
         )
 
