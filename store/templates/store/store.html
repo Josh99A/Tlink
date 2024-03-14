@@ -38,10 +38,10 @@
     <div class="col text-center mt-md-4 ps-4 ">
         <h4 class="display-3 fw-bold text-primary  d-md-block d-lg-block me-auto ">Welcome to {{ store.name }} online store</h4>
             <div class="d-flex flex-warp-nowrap justify-content-center ">
-                {% if store.record.products.count == 1 %}
-                <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.count }} product</span>
+                {% if store.record.products.browsable.count == 1 %}
+                <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.browsable.count }} product</span>
                 {% else %}
-                <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.count }} products</span>
+                <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.browsable.count }} products</span>
                 {% endif %}
 
                 {% if store.comments.count == 1 %}
@@ -62,15 +62,15 @@
                     <form  id="followForm">
                         {% csrf_token %}
                         {% if user in store.record.store_followers.all  %}
-                        <button class="btn btn-dark text-light ms-2 btn-sm"  id="followbtn" value="{{ store.id  }}">Unfollow <i class="bi bi-heart-fill has-text-danger "></i></button>
+                        <button class="btn btn-dark text-light mx-2 btn-sm"  id="followbtn" value="{{ store.id  }}">Unfollow <i class="bi bi-heart-fill has-text-danger "></i></button>
                         {% else %}
-                        <button class="btn btn-dark text-light ms-2 btn-sm"  id="followbtn" value="{{ store.id  }}">Follow <i class="bi bi-heart-fill "></i></button>
+                        <button class="btn btn-dark text-light mx-2 btn-sm"  id="followbtn" value="{{ store.id  }}">Follow <i class="bi bi-heart-fill "></i></button>
                         {% endif %}
                     </form>
                     {% endif %}
                     {% else %}
                     <a href="{% url 'store:follow' store.id %}">
-                        <button class="btn btn-dark text-light ms-2 btn-sm" >Follow <i class="bi bi-heart-fill"></i></button>   
+                        <button class="btn btn-dark text-light mx-2 btn-sm" >Follow <i class="bi bi-heart-fill"></i></button>   
                     </a>
                     
                     {% endif %}
@@ -110,7 +110,7 @@
         </div>
     </div>
     <div class="col-md-8 col-lg-9">
-        <h5 class="text-center">Catalogue</h5>
+        <h3 class="text-center " id="catalogue">Catalogue</h3>
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a href="" class="nav-link active" aria-current="page">All products</a>
@@ -126,11 +126,9 @@
                 <a href="" class="nav-link" >Contact Seller</a>
             </li>
         </ul>
-        <div class="row products ms-3 m-4 ">
-            {% for product in products %}
-            {% include 'oscar/catalogue/partials/product.html'  %}
-            {% endfor %}
-          </div>
+        
+        {% include 'core/partials/paginatedProductMixture.html' with slider_id='catalogue' %}
+          
     </div>
   </div>
   <hr>
@@ -204,7 +202,20 @@
 
     </div>
     <div class="col-md-8 col-lg-9 pt-3 my-3">
-        <h1 class="text-center">Store Comments</h1>
+        <h1 class="text-center" id="comments">Store Comments</h1>
+        {% if commentForm.errors or commentForm.non_field_errors %}
+                    <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
+                        {% for field in commentForm %}
+                        {% if field.errors %}
+                        {{field.label_tag}}
+                        {{field.errors}}
+                        {% endif %}
+                        {% endfor %}
+                        {{commentForm.non_field_errors}}
+                        <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+                    </div>
+            {% endif %}
+
         {% if store.comments.all.exists %}
         {% for comment in store.comments.all %}
         <article class="media">
@@ -270,21 +281,9 @@
             </figure>
             {% endif %}
             <div class="media-content">
-                <form action="{% url 'store:comment' store.pk store.slug %}" method="POST" >
+                <form action="{% url 'store:comment' store.pk store.slug %}#comments" method="POST" >
                     {% csrf_token %}
-                    {% if commentForm.errors or commentForm.non_field_errors %}
-                    <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
-                        {% for field in commentForm %}
-                        {% if field.errors %}
-                        {{field.label_tag}}
-                        {{field.errors}}
-                        {% endif %}
-                        {% endfor %}
-                        {{commentForm.non_field_errors}}
-                        <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
-                    </div>
-                    {% endif %}
-              
+                    
                     <div class="col-md-6">
                         <label for="{{commnetForm.title.id_for_label}}" class="form-label fw-bold  {% if commentForm.title.error %} tex-danger {% else %} text-dark {% endif %}">Title:</label>
                         {{ commentForm.title }}

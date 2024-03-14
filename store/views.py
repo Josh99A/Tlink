@@ -1,6 +1,5 @@
-import re
-from urllib import request
-from django.shortcuts import render, redirect
+from django.db.models.query import QuerySet
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.conf import settings
@@ -9,10 +8,11 @@ from django.views.generic import TemplateView, View, DetailView, ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 
 from django.utils import timezone
 
-
+from .signals import store_viewed
 from core.mixins import BaseContextMixin
 
 
@@ -21,7 +21,7 @@ from .forms import StoreForm, CommentForm, PasswordChangeForm
 from core.models import User
 from .models import Store, Product, StoreRecord
 from .mixins import settingsMixin, PageTitleMixin, StoreMixin
-from .signals import store_viewed
+
 
 
 from apps.dashboard.catalogue.views import ProductListView
@@ -112,22 +112,11 @@ class UploadProfileImageView(View):
 class FollowView(LoginRequiredMixin, BaseContextMixin, StoreMixin, DetailView):
     model =Store
     template_name = 'store/store.html'
-    redirect_field_name = 'next'
 
     def get(self, request , *args, **kwargs):
         store = self.get_object()
+        return redirect(reverse('store:store', kwargs={'pk': store.pk, 'slug': store.get_slug()}))
 
-        if request.user in store.record.store_followers.all():
-            store.record.store_followers.remove(request.user)
-        else:
-            store.record.store_followers.add(request.user)
-
-        return super().get(request ,*args, **kwargs)
-
-    def get_redirect_field_name(self) -> str:
-        print(super().get_redirect_field_name())
-        return super().get_redirect_field_name()
-    
     def post(self, request, *args, **kwargs):
         store_id = int(request.POST['store_id'])
         store = Store.objects.filter(id=store_id).first()
@@ -146,30 +135,18 @@ class FollowView(LoginRequiredMixin, BaseContextMixin, StoreMixin, DetailView):
 
 
 
-class StoreView(BaseContextMixin, StoreMixin, DetailView):
-    model=Store
-    template_name='store/store.html'
+class StoreView(BaseContextMixin, StoreMixin, ListView):
+
     view_signal = store_viewed
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    def get(self, request, *args, **kwargs):  
+        self.store = self.get_store(**kwargs)
 
+        
         if request.user.is_authenticated:
-            if not self.object == request.user.shop:
-                self.send_signal(store=self.object, user=request.user , datetime=timezone.now())
-                
+            if not self.store == request.user.shop:
+                self.send_signal(store=self.store, user=request.user , datetime=timezone.now())
         return super().get(request, *args, **kwargs)
-    
-
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        context['commentForm'] = CommentForm(store=self.object, user=self.request.user)
-        store_record_exists = StoreRecord.objects.filter(store=self.object).exists()
-        if store_record_exists:
-            context['products'] = context['store'].record.products.all()
-        print(context)
-        return context
-    
     
     def send_signal(self, user, store, datetime):
         self.view_signal.send(
@@ -178,31 +155,29 @@ class StoreView(BaseContextMixin, StoreMixin, DetailView):
             user= user,
             datetime=datetime
         )
+    
+
+    
 
 
-class StoreCommentView(BaseContextMixin, StoreMixin, SingleObjectMixin, View):
-    model=Store
-    form_class = CommentForm
-    template_name = 'store/store.html'
-
+class StoreCommentView(StoreView):
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object() 
-        commentForm = self.form_class(data=request.POST, store=self.object, user=request.user)
+        self.store = self.get_store(**kwargs)
+        self.object_list = self.get_queryset()
+        commentForm = self.form_class(data=request.POST, store=self.store, user=request.user)
        
- 
         if commentForm.is_valid():
             comment = commentForm.save(commit=False)
-            comment.store = self.object
+            comment.store = self.store
             comment.user = request.user
             comment.save()
-            return redirect(reverse('store:store', kwargs={'pk':self.object.pk, 'slug':self.object.get_slug()}))
-        else:
-            context = self.get_context_data(commentForm=commentForm)
-            return render(request, self.template_name, context)
-
+            return redirect(reverse('store:store', kwargs={'pk': self.store.pk, 'slug': self.store.get_slug()}))
+        
+        return render(request, self.template_name, self.get_context_data(commentForm = commentForm))
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        print(context)
         for kw in kwargs:
             context[kw] = kwargs[kw]
         return context

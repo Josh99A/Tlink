@@ -50,7 +50,7 @@ class StoreRecord(models.Model):
     store_followers = models.ManyToManyField(User, through='FollowInfo')
 
     def __str__(self):
-        return self.store
+        return self.store.name
     
 class FollowInfo(models.Model):
     follower_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followed_store')

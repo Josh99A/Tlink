@@ -1,8 +1,13 @@
 from .forms import StoreForm
 from core.models import User
 from .models import Store
-from apps.catalogue.models import ProductClass
+from apps.catalogue.models import ProductClass, Product
 
+from django.shortcuts import get_object_or_404
+from django.conf import settings
+
+
+from store.forms import CommentForm
 from core.mixins import BaseContextMixin
 
 class settingsMixin(BaseContextMixin):
@@ -52,8 +57,24 @@ class StoreMixin:
     """
         Common context data for the store
     """
+    model = Product
+    template_name='store/store.html'
+    paginate_by= settings.STORE_PRODUCTS_PER_PAGE
+    context_object_name ='products'
+   
+    form_class = CommentForm
+
+    def get_store(self, **kwargs):
+        return get_object_or_404(Store, **kwargs)
+    
+   
+    def get_queryset(self):
+        queryset = self.store.record.products.browsable().base_queryset()
+        return queryset
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['user_productclass'] = ProductClass.objects.filter(products__seller=self.object.owner).distinct()
-        return ctx
+        context = super().get_context_data(**kwargs)
+        context['commentForm'] = CommentForm(store=self.store, user=self.request.user)
+        context['store'] = self.store
+        context['user_productclass'] = ProductClass.objects.filter(products__seller=self.store.owner).distinct()
+        return context

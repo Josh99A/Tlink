@@ -122,7 +122,12 @@
         </div>
         
         {% include 'core/partials/storeList.html' %}
-        {% include 'core/partials/paginatedProductMixture.html' %}
+
+        <div class="text-captialise text-center my-3">
+            <h2 id="feature_products">Featured {{ category.name }} products</h2>  
+        </div>
+
+        {% include 'core/partials/paginatedProductMixture.html' with slider_id='feature_products' %}
     </div>
   
 </div>
