@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from apps.catalogue.models import Category
 
 
-from .models import Store, Comment
+from .models import Store, Comment, Vote
 from core.models import User
 
 
@@ -69,3 +69,23 @@ class CommentForm(ModelForm):
                     raise ValidationError(_("You can only comment once on a store"))
 
         return cleaned_data
+
+
+
+class VoteForm(ModelForm):
+    class Meta:
+        model = Vote
+        fields = ("delta",)
+
+    def __init__(self, comment, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.instance.comment = comment
+        self.instance.user = user
+
+    @property
+    def is_up_vote(self):
+        return self.cleaned_data["delta"] == Vote.UP
+
+    @property
+    def is_down_vote(self):
+        return self.cleaned_data["delta"] == Vote.DOWN

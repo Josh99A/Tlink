@@ -17,9 +17,9 @@ from core.mixins import BaseContextMixin
 
 
 
-from .forms import StoreForm, CommentForm, PasswordChangeForm
+from .forms import StoreForm, CommentForm, PasswordChangeForm, VoteForm
 from core.models import User
-from .models import Store, Product, StoreRecord
+from .models import Store, Product, StoreRecord, Comment
 from .mixins import settingsMixin, PageTitleMixin, StoreMixin
 
 
@@ -243,3 +243,45 @@ class ProductCreation(TemplateView):
         return context
 
 
+class AddVoteView(StoreView ):
+    """
+    Simple view for voting on a review.
+
+    We use the URL path to determine the product and review and use a 'delta'
+    POST variable to indicate it the vote is up or down.
+    """
+
+    def post(self, request, *args, **kwargs):     
+        comment  = get_object_or_404(Comment, pk=self.kwargs["pk"])
+        errors = []
+
+        form = VoteForm(comment, request.user, request.POST)
+        if form.is_valid():
+            print('Form Valid')
+            if form.is_up_vote:
+                print('Vote is up')
+                comment.vote_up(request.user)
+            elif form.is_down_vote:
+                print('vote is down')
+                comment.vote_down(request.user)
+                 
+        else:
+            for error_list in form.errors.values():
+                for msg in error_list:
+                    errors.append(msg)
+                    print(msg)
+
+        has_up_vote = comment.votes.filter(user=request.user, delta=1).exists()
+        has_down_vote = comment.votes.filter(user=request.user, delta=-1).exists()
+
+        
+        data = {
+            'errors': errors,
+            'has_up_vote': has_up_vote,
+            'has_down_vote': has_down_vote,
+            'num_up_votes': comment.num_up_votes,
+            'num_down_votes': comment.num_down_votes
+        }
+        print(data)
+                    
+        return JsonResponse(data)

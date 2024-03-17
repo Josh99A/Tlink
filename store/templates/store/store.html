@@ -5,10 +5,16 @@
 {% load currency_filters %}
 {% load purchase_info_tags %}
 {% load reviews_tags %}
+{% load comment_tags  %}
 
 {% block main-content %}
 <div class="container-fluid">
     <div style="height:100px; margin-bottom: 20px;" ></div> 
+
+    <div class="alert alert-success alert-dismissible fade d-none show  box fw-bold fs-6" role="alert" id="ajax-alert">
+        <p id="alert-message"></p>
+        <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+    </div>
    
   <div class="row">
     <div class="card mb-3 ms-2" style="max-width: 500px;">
@@ -226,7 +232,7 @@
             </figure>
             <div class="media-content">
                 <div class="content">
-                    <p>
+                    
                         <div class="d-flex justify-content-between">
                             <strong>{{ comment.user.get_full_name  }}</strong>
                             <div class="star-rating {{ comment.score |as_stars }} d-flex">
@@ -238,11 +244,50 @@
                             </div>
                         </div>
                         <p>{{ comment.message }}</p>
+                        <div>
+                            {% if comment.num_up_votes > 0  %}
+                                {% if comment.num_up_votes == 1 %}
+                                <p id="comment_message{{ comment.id }}">{{ comment.num_up_votes }} person agrees</p>
+                                {% else %}
+                                <p id="comment_message{{ comment.id }}">{{ comment.num_up_votes }} people agree</p>
+                                {% endif %}
+                            {% endif %}
+                    
+                        </div>
+                      
+                        
+                        {% if user.is_authenticated and not store.owner == user and not comment.user == user %}
+                        <p class="small">Do you agree?</p>
                        <div class="d-flex flex-warp-nowrap ">
-                        <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>.
+                            <form action="" method="POST" class="d-flex">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ comment.id }}" name="comment_id">
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input d-none" name="delta" id="agree" value="1">
+                                        <label for="agree" class="form-check-label">
+                                            {% if comment|has_up_vote:user %}
+                                            <small class="fs-6 me-2 votebtn text-primary fw-semibold comment{{ comment.id }} up" ><i class="bi bi-hand-thumbs-up-fill"></i><span class="text-dark" >Yes({{ comment.num_up_votes }})</span></small>.
+                                            {% else %}
+                                            <small class="fs-6 me-2 votebtn  fw-semibold comment{{ comment.id }} up " ><i class="bi bi-hand-thumbs-up-fill"></i><span class="text-dark" id="up_vote{{ forloop.counter }}">Yes({{ comment.num_up_votes  }})</span></small>.
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input d-none" name="delta" id="disagree" value="-1">
+                                        <label for="disagree" class="form-check-label">
+                                            {% if comment|has_down_vote:user %}
+                                            <small class="fs-6 me-2 votebtn text-primary fw-semibold comment{{ comment.id }} down" ><i class="bi bi-hand-thumbs-down-fill"></i><span class="text-dark" >No({{ comment.num_down_votes }})</span></small>.
+                                            {% else %}
+                                            <small class="fs-6 me-2 votebtn  fw-semibold comment{{ comment.id }} down " ><i class="bi bi-hand-thumbs-down-fill"></i><span class="text-dark" id="up_vote{{ forloop.counter }}">No({{ comment.num_down_votes  }})</span></small>.
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </form>
                         <small class="fs-6"><a href="" class="text-dark"><i class="bi bi-reply-fill  "></i>Reply(4)</a></small>
                        </div>
-                    </p>
+
+                    {% endif %}
                 </div>
                 <article class="media">
                     <figure class="media-left">
@@ -312,8 +357,11 @@
     </div>
   </div>
   <script>
-    // Handle Rating
-    var ratings = $('.store-rating')
+   
+    $(document).ready(function(){
+
+     // Handle Rating
+     var ratings = $('.store-rating')
     if(ratings.length){
         ratings.find('.star-rating i').on('click', starFunc)
     }
@@ -325,8 +373,6 @@
     }
 
 
-    
-    $(document).ready(function(){
     $('#followbtn').on('click', function(e){
         e.preventDefault()
         $.ajax({
@@ -340,9 +386,12 @@
 
                 if(response.is_follower == true){
                     $('#followbtn').html("Unfollow <i class='bi bi-heart-fill has-text-danger '></i>")
-
+                    $('#alert-message').html('You are now following {{ store.name }} store')
+                    $('#ajax-alert').removeClass('d-none')
                 } else {
                     $('#followbtn').html("Follow <i class='bi bi-heart-fill'></i>")
+                    $('#alert-message').html('You have unfollowed  {{ store.name }} store')
+                    $('#ajax-alert').removeClass('d-none')
                 }
 
                 if(response.followers_count == '1' ){
@@ -351,17 +400,82 @@
                     document.getElementById('followers_count').innerHTML = response.followers_count + ' followers'
                     
                 }
-                
+               
 
-    
-                console.log(response.followers_count)
-                console.log(response.is_follower)
             }, 
             error: function(error){
                 console.log(error)
             }
         })
-    })})
+    })
+
+    $('.votebtn').on('click', function(){
+
+        
+
+        const comment_id = $(this).parents('form').children("input[name='comment_id']").val()
+        
+
+    thumb_containers = $(this).parents('form').find(`.comment${comment_id}`)
+
+
+
+$.ajax({
+    type:'POST',
+    url: `/tlink/${ comment_id }/vote/comment`,
+    data: { 
+        delta: $(this).closest('.form-check').find("input[name='delta']").val() ,
+        csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val()
+    },
+    success: function(response){
+        console.log(response.errors)
+
+        thumb_containers.each(function(){
+            if ($(this).hasClass('up')){
+                $(this).find('span').html(`Yes(${response.num_up_votes})`)
+                  if(response.has_up_vote){
+                        $(this).addClass('text-primary')
+                    
+                    } else{
+                            $(this).removeClass('text-primary')
+                        }
+                if(response.num_up_votes == 1){
+                    $(`#comment_message${comment_id}`).removeClass('d-none')
+                    $(`#comment_message${comment_id}`).html(`${response.num_up_votes} person agrees`)
+                    
+                    
+                } else if( response.num_up_votes == 0){
+                    $(`#comment_message${comment_id}`).html('')
+                    $(`#comment_message${comment_id}`).addClass('d-none')
+                    
+                } else{
+                    $(`#comment_message${comment_id}`).removeClass('d-none')
+                    $(`#comment_message${comment_id}`).html(`${response.num_up_votes} people agree`)
+                    
+                }
+            } else if($(this).hasClass('down')){
+                $(this).find('span').html(`No(${response.num_down_votes})`)
+
+                if(response.has_down_vote){
+                        $(this).addClass('text-primary')
+                    } else{
+                            $(this).removeClass('text-primary')
+                        }
+                
+            }
+        })
+
+    }, 
+    error: function(xhr, textStatus, error){
+        console.log(error)
+    }
+})
+
+
+
+})
+
+})
 
 </script>
 </div>

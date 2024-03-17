@@ -14,7 +14,8 @@ urlpatterns = [
     path('product_addition/<str:category>/', views.ProductCreation.as_view(), name='add_product'),
     path('<int:pk>/<slug:slug>/store', views.StoreView.as_view(), name='store'),
     path('upload-profile-image/', views.UploadProfileImageView.as_view(), name='profile_upload'),
-    path('<int:pk>/comment-on-store/<slug:slug>/', views.StoreCommentView.as_view(), name="comment"),
+    path('<int:pk>/<slug:slug>/comment-on-store/', views.StoreCommentView.as_view(), name="comment"),
+    path('<int:pk>/vote/comment', views.AddVoteView.as_view() , name='add-vote'),
     path('<int:pk>/create/store/settings', views.StoreCreationView.as_view(),  name="createStore"),
     re_path(
                 r"^products/create/(?P<product_class_slug>[\w-]+)/$",

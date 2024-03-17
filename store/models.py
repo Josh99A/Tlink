@@ -2,8 +2,10 @@ from email.policy import default
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.db.models import Count, Sum
 from core.models import User
-from datetime import datetime
+from datetime import datetime 
+from django.core.exceptions import ValidationError
 
 
 from apps.catalogue.models import Category, Product
@@ -70,6 +72,8 @@ class Comment(models.Model):
     user = models.ForeignKey(User, related_name='comment_user', on_delete=models.CASCADE)
     message = models.TextField('Body')
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
+    total_votes = models.IntegerField('Total votes', default=0)
+    delta_votes = models.IntegerField('Delta Votes', default=0)
     
     date_created = models.DateField('Date created', auto_now_add=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='comments')
@@ -78,6 +82,106 @@ class Comment(models.Model):
     score = models.PositiveSmallIntegerField( "Score", choices=SCORE_CHOICES)
 
 
+    class Meta:
+        ordering = ["-delta_votes", "id"]
+
     def __str__(self):
         return self.title
+    
+    def vote_up(self, user):
+        self.votes.create(user=user, delta=Vote.UP)
+
+    def vote_down(self, user):
+        self.votes.create(user=user, delta=Vote.DOWN)
+
+    def can_user_vote(self, user):
+        """
+        Test whether the passed user is allowed to vote on this
+        review
+        """
+        if not user.is_authenticated:
+            return False, _("Only signed in users can vote")
+        # pylint: disable=no-member
+        vote = self.votes.model(comment=self, user=user, delta=1)
+        try:
+            vote.full_clean()
+        except ValidationError as e:
+            return False, "%s" % e
+        return True, ""
+
+    
+    def update_totals(self):
+        """
+        Update total and delta votes
+        """
+        result = self.votes.aggregate(score=Sum("delta"), total_votes=Count("id"))
+        self.total_votes = result["total_votes"] or 0
+        self.delta_votes = result["score"] or 0
+        self.save()
+
+    @property
+    def is_anonymous(self):
+        return self.user is None
+    
+    @property
+    def has_votes(self):
+        return self.total_votes > 0
+
+    @property
+    def num_up_votes(self):
+        """Returns the total up votes"""
+        return int((self.total_votes + self.delta_votes) / 2)
+
+    @property
+    def num_down_votes(self):
+        """Returns the total down votes"""
+        return int((self.total_votes - self.delta_votes) / 2)
+    
+
+class Vote(models.Model):
+    """
+    Records user comment as yes/no vote.
+
+    * Only signed-in users can vote.
+    * Each user can vote only once.
+    """
+
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name="votes"
+    )
+    user = models.ForeignKey(
+        User, related_name="comment_votes", on_delete=models.CASCADE
+    )
+    UP, DOWN = 1, -1
+    VOTE_CHOICES = ((UP, "Up"), (DOWN, "Down"))
+    delta = models.SmallIntegerField("Delta", choices=VOTE_CHOICES)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date_created"]
+        verbose_name = "Comment Vote"
+        verbose_name_plural = "Comment Votes"
+
+    def __str__(self):
+        return "%s vote for %s" % (self.delta, self.comment)
+    
+    def clean(self):
+        if not self.comment.is_anonymous and self.comment.user == self.user:
+            raise ValidationError("You cannot vote on your own comment")
+        if not self.user.id:
+            raise ValidationError("Only signed-in users can vote on comments")
+        previous_votes = self.comment.votes.filter(user=self.user)
+        if len(previous_votes) > 0:
+            print(previous_votes)
+            previous_votes.delete()
+            # raise ValidationError("You can only vote once on a review")
+
+
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.comment.update_totals()
+
+
+
     
