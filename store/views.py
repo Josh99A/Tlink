@@ -257,19 +257,15 @@ class AddVoteView(StoreView ):
 
         form = VoteForm(comment, request.user, request.POST)
         if form.is_valid():
-            print('Form Valid')
             if form.is_up_vote:
-                print('Vote is up')
                 comment.vote_up(request.user)
             elif form.is_down_vote:
-                print('vote is down')
                 comment.vote_down(request.user)
                  
         else:
             for error_list in form.errors.values():
                 for msg in error_list:
                     errors.append(msg)
-                    print(msg)
 
         has_up_vote = comment.votes.filter(user=request.user, delta=1).exists()
         has_down_vote = comment.votes.filter(user=request.user, delta=-1).exists()
@@ -282,6 +278,5 @@ class AddVoteView(StoreView ):
             'num_up_votes': comment.num_up_votes,
             'num_down_votes': comment.num_down_votes
         }
-        print(data)
-                    
+                      
         return JsonResponse(data)

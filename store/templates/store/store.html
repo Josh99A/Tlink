@@ -11,9 +11,8 @@
 <div class="container-fluid">
     <div style="height:100px; margin-bottom: 20px;" ></div> 
 
-    <div class="alert alert-success alert-dismissible fade d-none show  box fw-bold fs-6" role="alert" id="ajax-alert">
-        <p id="alert-message"></p>
-        <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+    <div id="follow-alert">
+       
     </div>
    
   <div class="row">
@@ -309,7 +308,30 @@
         
                         </div>
                     </div>
+            
                 </article>
+                <article class="media"><!--===========Reply form=================-->
+                    <figure class="media-left">
+                        <p class="image is-64x64">
+                            <img src="{{ user.profile_image.url }}" alt="">
+                        </p>
+                    </figure>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <div class="text-start">
+                                    <strong>Reply</strong>    
+                                </div>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ducimus.</p>
+                               <div class="d-flex flex-warp-nowrap ">
+                                <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>
+                               </div>
+                            </p>
+        
+                        </div>
+                    </div>
+            
+                </article><!---===========End of reply form-->
             </div>
         </article>
         {% endfor %}
@@ -372,6 +394,23 @@
     $(this).closest('.col-md-12').find('select').val($(this).index() + 1); //select is hidden, set value
     }
 
+    function alertFunc(divid, message, type){
+        const alertPlaceholder = document.getElementById(divid)
+        const appendAlert = (message, type) =>{
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div  class="alert alert-${type} alert-dismissible" role="alert">`,
+                `    <div>${ message }</div>`,
+                '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+
+            ].join('')
+            alertPlaceholder.append(wrapper)
+        }
+        appendAlert(message, type)
+    }
+
+
 
     $('#followbtn').on('click', function(e){
         e.preventDefault()
@@ -383,15 +422,16 @@
                 csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val()
             },
             success: function(response){
+                console.log('Loading')
 
                 if(response.is_follower == true){
                     $('#followbtn').html("Unfollow <i class='bi bi-heart-fill has-text-danger '></i>")
-                    $('#alert-message').html('You are now following {{ store.name }} store')
-                    $('#ajax-alert').removeClass('d-none')
+                    alertFunc('follow-alert', 'You are now following {{ store.name }} store', 'primary' )
+                   
                 } else {
                     $('#followbtn').html("Follow <i class='bi bi-heart-fill'></i>")
-                    $('#alert-message').html('You have unfollowed  {{ store.name }} store')
-                    $('#ajax-alert').removeClass('d-none')
+                    alertFunc('follow-alert', 'You have unfollowed  {{ store.name }} store' , 'primary' )
+                   
                 }
 
                 if(response.followers_count == '1' ){
