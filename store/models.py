@@ -1,4 +1,5 @@
 from email.policy import default
+from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
@@ -6,6 +7,8 @@ from django.db.models import Count, Sum
 from core.models import User
 from datetime import datetime 
 from django.core.exceptions import ValidationError
+
+from .managers import CommentQuerySet
 
 
 from apps.catalogue.models import Category, Product
@@ -18,7 +21,7 @@ class Store(models.Model):
     location = models.CharField(max_length=20, choices=LOCATION_CHOICES)
     product_type  = models.ManyToManyField(Category)
     is_active = models.BooleanField(default=False)
-    prompted = models.BooleanField(default=False)
+    whatsApp_number = models.CharField(max_length=13, blank=True, null=True)
     slug = models.SlugField()
     date_created = models.DateField('Date created', auto_now_add=True)
     date_modified = models.DateTimeField('Date modified', auto_now=True)
@@ -40,6 +43,30 @@ class Store(models.Model):
             Get the store 
         """
         return reverse('store:store', kwargs={'pk': self.pk , 'slug':self.slug})
+
+    
+    def update_rating(self):
+        """
+        Recalculate rating field
+        """
+        self.record.rating = self.calculate_rating()
+        self.record.save()
+
+    update_rating.alters_data = True
+
+    def calculate_rating(self):
+        """
+        Calculate rating value
+        """
+        result = self.comments.filter(type='PC').aggregate(
+            sum=Sum("score"), count=Count("id")
+        )
+        reviews_sum = result["sum"] or 0
+        reviews_count = result["count"] or 0
+        rating = None
+        if reviews_count > 0:
+            rating = float(reviews_sum) / reviews_count
+        return rating
 
 class StoreRecord(models.Model):
     store = models.OneToOneField(Store, on_delete=models.CASCADE ,  related_name='record')
@@ -68,9 +95,14 @@ class UserStoreRecord(models.Model):
 
 
 class Comment(models.Model):
+    TYPE_CHOICES = [
+        ('PC', 'Parent Comment'),
+        ('R', 'Reply')
+    ]
     title = models.CharField(max_length=30)
     user = models.ForeignKey(User, related_name='comment_user', on_delete=models.CASCADE)
     message = models.TextField('Body')
+    type = models.CharField(max_length=16, choices=TYPE_CHOICES, default='PC')
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
     total_votes = models.IntegerField('Total votes', default=0)
     delta_votes = models.IntegerField('Delta Votes', default=0)
@@ -80,6 +112,8 @@ class Comment(models.Model):
     # Scores are between 0 and 5
     SCORE_CHOICES = tuple([(x, x) for x in range(0, 6)])
     score = models.PositiveSmallIntegerField( "Score", choices=SCORE_CHOICES)
+
+    objects = CommentQuerySet.as_manager()
 
 
     class Meta:
@@ -108,6 +142,15 @@ class Comment(models.Model):
         except ValidationError as e:
             return False, "%s" % e
         return True, ""
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.store.update_rating()
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        if self.store is not None:
+            self.store.update_rating()
 
     
     def update_totals(self):
@@ -136,6 +179,18 @@ class Comment(models.Model):
     def num_down_votes(self):
         """Returns the total down votes"""
         return int((self.total_votes - self.delta_votes) / 2)
+    
+    @property
+    def has_replies(self):
+        """Return true if comment has replies"""
+        return self.replies.filter().exists()
+    @property
+    def is_parent(self):
+        """Returns true is comment is a parent comment"""
+        if self.type == 'PC':
+            return True
+        else:
+            return False
     
 
 class Vote(models.Model):

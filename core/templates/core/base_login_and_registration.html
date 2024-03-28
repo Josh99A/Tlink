@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block main-content %}
+
+<div style="height: 40px;"></div>
+<div class="container d-flex justify-content-center align-items-center  min-vh-100 my-3">
+
+    <div class="row border rounded-5 p-3 bg-white shadow box-area mb-3">
+        <!--=================Left divison=========================-->
+        <div class="col-md-6 col-sm-3 rounded-4 d-flex justify-content-center align-items-center flex-column left-box bg-primary" >
+            <div class="featured-image">
+                <img src="{% static 'core/Images/1.png' %}" alt="" class="img-fluid" style="width:250px">
+               <p class="text-white fs-2" style="font-family: 'Courier New', Courier, monospace; font-weight: 600px;">
+                   TrustLink
+                </p>
+                <small class="text-white text-warp" style="width:17rem; font-family: 'Courier New', Courier, monospace;">The best online shopping experience</small>
+            </div>
+           
+        </div>
+        <!--=================Right divison=========================-->
+        <div class="col-md-6 col-sm-9 right-box">
+            <div class="row align-items-center">
+                <div class="header-text mb-4">
+                    <h2 class="text-center">{% block form_label %}{% endblock %}</h2>
+                    <h3>{% block greeting_intro %}{% endblock %}</h3>
+                    <p>{% block greeting %}{% endblock %}</p>
+                </div>
+                <form action="{{ request.get_full_path }}" method="POST">
+                    {% csrf_token %}
+                   {% block form_content %}{% endblock %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .box-area{
+            width: 930px;
+        }
+
+        .right-box{
+            padding: 40px 30px 40px 40px;
+        }
+
+        @media only screen and (max-width: 768px){
+            .box-area{
+                margin: 0 10px;
+            }
+
+            .left-box {
+                height: 100px;
+            }
+
+            .right-box{
+                padding: 20px;
+            }
+        }
+    </style>
+    
+</div>
+{% endblock %}

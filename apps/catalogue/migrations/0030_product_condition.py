@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='condition',
-            field=models.CharField(choices=[('N', 'New'), ('U', 'Used')], default='Used', max_length=2),
+            field=models.CharField(choices=[('N', 'New'), ('U', 'Used')], default='Used', max_length=4),
             preserve_default=False,
         ),
     ]

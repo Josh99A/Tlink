@@ -1,4 +1,5 @@
 {% load static %}
+{% load reviews_tags %}
 {% load image_tags %}
 
 <div class="row my-3">
@@ -21,10 +22,10 @@
                 <div class="text-start">
                   <h5>Location: {{ store.get_location_display }}</h5>
                   <h6 class="fw-bold">Seller rating</h6>
-                  <div class="star-rating ">
-                    <i class="bi bi-star-fill text-warning"></i>
-                    <i class="bi bi-star-fill text-warning"></i>
-                    <i class="bi bi-star-fill text-warning"></i>
+                  <div class="star-rating {{ store.record.rating| as_stars }} ">
+                    <i class="bi bi-star-fill "></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill "></i>
                     <i class="bi bi-star-fill"></i>
                     <i class="bi bi-star-fill"></i>
                   </div>

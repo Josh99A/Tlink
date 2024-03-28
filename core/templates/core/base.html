@@ -4,11 +4,11 @@
  <!--Navbar-->
  <nav class="primary-nav navbar navbar-dark bg-dark navbar-expand-lg fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand me-auto" href="{% url 'core:index' %}">TLink</a>
+      <a class="navbar-brand me-auto" href="{% url 'core:index' %}">{{ site_name_short }}</a>
       
       <div class="offcanvas text-bg-dark offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">TrustLink</h5>
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">{{ site_name }}</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">

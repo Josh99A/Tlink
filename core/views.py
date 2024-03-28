@@ -55,6 +55,8 @@ class indexList(BaseContextMixin, ListView):
 class Subscribe(TemplateView):
     template_name = 'core/pricing.html'
 
+
+
    
 
 

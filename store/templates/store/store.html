@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <h5 class="card-title ">{{ store.name }}</h5>
                     <h6 class="fw-bold">Store Rating</h6>
-                    <div class="star-rating Three  me-auto">
+                    <div class="star-rating {{ store.record.rating|as_stars }}  me-auto">
                         <i class="bi bi-star-fill "></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill "></i>
@@ -49,15 +49,15 @@
                 <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.record.products.browsable.count }} products</span>
                 {% endif %}
 
-                {% if store.comments.count == 1 %}
-                <a href="#storeCommentForm" ><span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.comments.count }} comment</span></a>
+                {% if store.comments.only_parent_comments.count == 1 %}
+                <a href="#storeCommentForm" ><span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.comments.only_parent_comments.count }} comment</span></a>
                 {% else %}
-                <a href="#storeCommentForm" ><span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.comments.count }} comments</span></a>
+                <a href="#storeCommentForm" ><span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 ">{{ store.comments.only_parent_comments.count }} comments</span></a>
                 {% endif %}
 
 
                 <div class="d-flex flex-warp-nowrap">
-                    {% if store.record.store_followers.count == 1 %}
+                    {% if store.record.store_followers.only_parent_comments.count == 1 %}
                     <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 align-self-end " id="followers_count">{{ store.record.store_followers.count }} follower</span>
                     {% else %}
                     <span class="has-text-success is-size-4 is-size-5-mobile text-captialise fw-bold px-2 align-self-end " id="followers_count">{{ store.record.store_followers.count }} followers</span>
@@ -93,11 +93,13 @@
             <form action="">
                <div class="input-group">
                 <button class="input-group-text" id="search-addon"><i class="bi bi-search"></i></button>
-                <input type="search" class="form-control" list="datalistOptions" placeholder="Search product or category" aria-label="Product or category search" aria-describedby="search-addon"> 
+                <input type="search" class="form-control" list="datalistOptions" placeholder="Search for store product" aria-label="Product or category search" aria-describedby="search-addon"> 
                 <datalist id="datalistOptions">
-                    <option value="T-shirts">
-                    <option value="Bras">
-                    <option value="Jackets">
+                    {% if user_productclass %}
+                    {% for product_class in user_productclass %}
+                    <option value="{{ product_class.name }}">    
+                    {% endfor %}
+                    {% endif %}
                 </datalist>
                </div> 
             </form>
@@ -105,8 +107,9 @@
            <div class="mt-2">
             <h3 class="text-center">Store Tags</h3>
             {% if user_productclass %}
+            <a href="{% url 'store:store' store.pk store.get_slug  %}#catalogue">  <button class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">All</button> </a>
             {% for product_class in user_productclass %}
-            <a href="">  <button class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">{{ product_class.name }}</button> </a>
+            <a href="{% url 'store:productclass' product_class.name store.pk store.get_slug %}#catalogue">  <button class="btn-outline-success btn rounded-pill fw-bold fs-6 my-1">{{ product_class.name }}</button> </a>
             {% endfor %}
             {% else %}
             <p>No products posted yet</p>
@@ -223,6 +226,7 @@
 
         {% if store.comments.all.exists %}
         {% for comment in store.comments.all %}
+        {% if comment.is_parent %}
         <article class="media">
             <figure class="media-left">
                 <p class="image is-64x64">
@@ -254,10 +258,11 @@
                     
                         </div>
                       
-                        
                         {% if user.is_authenticated and not store.owner == user and not comment.user == user %}
-                        <p class="small">Do you agree?</p>
-                       <div class="d-flex flex-warp-nowrap ">
+                        <p class="small fw-bold ">Do you agree?</p>
+                        {% endif %}
+                        <div class="d-flex flex-warp-nowrap ">
+                            {% if user.is_authenticated and not store.owner == user and not comment.user == user %}
                             <form action="" method="POST" class="d-flex">
                                     {% csrf_token %}
                                     <input type="hidden" value="{{ comment.id }}" name="comment_id">
@@ -266,9 +271,9 @@
                                         <input type="radio" class="form-check-input d-none" name="delta" id="agree" value="1">
                                         <label for="agree" class="form-check-label">
                                             {% if comment|has_up_vote:user %}
-                                            <small class="fs-6 me-2 votebtn text-primary fw-semibold comment{{ comment.id }} up" ><i class="bi bi-hand-thumbs-up-fill"></i><span class="text-dark" >Yes({{ comment.num_up_votes }})</span></small>.
+                                            <small class="fs-6 me-2 btn votebtn text-primary fw-semibold comment{{ comment.id }} up" ><i class="bi bi-hand-thumbs-up-fill"></i><span class="text-dark" >Yes({{ comment.num_up_votes }})</span></small>.
                                             {% else %}
-                                            <small class="fs-6 me-2 votebtn  fw-semibold comment{{ comment.id }} up " ><i class="bi bi-hand-thumbs-up-fill"></i><span class="text-dark" id="up_vote{{ forloop.counter }}">Yes({{ comment.num_up_votes  }})</span></small>.
+                                            <small class="fs-6 me-2 btn votebtn  fw-semibold comment{{ comment.id }} up " ><i class="bi bi-hand-thumbs-up-fill"></i><span class="text-dark" id="up_vote{{ forloop.counter }}">Yes({{ comment.num_up_votes  }})</span></small>.
                                             {% endif %}
                                         </label>
                                     </div>
@@ -276,64 +281,76 @@
                                         <input type="radio" class="form-check-input d-none" name="delta" id="disagree" value="-1">
                                         <label for="disagree" class="form-check-label">
                                             {% if comment|has_down_vote:user %}
-                                            <small class="fs-6 me-2 votebtn text-primary fw-semibold comment{{ comment.id }} down" ><i class="bi bi-hand-thumbs-down-fill"></i><span class="text-dark" >No({{ comment.num_down_votes }})</span></small>.
+                                            <small class="fs-6 me-2 btn votebtn text-primary fw-semibold comment{{ comment.id }} down" ><i class="bi bi-hand-thumbs-down-fill"></i><span class="text-dark" >No({{ comment.num_down_votes }})</span></small>.
                                             {% else %}
-                                            <small class="fs-6 me-2 votebtn  fw-semibold comment{{ comment.id }} down " ><i class="bi bi-hand-thumbs-down-fill"></i><span class="text-dark" id="up_vote{{ forloop.counter }}">No({{ comment.num_down_votes  }})</span></small>.
+                                            <small class="fs-6 me-2 btn votebtn  fw-semibold comment{{ comment.id }} down " ><i class="bi bi-hand-thumbs-down-fill"></i><span class="text-dark" id="up_vote{{ forloop.counter }}">No({{ comment.num_down_votes  }})</span></small>.
                                             {% endif %}
                                         </label>
                                     </div>
                                 </form>
-                        <small class="fs-6"><a href="" class="text-dark"><i class="bi bi-reply-fill  "></i>Reply(4)</a></small>
+                                {% endif %}
+                                <small class="fs-6 fw-bold btn" data-bs-toggle="collapse" data-bs-target="#replyCollapse{{ comment.id}}" aria-controls="replyCollapse{{ comment.id }}"><i class="bi bi-reply-fill  "></i>Replies({{ comment.replies.count }})</small>
                        </div>
 
-                    {% endif %}
                 </div>
-                <article class="media">
-                    <figure class="media-left">
-                        <p class="image is-64x64">
-                            <img src="{% static 'core\Images\Fashion\8414ce16fab38c2c8ee81096b7b70092.jpg' %}" alt="">
-                        </p>
-                    </figure>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <div class="text-start">
-                                    <strong>Barbra Middleton</strong>    
+                
+                <div class="collapse" id="replyCollapse{{ comment.id }}">
+                    <div class="card card-body">
+                        {% if comment.has_replies %}
+                        {% for reply in comment.replies.all %}
+                        <article class="media"><!--=============Replies=========================-->
+                            <figure class="media-left">
+                                <p class="image is-64x64">
+                                    <img src="{{ reply.user.profile_image.url }}" alt="{{ reply.user.get_full_name }}">
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <div class="text-start">
+                                            <strong>{{ reply.user.get_ful_name }}</strong>    
+                                        </div>
+                                        <p>{{ reply.message }}</p>
+                                       <div class="d-flex flex-warp-nowrap ">
+                                        <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>
+                                       </div>
+                                    </p>
+                
                                 </div>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ducimus.</p>
-                               <div class="d-flex flex-warp-nowrap ">
-                                <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>
-                               </div>
-                            </p>
-        
-                        </div>
-                    </div>
-            
-                </article>
-                <article class="media"><!--===========Reply form=================-->
-                    <figure class="media-left">
-                        <p class="image is-64x64">
-                            <img src="{{ user.profile_image.url }}" alt="">
-                        </p>
-                    </figure>
-                    <div class="media-content">
-                        <div class="content">
-                            <p>
-                                <div class="text-start">
-                                    <strong>Reply</strong>    
+                            </div>
+                    
+                        </article><!--=====================End of replies==========================-->
+                        {% endfor %}
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <article class="media"><!--===========Reply form=================-->
+                            <figure class="media-left">
+                                <p class="image is-64x64">
+                                    <img src="{{ user.profile_image.url }}" alt="">
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <div class="text-start mb-2">
+                                        <strong>{{ user.get_full_name }}</strong>    
+                                    </div>
+                                  <form action="{% url 'store:reply' comment.id   %}" method="POST">
+                                    {% csrf_token %}
+                                    {{ replyForm.message }}
+                                    <button class="btn w-5 btn-primary my-2" type="submit"><i class="bi bi-arrow-up"></i>Send</button>
+                                  </form>
+                                    
                                 </div>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, ducimus.</p>
-                               <div class="d-flex flex-warp-nowrap ">
-                                <small class="fs-6 me-2 "><a href="" class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i>Like (200likes)</a></small>
-                               </div>
-                            </p>
-        
-                        </div>
+                            </div>
+                    
+                        </article><!---===========End of reply form-->
+                        {% endif %}
                     </div>
-            
-                </article><!---===========End of reply form-->
+                </div>
+              
             </div>
         </article>
+        {% endif %}
         {% endfor %}
         {% else %}
         <p>This store has no comments. <a href="#storeCommentForm">Be the first to comment</a></p>

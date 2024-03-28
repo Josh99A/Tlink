@@ -17,12 +17,20 @@ class PasswordChangeForm(BasePasswordChangeForm):
         self.fields['new_password1'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
         self.fields['new_password2'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
 
+class ReplyForm(ModelForm):
+    class Meta:
+        model=Comment
+        fields = ('message',)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['message'].widget.attrs.update({'class':'form-control', 'cols':10, 'rows': 3 , 'placeholder':'Enter your reply'})
+        
 
 class StoreForm(ModelForm):
     class Meta:
         model=Store
         fields = [
-            'name', 'location','product_type', 'location_image1',
+            'name', 'location','product_type', 'location_image1','whatsApp_number',
             'location_image2', 'location_image3',
             'location_image4'
             ]  
@@ -34,6 +42,7 @@ class StoreForm(ModelForm):
     def __init__(self, *args,**kwargs):
         super().__init__(*args,  **kwargs)
         self.fields['name'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
+        self.fields['whatsApp_number'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
         self.fields['location'].widget.attrs.update({'class':'form-select border border-primary-subtle'})
         self.fields['location_image1'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card1', 'imageName1')"})
         self.fields['location_image2'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card2', 'imageName2')"})
@@ -64,7 +73,7 @@ class CommentForm(ModelForm):
                 raise ValidationError(_("Only signed-in users can comment on stores"))
             if  self.store.owner == self.user:
                 raise ValidationError(_("You cannot comment on your own store"))
-            previous_comments = self.store.comments.filter(user=self.user)
+            previous_comments = self.store.comments.filter(user=self.user, type='PC')
             if len(previous_comments) > 0:
                     raise ValidationError(_("You can only comment once on a store"))
 

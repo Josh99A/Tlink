@@ -9,8 +9,9 @@ class CustomerConfig(apps.CustomerConfig):
     name = 'apps.customer'
 
     def ready(self):
-        from .views import AccountAuthView, LogoutView
+        from .views import AccountAuthView, LogoutView,  AccountRegistrationView
         self.login_view = AccountAuthView
+        self.register_view = AccountRegistrationView
         self.logout_view = LogoutView
 
         super().ready()
@@ -19,6 +20,7 @@ class CustomerConfig(apps.CustomerConfig):
     def get_urls(self):
         urls = [
             path("login/", self.login_view.as_view(), name="login"),
+            path("register/", self.register_view.as_view(), name="register"),
             path("logout/", self.logout_view.as_view(), name="logout"),
 
         ] + super().get_urls()

@@ -17,7 +17,8 @@ from core.mixins import BaseContextMixin
 
 
 
-from .forms import StoreForm, CommentForm, PasswordChangeForm, VoteForm
+
+from .forms import StoreForm, CommentForm, PasswordChangeForm, VoteForm,ReplyForm
 from core.models import User
 from .models import Store, Product, StoreRecord, Comment
 from .mixins import settingsMixin, PageTitleMixin, StoreMixin
@@ -32,7 +33,7 @@ from apps.catalogue.models import Category
 
 
 class SettingsView(settingsMixin, ProfileView):
-    template_name = 'store/profile.html'
+    template_name = 'store/store_settings_details.html'
     active_tab = 'store_settings'
     page_title = 'Profile'
 
@@ -54,18 +55,20 @@ class ChangePasswordView(settingsMixin, ChangePasswordView):
     success_url = reverse_lazy('store:settings')
 
 
-class StoreCreationView(PageTitleMixin, SingleObjectMixin,FormView ):
+class StoreCreationView(SettingsView):
     """
      Get the existing user store and create a form for updating it.
 
     """
-    template_name = 'store/profile.html'
+    template_name = 'store/store_settings_form.html'
     form_class = StoreForm
     model = User
     active_tab = 'store_settings'
 
+   
+
     def post(self, request, *args, **kwargs):
-        storeForm = self.form_class(request.POST, request.FILES, instance=request.user.shop)
+        storeForm = self.form_class(request.POST, request.FILES)
         self.object = self.get_object()
         if storeForm.is_valid():
            store = storeForm.save(commit=False)
@@ -109,12 +112,12 @@ class UploadProfileImageView(View):
 
         return JsonResponse({'new_image': new_image_url })
     
-class FollowView(LoginRequiredMixin, BaseContextMixin, StoreMixin, DetailView):
+class FollowView(LoginRequiredMixin, BaseContextMixin, StoreMixin, View):
     model =Store
     template_name = 'store/store.html'
 
     def get(self, request , *args, **kwargs):
-        store = self.get_object()
+        store = self.get_store()
         return redirect(reverse('store:store', kwargs={'pk': store.pk, 'slug': store.get_slug()}))
 
     def post(self, request, *args, **kwargs):
@@ -136,7 +139,12 @@ class FollowView(LoginRequiredMixin, BaseContextMixin, StoreMixin, DetailView):
 
 
 class StoreView(BaseContextMixin, StoreMixin, ListView):
-
+    model = Product
+    template_name='store/store.html'
+    paginate_by= settings.STORE_PRODUCTS_PER_PAGE
+    context_object_name ='products'
+   
+    form_class = CommentForm
     view_signal = store_viewed
 
     def get(self, request, *args, **kwargs):  
@@ -155,7 +163,17 @@ class StoreView(BaseContextMixin, StoreMixin, ListView):
             user= user,
             datetime=datetime
         )
+
+
+class ProductClassFilterView(StoreView):
+    model=Product
+    def get_store(self, **kwargs):
+        return get_object_or_404(Store, pk=self.kwargs['pk'], slug=self.kwargs['slug'])
     
+    def get_queryset(self,*args,**kwargs):
+        print(self.kwargs)
+        queryset= self.store.record.products.filter(product_class__name=self.kwargs['product_class']).browsable().base_queryset()
+        return queryset
 
     
 
@@ -280,3 +298,25 @@ class AddVoteView(StoreView ):
         }
                       
         return JsonResponse(data)
+
+
+class CommentReplyView(StoreMixin, FormView):
+    form_class= ReplyForm
+
+    def post(self, request, *args , **kwargs):
+        comment = get_object_or_404(Comment, pk=kwargs['comment_pk'])
+        form = self.get_form()
+
+        if form.is_valid:
+            reply = form.save(commit=False)
+            reply.title = comment.title + '_reply by ' + request.user.get_full_name()
+            reply.user = request.user
+            reply.score = 0
+            reply.type = 'R'
+            reply.parent_comment = comment
+            reply.store = comment.store
+            reply.save()
+             
+         
+
+        return redirect(reverse('store:store', kwargs={'pk': comment.store.id, 'slug':comment.store.get_slug()}))

@@ -10,8 +10,6 @@ from core.models import User
 
 
 class Category(OscarAbstractCategory):
-    # def get_absolute_url(self):
-    #     return reverse(f'core:{self.name}'.lower(), kwargs={'slug': self.slug, 'str': self.name.lower()})
     pass
 
 class ProductClass(BaseAbstractProductClass):

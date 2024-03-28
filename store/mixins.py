@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 
 
-from store.forms import CommentForm
+from store.forms import CommentForm, ReplyForm
 from core.mixins import BaseContextMixin
 
 class settingsMixin(BaseContextMixin):
@@ -15,13 +15,12 @@ class settingsMixin(BaseContextMixin):
         # Get the user shop 
         try: 
             user_shop = Store.objects.get(owner=request.user)
+            self.form = StoreForm(instance=user_shop)
         except (User.shop.RelatedObjectDoesNotExist, Store.DoesNotExist):
             # create if it does not exist
-            user_shop = Store(owner=request.user, primary_image=request.user.profile_image)
-            user_shop.save() 
-
-
-        self.form = StoreForm(instance=user_shop)
+            self.form = StoreForm()
+            
+        print(self.get_context_data())
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -57,15 +56,10 @@ class StoreMixin:
     """
         Common context data for the store
     """
-    model = Product
-    template_name='store/store.html'
-    paginate_by= settings.STORE_PRODUCTS_PER_PAGE
-    context_object_name ='products'
-   
-    form_class = CommentForm
+    
 
-    def get_store(self, **kwargs):
-        return get_object_or_404(Store, **kwargs)
+    def get_store(self, **kwargs): 
+        return get_object_or_404(Store, **self.kwargs)
     
    
     def get_queryset(self):
@@ -76,5 +70,6 @@ class StoreMixin:
         context = super().get_context_data(**kwargs)
         context['commentForm'] = CommentForm(store=self.store, user=self.request.user)
         context['store'] = self.store
+        context['replyForm'] = ReplyForm
         context['user_productclass'] = ProductClass.objects.filter(products__seller=self.store.owner).distinct()
         return context
