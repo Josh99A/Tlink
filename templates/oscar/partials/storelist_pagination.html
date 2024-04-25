@@ -1,0 +1,30 @@
+{% load display_tags %}
+{% load i18n %}
+
+{% if store_paginator.num_pages > 1 %}
+    <nav class="my-2">
+        <ul class="pagination justify-content-center">
+            {% if store_page_obj.has_previous %}
+                <li class="page-item ">
+                    <a class="page-link" href="?{% get_parameters 'store_page' %}store_page={{ store_page_obj.previous_page_number }}#{{ slider_id }}&tab=store" tabindex="-1">
+                        {% trans "previous" %}
+                    </a>
+                </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <span class="page-link bg-primary text-white fw-bold">
+                    {% blocktrans with page_num=store_page_obj.number total_pages=store_paginator.num_pages %}
+                        Page {{ page_num }} of {{ total_pages }}
+                    {% endblocktrans %}
+                </span>
+            </li>
+            {% if store_page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% get_parameters 'store_page' %}store_page={{ store_page_obj.next_page_number }}#{{ slider_id }}&tab=store">
+                        {% trans "next" %}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}

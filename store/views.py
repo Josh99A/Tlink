@@ -236,8 +236,6 @@ class ProductCreation(TemplateView):
         is_enterprise = False
         if request.user.groups.all().first().name == 'Enterprise':
             is_enterprise = True
-        print('Is Enterprise', is_enterprise)
-        print('Group', request.user.groups.all().first().name)
 
         if request.user.is_authenticated and not is_enterprise  :
             user_product_count = request.user.shop.record.products.count()
@@ -245,11 +243,10 @@ class ProductCreation(TemplateView):
             product_limit = settings.BASIC_PRODUCT_LIMIT
             if user_group == 'Premium':
                 product_limit = settings.PREMIUM_PRODUCT_LIMIT
-            print('Product limit: ', product_limit)
+           
 
             if user_product_count >= product_limit:
                 messages.error(request, 'Update to premium or enterprise to add more products')
-                print('Redirecting now to dashboard')
                 return redirect(reverse('store:dashboard', kwargs={'pk': request.user.pk}))
             
         return super().get(request, *args, **kwargs)

@@ -7,6 +7,7 @@ from apps.dashboard.catalogue.views import TlinkProductCreateUpdateView
 app_name='core'
 urlpatterns = [
     path('', views.indexList.as_view() , name='index'),
+    path('search/', views.ProductStoreSearch.as_view(), name='search'),
     path('subscribe/', views.Subscribe.as_view(), name='subscribe'),
     re_path(
                 r"^products/create/(?P<product_class_slug>[\w-]+)/$",

@@ -48,8 +48,8 @@
               </ul>
             </li>
           </ul>
-          <form class="d-flex me-3 mt-3 mt-lg-0 " role="search">
-            <input class="form-control me-2" type="search" placeholder="Search product or store" aria-label="Search">
+          <form class="d-flex me-3 mt-3 mt-lg-0 " role="search" action="{% url 'core:search' %}" >
+            <input value="{% if q %} {{ q }} {% endif %}" class="form-control me-2" type="search" name='q' placeholder="Search product or store" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
           </form>
 

@@ -1,0 +1,31 @@
+{% load reviews_tags %}
+  <div class="card text-white bg-dark ps-card">
+      <img src="{{ store.primary_image.url }}" class="ps-image" alt="{{ store.name }}">
+      <div class="card-header ps-card-header ">
+        <h5>{{ store.name }}</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-none">
+          <h6 class="fw-bold">Seller's Score</h6>
+          <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width: 75%">75%</div>
+          </div>
+        </div>
+        <div class="text-start">
+          <h5>Location: {{ store.get_location_display }}</h5>
+          <h6 class="fw-bold">Seller rating</h6>
+          <div class="star-rating {{ store.record.rating| as_stars }} ">
+            <i class="bi bi-star-fill "></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill "></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+      </div>
+       
+          <a href="{{ store.get_absolute_url }}" class="d-grid mt-3">
+            <button class="btn btn-primary" type="button">Visit Store</button>
+          </a>
+  
+      </div>
+  </div>

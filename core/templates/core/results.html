@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %} 
+
+{% block main-content %}
+<div class="container-fluid my-2 mb-3">
+  <div style="height: 100px; margin-bottom: 20px"></div>
+  <h1>Search results for {{ q }}</h1>
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button
+        class="nav-link active fw-bold"
+        id="nav-Products-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#nav-Products"
+        type="button"
+        role="tab"
+        aria-controls="nav-Products"
+        aria-selected="true"
+      >
+        Products
+      </button>
+      <button
+        class="nav-link fw-bold"
+        id="nav-Stores-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#nav-Stores"
+        type="button"
+        role="tab"
+        aria-controls="nav-Stores"
+        aria-selected="false"
+      >
+        Stores
+      </button>
+    </div>
+  </nav>
+  <div class="tab-content my" id="nav-tabContent">
+    <div
+      class="tab-pane fade show active"
+      id="nav-Products"
+      role="tabpanel"
+      aria-labelledby="nav-Products-tab"
+      tabindex="0"
+    >
+    {% include 'core/partials/paginatedProductMixture.html'  %}
+    </div>
+    <div
+      class="tab-pane fade"
+      id="nav-Stores"
+      role="tabpanel"
+      aria-labelledby="nav-Stores-tab"
+      tabindex="0"
+    >
+    {% include 'core/partials/paginatedStoreList.html'  %}
+    </div>
+  </div>
+  
+</div>
+
+{% endblock %}

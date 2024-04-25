@@ -1,9 +1,10 @@
 from typing import Any
 from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
-from django.views.generic import ListView, DetailView,  View, TemplateView
-from django.views.generic.detail import SingleObjectMixin
+from django.db.models import Q
+from django.conf import settings
+from django.views.generic import ListView,  TemplateView
 from apps.catalogue.models import Product
+from django.core.paginator import Paginator
 
 from store.models import Store
 from .models import User
@@ -29,6 +30,7 @@ class indexList(BaseContextMixin, ListView):
     model = Product
     template_name = 'core/index.html'
     context_object_name = 'products'
+    paginate_by = settings.STORE_PRODUCTS_PER_PAGE
 
     def get_queryset(self):
         queryset = Product.objects.all().browsable().base_queryset()  
@@ -56,7 +58,44 @@ class Subscribe(TemplateView):
     template_name = 'core/pricing.html'
 
 
+class ProductStoreSearch(BaseContextMixin, ListView):
+    model = Product
+    template_name = 'core/results.html'
+    context_object_name = 'products'
+    paginate_by = settings.STORE_PRODUCTS_PER_PAGE
+    tab = 'products'
 
+    def get_queryset(self):
+        # Product search
+        self.q = self.request.GET.get('q', '').strip()
+        queryset = Product.objects.filter(Q(title__icontains=self.q)).browsable().base_queryset()
+        return queryset
+    
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        # Store search
+        stores = Store.objects.filter(Q(name__icontains=self.q))
+        store_paginator = Paginator(stores,settings.STORE_PRODUCTS_PER_PAGE)
+        page_number = self.request.GET.get("store_page")
+        store_page_obj = store_paginator.get_page(page_number)
+        context['store_paginator'] = store_paginator
+        context['store_page_obj'] = store_page_obj
+        context['stores'] = stores
+        context['q'] = self.q
+        context['tab'] = self.set_tab()
+        print(context)
+        return context
+    
+    def set_tab(self):
+        urlTab = self.request.GET.get('tab')
+        print(self.request.GET.copy())
+        if urlTab == 'products':
+            return 'products'
+        elif urlTab == 'store':
+            return 'store'
+        
+            
    
 
 
