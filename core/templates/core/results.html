@@ -7,7 +7,7 @@
   <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
       <button
-        class="nav-link active fw-bold"
+        class="nav-link fw-bold {% if tab == 'products' %} active {% endif %}"
         id="nav-Products-tab"
         data-bs-toggle="tab"
         data-bs-target="#nav-Products"
@@ -19,7 +19,7 @@
         Products
       </button>
       <button
-        class="nav-link fw-bold"
+        class="nav-link fw-bold {% if tab == 'store' %} active {% endif %}"
         id="nav-Stores-tab"
         data-bs-toggle="tab"
         data-bs-target="#nav-Stores"
@@ -34,22 +34,39 @@
   </nav>
   <div class="tab-content my" id="nav-tabContent">
     <div
-      class="tab-pane fade show active"
+      class="tab-pane fade {% if tab == 'products' %}  show active {% endif %}"
       id="nav-Products"
       role="tabpanel"
       aria-labelledby="nav-Products-tab"
       tabindex="0"
     >
+    {% if products %}
     {% include 'core/partials/paginatedProductMixture.html'  %}
+    {% else %}
+    <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+      <h1>
+        No products with title {{ q }}
+      </h1>
+    </div>
+    {% endif %}
     </div>
     <div
-      class="tab-pane fade"
+      class="tab-pane fade {% if tab == 'store' %}  show active {% endif %}"
       id="nav-Stores"
       role="tabpanel"
       aria-labelledby="nav-Stores-tab"
       tabindex="0"
     >
+    {% if stores %}
+  
     {% include 'core/partials/paginatedStoreList.html'  %}
+    {% else %}
+    <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+      <h1>
+        No stores with label {{ q }}
+      </h1>
+    </div>
+    {% endif %}
     </div>
   </div>
   

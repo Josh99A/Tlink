@@ -6,7 +6,7 @@
         <ul class="pagination justify-content-center">
             {% if store_page_obj.has_previous %}
                 <li class="page-item ">
-                    <a class="page-link" href="?{% get_parameters 'store_page' %}store_page={{ store_page_obj.previous_page_number }}#{{ slider_id }}&tab=store" tabindex="-1">
+                    <a class="page-link" href="?{% get_parameters 'store_page' %}{% get_parameters 'tab' %}store_page={{ store_page_obj.previous_page_number }}#{{ slider_id }}&tab=store" tabindex="-1">
                         {% trans "previous" %}
                     </a>
                 </li>
@@ -20,7 +20,7 @@
             </li>
             {% if store_page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?{% get_parameters 'store_page' %}store_page={{ store_page_obj.next_page_number }}#{{ slider_id }}&tab=store">
+                    <a class="page-link" href="?{% get_parameters 'store_page' %}{% get_parameters 'tab' %}store_page={{ store_page_obj.next_page_number }}&tab=store#{{ slider_id }}">
                         {% trans "next" %}
                     </a>
                 </li>

@@ -69,11 +69,13 @@ class StoreCreationView(SettingsView):
 
     def post(self, request, *args, **kwargs):
         storeForm = self.form_class(request.POST, request.FILES)
-        self.object = self.get_object()
+
         if storeForm.is_valid():
            store = storeForm.save(commit=False)
            store.slug = store.get_slug()
            store.prompted = True
+           store.owner = request.user
+           store.primary_image = request.user.profile_image
            store.save()
            storeForm.save_m2m()
 

@@ -89,11 +89,11 @@ class ProductStoreSearch(BaseContextMixin, ListView):
     
     def set_tab(self):
         urlTab = self.request.GET.get('tab')
-        print(self.request.GET.copy())
-        if urlTab == 'products':
-            return 'products'
-        elif urlTab == 'store':
+
+        print('requet.GEt objects ', self.request.GET)
+        if urlTab == 'store':
             return 'store'
+        return self.tab
         
             
    
