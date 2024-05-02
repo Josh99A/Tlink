@@ -11,7 +11,6 @@ class ProductCategoryView(BaseContextMixin,OscarProductCategoryView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['stores'] = Store.objects.filter(product_type=context['category'].get_root())
-        print(context)
         return context
 
 
@@ -21,6 +20,6 @@ class ProductDetailView(BaseContextMixin, OscarProductDetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print(context)
+        print('Deatil context ' , context)
 
         return context

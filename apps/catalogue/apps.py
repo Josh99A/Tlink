@@ -10,7 +10,7 @@ class CatalogueConfig(apps.CatalogueConfig):
 
         self.detail_view = ProductDetailView
         self.category_view = ProductCategoryView
-        super().ready()
+        super().ready(*args, **kwargs)
 
     def get_urls(self):
         urls = [
@@ -19,6 +19,6 @@ class CatalogueConfig(apps.CatalogueConfig):
                 self.detail_view.as_view(),
                 name=" detail",
             ),
-        ]+ super().get_urls()
+        ] + super().get_urls()
     
         return self.post_process_urls(urls)

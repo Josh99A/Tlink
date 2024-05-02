@@ -38,6 +38,7 @@ def _update_counter(model, field_name, filter_kwargs, increment=1):
                           correct instance
     """
     try:
+    
         record = model.objects.filter(**filter_kwargs)
         affected = record.update(**{field_name: F(field_name) + increment})
         if not affected:
@@ -86,7 +87,10 @@ def _record_user_order(user, order):
 def receive_product_view(sender, product, user, **kwargs):
     if kwargs.get("raw", False):
         return
-    _update_counter(ProductRecord, "num_views", {"product": product, 'category': product.categories.get(), 'store': product.store_record.all().first().store})
+    if user != product.seller:
+        #  Do not increment the record
+        # if the user is the owner of the product
+         _update_counter(ProductRecord, "num_views", {"product": product})
     if user and user.is_authenticated:
         _update_counter(UserRecord, "num_product_views", {"user": user})
         UserProductView.objects.create(product=product, user=user)
