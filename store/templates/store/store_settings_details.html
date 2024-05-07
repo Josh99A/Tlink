@@ -48,14 +48,14 @@
     </tbody>
 </table>
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <a href="{% url 'store:createStore' %}" class="btn btn-primary">{% trans 'Edit Store' %}</a>
+    <a href="{% url 'store:updateStore' %}" class="btn btn-primary">{% trans 'Edit Store' %}</a>
     <a id="delete_profile" href="{% url 'store:profile-delete' %}" class="btn btn-danger">{% trans 'Delete Store' %}</a>
 </div>
 {% else %}
 <h3>You have  no store</h3>
 <p>Click the button bellow to create a store.</p>
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <a href="{% url 'store:createStore' %}" class="btn btn-primary">{% trans 'Create Store' %}</a>
+    <a href="{% url 'store:createStore'  %}" class="btn btn-primary">{% trans 'Create Store' %}</a>
 </div>
 {% endif %}
 

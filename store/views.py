@@ -197,7 +197,6 @@ class StoreCommentView(StoreView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print(context)
         for kw in kwargs:
             context[kw] = kwargs[kw]
         return context

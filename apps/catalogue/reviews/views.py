@@ -1,8 +1,14 @@
-from oscar.apps.catalogue.reviews.views import CreateProductReview as OscarCreateProductReview
+from oscar.apps.catalogue.reviews.views import CreateProductReview as OscarCreateProductReview, ProductReviewDetail as OscarProductReviewDetail,  ProductReviewList as OscarProductReviewList
 from core.mixins import BaseContextMixin
+from .forms import ProductReviewForm
 
 class CreateProductReview(BaseContextMixin, OscarCreateProductReview):
-    def get_context_data(self,*args, **kwargs):
-        
-        print('The context' , super().get_context_data(*args, **kwargs))
-        return super().get_context_data(*args, **kwargs)
+    form_class = ProductReviewForm
+
+class ProductReviewDetail(BaseContextMixin, OscarProductReviewDetail):
+    pass
+
+class  ProductReviewList(BaseContextMixin, OscarProductReviewList):
+    # template_name = 'Oscar/catalogue/partials/review_list.html'
+    pass
+

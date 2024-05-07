@@ -62,7 +62,7 @@ class CommentForm(ModelForm):
         self.store = store
         self.user = user
         self.fields['title'].widget.attrs.update({'class':'form-control'})
-        self.fields['score'].widget.attrs.update({'class':'form-control d-none'})
+        self.fields['score'].widget.attrs.update({'class':'form-select d-none'})
         self.fields['message'].widget.attrs.update({'class':'form-control', 'cols':40, 'rows': 5, 'placeholder':'Enter your comment'})
 
 

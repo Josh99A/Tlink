@@ -4,29 +4,41 @@
 
 {% block product_review %}
     <div id="addreview" class="review_add card card-body bg-light">
-        <form id="add_review_form" method="post" action="#addreview">
+        {% if form.errors or form.non_field_errors %}
+        <div class="alert alert-danger alert-dismissible fade show  box fw-bold fs-6" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            {{field.label_tag}}
+            {{field.errors}}
+            {% endif %}
+            {% endfor %}
+            {{form.non_field_errors}}
+            <span class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+        </div>
+        {% endif %}
+        <form id="add_review_form" method="post" action="#addreview" novalidate>
             <fieldset>
                 <legend>{% trans "Leave a product review" %}</legend>
                 {% csrf_token %}
 
                 {% include 'oscar/partials/form_field.html' with field=form.title %}
 
-                <div class="reviewrating form-group {% if form.score.errors %}error{% endif %}">
+                <div class="reviewrating form-group {% if form.score.errors %} border border-danger {% endif %}">
                     <label for="{{ form.score.auto_id }}" class="col-form-label required">
                         {{ form.score.label|safe }}
                     </label>
                     <div class="controls">
                         {{ form.score }}
-                        <div class="star-rating {{ form.score.value|as_stars }}">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                        <div class="star-rating {{ form.score.value|as_stars }} d-flex">
+                            <i class="bi bi-star-fill fs-3 mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3 mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3 mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3 mx-2"></i>
+                            <i class="bi bi-star-fill  fs-3 mx-2"></i>
                         </div>
 
                         {% for error in form.score.errors %}
-                            <span class="error-block"><i class="fas fa-exclamation"></i> {{ error }}</span>
+                            <span class="error-block text-danger fw-bold"><i class="bi bi-exclamation"></i> {{ error }}</span>
                         {% endfor %}
                     </div>
 
@@ -49,5 +61,22 @@
                 <a href="{{ product.get_absolute_url }}">{% trans "cancel" %}</a>
             </fieldset>
         </form>
+        <script>
+            $(document).ready(function(){
+
+                   // Handle Rating
+     var review_ratings = $('.reviewrating')
+    if(review_ratings.length){
+        review_ratings.find('.star-rating i').on('click', reviewStarFunc)
+    }
+
+    function reviewStarFunc(){
+    var ratings = ['One','Two','Three','Four','Five']; //possible classes for display state
+    $(this).parent().removeClass('One Two Three Four Five').addClass(ratings[$(this).index()]);
+    $(this).closest('.controls').find('select').val($(this).index() + 1); //select is hidden, set value
+    }
+                
+            })
+        </script>
     </div>
 {% endblock %}

@@ -2,6 +2,7 @@
 {% load static %}
 {% load image_tags %}
 {% load i18n %}
+{% load history_tags %}
 
 {% block main-content %}
 <div style="height: 100px; margin-bottom: 20px;" ></div>
@@ -89,6 +90,7 @@
             </div>
         </div>
     </div>
+    {% recently_viewed_products  %}
     <script>
            
         function  imageUploaded(elem, cardid, imageNamediv){

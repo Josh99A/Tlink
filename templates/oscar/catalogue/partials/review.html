@@ -4,11 +4,11 @@
 {% load static %}
 <article class="card border-secondary">
     <div class="card-header d-flex justify-content-between">
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and review.user.profile_image %}
                 <img src="{% oscar_thumbnail review.user.profile_image   '100x100' upscale='False' %}" class="img-fluid rounded" alt="Profile image">
             
             {% else %}    
-                <img src="{% static 'core\Images\blank-profile.png' %}" class="img-fluid rounded" alt="Profile image" style="width: 100px; height: 100px;">
+                <img src="{% static 'core\Images\blank-profile.png' %}" class="img-fluid rounded" alt="Profile image" style="width: 100px; height: 85px;">
             {% endif %}
             <span class="ms-3 lh-sm">
                 
