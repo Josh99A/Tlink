@@ -21,7 +21,6 @@ class Store(models.Model):
     location = models.CharField(max_length=20, choices=LOCATION_CHOICES)
     product_type  = models.ManyToManyField(Category)
     is_active = models.BooleanField(default=False)
-    whatsApp_number = models.CharField(max_length=13, blank=True, null=True)
     slug = models.SlugField()
     date_created = models.DateField('Date created', auto_now_add=True)
     date_modified = models.DateTimeField('Date modified', auto_now=True)

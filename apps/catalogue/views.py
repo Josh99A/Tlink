@@ -16,3 +16,8 @@ class ProductCategoryView(BaseContextMixin,OscarProductCategoryView):
 
 class ProductDetailView(BaseContextMixin, OscarProductDetailView):
     template_name = 'oscar/dashboard/catalogue/product_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data()
+        print(context)
+        return context

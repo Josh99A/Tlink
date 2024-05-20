@@ -25,36 +25,19 @@
                     <a href="{% url 'catalogue:reviews-list' product_slug=product.slug product_pk=product.pk %}" class="fw-bold">{% trans "Reviews" %}</a>
                 </li>
             {% endwith %}
-            <li class="breadcrumb-item active" aria-current="page">{{ review.title }}</li>
+            <li class="breadcrumb-item fw-bold active" aria-current="page" >{{ review.title }}</li>
         </ol>
     </nav>
     {% endblock %}
+    {% block headertext %}
+    <h2>{% trans "Customer reviews" %}</h2>
+{% endblock  %}
+
     {% include 'oscar/catalogue/reviews/review_product.html' %}
-    {% if reviews %}
-    <div class="d-flex justify-content-center align-items-center">
-        <form method="get" class="form-inline w-50">
-            {% include "oscar/partials/form_fields_inline.html" with form=form %}
-            <button type="submit" class="btn btn-primary mx-3 d-block w-25 m-2">{% trans "Go" %}</button>
-        </form>
+    <div class="my-2">
+        {% include 'oscar/catalogue/partials/review.html' %}
     </div>
-
-    <hr>
-
-    <div class="row">
-    {% for review in reviews %}
-        <div class="col-md-6 my-2">
-            {% include 'oscar/catalogue/partials/review.html' %}   
-        </div>
-        
-        {% endfor %}
-    </div>
-    {% include 'oscar/partials/pagination.html' %}
-
-{% else %}
-    <p>{% trans "This product does not have any reviews yet." %}</p>
-{% endif %}
-
-
+   
 
 </div>
 

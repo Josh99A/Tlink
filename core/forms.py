@@ -5,7 +5,7 @@ class UserCreationForm(ModelForm):
     confirm_password = CharField(widget=PasswordInput, help_text='Enter the same password as above')
     class Meta:
         model = User
-        fields = ( 'email', 'phone_number', 'password','confirm_password', 'gender', 'date_of_birth', 'location', 'profile_image')
+        fields = ( 'email', 'phone_number',  'password','confirm_password', 'gender', 'date_of_birth', 'location', 'profile_image')
 
         widgets = {
             'password': PasswordInput(attrs={'class': 'has-text-warning'})

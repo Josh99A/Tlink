@@ -12,6 +12,7 @@ class User(AbstractUser):
     GENDER_CHOICES = [("M","Male"), ("F", "Female")]
     LOCATION_CHOICES = [("BW", "Bweyale"), ("KY", 'Kyradongo')]
     phone_number = models.CharField(max_length=13)
+    whatsApp = models.CharField(max_length=13, blank=True, null=True)
     date_of_birth = models.DateField(default=datetime.date(2024,1,1))
     location = models.CharField(max_length=2, choices=LOCATION_CHOICES)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)

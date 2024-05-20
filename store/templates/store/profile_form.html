@@ -41,6 +41,10 @@
                 <label for="{{ form.phone_number.id_for_label }}" class="form-label fw-bold">Phone number:</label>
                 {{ form.phone_number  }}
             </div>
+            <div class="col-6  mb-3">
+                <label for="{{ form.phone_number.id_for_label }}" class="form-label fw-bold">WhatsApp number:</label>
+                {{ form.whatsApp  }}
+            </div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn  btn-primary" type="submit" data-loading-text="{% trans 'Saving...' %}">{% trans "Save" %}</button>
                 <a href="{% url 'store:settings' %}" class="btn btn-danger ">Cancel</a>

@@ -9,6 +9,9 @@ class ProductReviewDetail(BaseContextMixin, OscarProductReviewDetail):
     pass
 
 class  ProductReviewList(BaseContextMixin, OscarProductReviewList):
-    # template_name = 'Oscar/catalogue/partials/review_list.html'
+    template_name = 'oscar/catalogue/partials/review_list.html'
     pass
 
+class ProductReviewDetail(OscarProductReviewDetail):
+    template_name = 'oscar/catalogue/reviews/review_detail.html'
+    pass

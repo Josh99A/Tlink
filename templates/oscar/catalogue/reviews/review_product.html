@@ -1,0 +1,21 @@
+{% load image_tags %}
+
+<div id="review-card">
+    <div class="row">
+        <div class="card mb-3 ms-2" style="max-width: 500px;">
+            <div class="row g-0 my-3">
+                <div class="col-4">
+                    <img src="{% oscar_thumbnail product.primary_image.original '400x370' crop='center' upscale=False  %}" alt="{{ product.get_title }}" class="img-fluid rounded-start">
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <h2><a href="{{ product.get_absolute_url }}">{{ product.get_title }}</a></h2>
+                        {% include "oscar/catalogue/partials/stock_record.html" %}
+                        {% include "oscar/catalogue/reviews/partials/review_stars.html" %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+</div>

@@ -30,7 +30,7 @@ class StoreForm(ModelForm):
     class Meta:
         model=Store
         fields = [
-            'name', 'location','product_type', 'location_image1','whatsApp_number',
+            'name', 'location','product_type', 'location_image1',
             'location_image2', 'location_image3',
             'location_image4'
             ]  
@@ -42,7 +42,6 @@ class StoreForm(ModelForm):
     def __init__(self, *args,**kwargs):
         super().__init__(*args,  **kwargs)
         self.fields['name'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
-        self.fields['whatsApp_number'].widget.attrs.update({'class':'form-control border border-primary-subtle'})
         self.fields['location'].widget.attrs.update({'class':'form-select border border-primary-subtle'})
         self.fields['location_image1'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card1', 'imageName1')"})
         self.fields['location_image2'].widget.attrs.update({'class':'form-control storeImage', 'onchange': "imageUploaded(this, 'card2', 'imageName2')"})
