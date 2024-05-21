@@ -50,7 +50,6 @@ class indexList(BaseContextMixin, ListView):
 
         context['categories'] = root_categories
         context['stores'] = stores
-        context['tstore'] = stores[0]
         print(context)
         return context
 

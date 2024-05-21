@@ -85,6 +85,7 @@
             </div> 
             </div> <!--End of Mobile category list-->            
             {% block category_description %}
+            {% if category.description %}
                 <div class="card mb-3 d-none d-mb-block d-lg-block" style="max-width: 760px;">
                     <div class="row g-0 ">
                         <div class="col-4">
@@ -98,6 +99,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             {% endblock %}
 
             <!--Find your interests section-->

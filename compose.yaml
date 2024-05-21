@@ -2,11 +2,17 @@ services:
   server:
     build:
       context: .
-    ports:
+    ports: 
       - 8000:8000
+    command: ["sh", "./start.sh"]
+    env_file:
+      - .env
+    secrets:
+      - db-password
     environment:
-      DEBUG: 'True'
-      SECRET_KEY: 'django-insecure-gn9!zs*ys5o-=lio3s%%offan+a$^pe4ysv*jio_+zaml2g!b-6'
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+ 
     volumes:
       - ./:/app
 
@@ -22,8 +28,8 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=example
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD_FILE=/run/secrets/ 
     expose:
       - 5432
     healthcheck:
